@@ -21,7 +21,10 @@ import Person from "@material-ui/icons/Person";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
 import BubbleChart from "@material-ui/icons/BubbleChart";
 import LocationOn from "@material-ui/icons/LocationOn";
+import Alarm from "@material-ui/icons/Alarm";
 import Notifications from "@material-ui/icons/Notifications";
+import SmartDocIcon from "@material-ui/icons/TabletMac";
+import ShareIcon from "@material-ui/icons/Share";
 import Unarchive from "@material-ui/icons/Unarchive";
 import Language from "@material-ui/icons/Language";
 // core components/views for Admin layout
@@ -31,7 +34,10 @@ import TableList from "views/TableList/TableList.js";
 import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
 import Maps from "views/Maps/Maps.js";
+import Vaccination from "views/Vaccination/Vaccination.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
+import SmartDoc from "views/SmartDoc/SmartDoc.js";
+import Share from "views/Share/Share.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
@@ -47,7 +53,7 @@ const dashboardRoutes = [
   },
   {
     path: "/user",
-    name: "User Profile",
+    name: "Dein Profil",
     rtlName: "ملف تعريفي للمستخدم",
     icon: Person,
     component: UserProfile,
@@ -55,7 +61,7 @@ const dashboardRoutes = [
   },
   {
     path: "/table",
-    name: "Table List",
+    name: "Befunde",
     rtlName: "قائمة الجدول",
     icon: "content_paste",
     component: TableList,
@@ -63,7 +69,7 @@ const dashboardRoutes = [
   },
   {
     path: "/typography",
-    name: "Typography",
+    name: "Termine",
     rtlName: "طباعة",
     icon: LibraryBooks,
     component: Typography,
@@ -78,37 +84,38 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/maps",
-    name: "Maps",
+    path: "/share",
+    name: "Freigabe",
+    rtlName: "إخطارات",
+    icon: ShareIcon,
+    component: Share,
+    layout: "/admin"
+  },
+ 
+  {
+    path: "/vaccination",
+    name: "Impfpass",
     rtlName: "خرائط",
-    icon: LocationOn,
-    component: Maps,
+    icon: Alarm,
+    component: Vaccination,
     layout: "/admin"
   },
   {
     path: "/notifications",
-    name: "Notifications",
+    name: "Benachrichtigungen",
     rtlName: "إخطارات",
     icon: Notifications,
     component: NotificationsPage,
     layout: "/admin"
   },
   {
-    path: "/rtl-page",
-    name: "RTL Support",
-    rtlName: "پشتیبانی از راست به چپ",
-    icon: Language,
-    component: RTLPage,
-    layout: "/rtl"
-  },
-  {
-    path: "/upgrade-to-pro",
-    name: "Upgrade To PRO",
-    rtlName: "التطور للاحترافية",
-    icon: Unarchive,
-    component: UpgradeToPro,
+    path: "/smartDoc",
+    name: "Smart Doc",
+    rtlName: "إخطارات",
+    icon: SmartDocIcon,
+    component: SmartDoc,
     layout: "/admin"
-  }
+  },
 ];
 
 export default dashboardRoutes;

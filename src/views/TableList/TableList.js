@@ -48,17 +48,17 @@ export default function TableList() {
       <GridItem xs={12} sm={12} md={12}>
         <Card>
           <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Simple Table</h4>
+            <h4 className={classes.cardTitleWhite}>Dermatologie</h4>
             <p className={classes.cardCategoryWhite}>
-              Here is a subtitle for this table
+              Untertitel
             </p>
           </CardHeader>
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={["Name", "Country", "City", "Salary"]}
+              tableHead={["Arzt", "Country", "City", "Salary"]}
               tableData={[
-                ["Dakota Rice", "Niger", "Oud-Turnhout", "$36,738"],
+                ["Linda", "Niger", "Oud-Turnhout", "$36,738"],
                 ["Minerva Hooper", "Curaçao", "Sinaai-Waas", "$23,789"],
                 ["Sage Rodriguez", "Netherlands", "Baileux", "$56,142"],
                 ["Philip Chaney", "Korea, South", "Overland Park", "$38,735"],
@@ -73,7 +73,7 @@ export default function TableList() {
         <Card plain>
           <CardHeader plain color="primary">
             <h4 className={classes.cardTitleWhite}>
-              Table on Plain Background
+              Allergologie
             </h4>
             <p className={classes.cardCategoryWhite}>
               Here is a subtitle for this table
