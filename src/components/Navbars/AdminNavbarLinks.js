@@ -21,6 +21,10 @@ import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+
 const useStyles = makeStyles(styles);
 
 export default function AdminNavbarLinks() {
@@ -45,7 +49,17 @@ export default function AdminNavbarLinks() {
     }
   };
   const handleCloseProfile = () => {
-    setOpenProfile(null);
+    var provider = new firebase.auth.GoogleAuthProvider();
+
+    firebase.auth().signOut().then(function() {
+      console.log("logged out");
+      // Sign-out successful.
+    }).catch(function(error) {
+      console.log("errortl");
+      // An error happened.
+    });
+
+    setOpenProfile(false);
   };
   return (
     <div>

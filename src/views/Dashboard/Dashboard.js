@@ -10,6 +10,7 @@ import Warning from "@material-ui/icons/Warning";
 import DateRange from "@material-ui/icons/DateRange";
 import LocalOffer from "@material-ui/icons/LocalOffer";
 import Update from "@material-ui/icons/Update";
+import Assignment from "@material-ui/icons/Assignment";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import AccessTime from "@material-ui/icons/AccessTime";
 import Accessibility from "@material-ui/icons/Accessibility";
@@ -23,11 +24,13 @@ import Table from "components/Table/Table.js";
 import Tasks from "components/Tasks/Tasks.js";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
 import Danger from "components/Typography/Danger.js";
+import Success from "components/Typography/Success.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+
 
 import { bugs, website, server } from "variables/general.js";
 
@@ -52,19 +55,17 @@ export default function Dashboard() {
               <CardIcon color="warning">
                 <Icon>content_copy</Icon>
               </CardIcon>
-              <p className={classes.cardCategory}>Used Space</p>
+              <p className={classes.cardCategory}>Befunde</p>
               <h3 className={classes.cardTitle}>
-                49/50 <small>GB</small>
+                50
               </h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
-                <Danger>
+                <Assignment>
                   <Warning />
-                </Danger>
-                <a href="#pablo" onClick={e => e.preventDefault()}>
-                  Get more space
-                </a>
+                </Assignment>
+                Archiviert
               </div>
             </CardFooter>
           </Card>
@@ -75,13 +76,13 @@ export default function Dashboard() {
               <CardIcon color="success">
                 <Store />
               </CardIcon>
-              <p className={classes.cardCategory}>Revenue</p>
-              <h3 className={classes.cardTitle}>$34,245</h3>
+              <p className={classes.cardCategory}>Krankenkassenkosten</p>
+              <h3 className={classes.cardTitle}>1.245€</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
                 <DateRange />
-                Last 24 Hours
+                Letzte 12 Monate
               </div>
             </CardFooter>
           </Card>
@@ -92,13 +93,13 @@ export default function Dashboard() {
               <CardIcon color="danger">
                 <Icon>info_outline</Icon>
               </CardIcon>
-              <p className={classes.cardCategory}>Fixed Issues</p>
-              <h3 className={classes.cardTitle}>75</h3>
+              <p className={classes.cardCategory}>Notfalldaten</p>
+              <h3 className={classes.cardTitle}>10</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
                 <LocalOffer />
-                Tracked from Github
+                Nur für Notärzte verfügbar
               </div>
             </CardFooter>
           </Card>
@@ -109,13 +110,13 @@ export default function Dashboard() {
               <CardIcon color="info">
                 <Accessibility />
               </CardIcon>
-              <p className={classes.cardCategory}>Followers</p>
-              <h3 className={classes.cardTitle}>+245</h3>
+              <p className={classes.cardCategory}>Freigaben</p>
+              <h3 className={classes.cardTitle}>15 aktiv</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
                 <Update />
-                Just Updated
+                In the letzten 6 Monaten
               </div>
             </CardFooter>
           </Card>
@@ -139,12 +140,12 @@ export default function Dashboard() {
                 <span className={classes.successText}>
                   <ArrowUpward className={classes.upArrowCardCategory} /> 55%
                 </span>{" "}
-                increase in today sales.
+                Steigerung in dieser Woche.
               </p>
             </CardBody>
             <CardFooter chart>
               <div className={classes.stats}>
-                <AccessTime /> updated 4 minutes ago
+                <AccessTime /> vor 4 Minuten aktualisiert
               </div>
             </CardFooter>
           </Card>
@@ -162,12 +163,12 @@ export default function Dashboard() {
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Email Subscriptions</h4>
-              <p className={classes.cardCategory}>Last Campaign Performance</p>
+              <h4 className={classes.cardTitle}>Cholesterin Werte</h4>
+              <p className={classes.cardCategory}>Erbliche Veranlagung</p>
             </CardBody>
             <CardFooter chart>
               <div className={classes.stats}>
-                <AccessTime /> campaign sent 2 days ago
+                <AccessTime /> Kampagne vor 1,5 Jahren gestartet
               </div>
             </CardFooter>
           </Card>
@@ -184,12 +185,12 @@ export default function Dashboard() {
               />
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Completed Tasks</h4>
-              <p className={classes.cardCategory}>Last Campaign Performance</p>
+              <h4 className={classes.cardTitle}>Blutdruck</h4>
+              <p className={classes.cardCategory}>Hypotonie Gefahr</p>
             </CardBody>
             <CardFooter chart>
               <div className={classes.stats}>
-                <AccessTime /> campaign sent 2 days ago
+                <AccessTime /> Kampagne vor 2 Tagen gestartet
               </div>
             </CardFooter>
           </Card>
@@ -239,21 +240,19 @@ export default function Dashboard() {
         </GridItem>
         <GridItem xs={12} sm={12} md={6}>
           <Card>
-            <CardHeader color="warning">
+            <CardHeader color="info">
               <h4 className={classes.cardTitleWhite}>Neuste Aktivitäten</h4>
               <p className={classes.cardCategoryWhite}>
-                New employees on 15th September, 2016
+                Aktivitäten seit dem letzten Login
               </p>
             </CardHeader>
             <CardBody>
               <Table
-                tableHeaderColor="warning"
-                tableHead={["Name", "Salary", "Country"]}
+                tableHeaderColor="info"
+                tableHead={["Verantwortlich", "Benachrichtigung"]}
                 tableData={[
-                  ["1", "Dakota Rice", "$36,738", "Niger"],
-                  ["2", "Minerva Hooper", "$23,789", "Curaçao"],
-                  ["3", "Sage Rodriguez", "$56,142", "Netherlands"],
-                  ["4", "Philip Chaney", "$38,735", "Korea, South"]
+                  ["Patient", "Online Visite vereinbaren"],
+                  ["Arzt Dr. Schieber", "Medikation prüfen"],
                 ]}
               />
             </CardBody>
