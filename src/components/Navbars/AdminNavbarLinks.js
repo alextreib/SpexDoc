@@ -27,8 +27,13 @@ import "firebase/firestore";
 
 const useStyles = makeStyles(styles);
 
+
+
+
+
 export default function AdminNavbarLinks() {
   const classes = useStyles();
+  const [profileActive, setProfile] = React.useState(null);
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
   const handleClickNotification = (event) => {
@@ -60,11 +65,12 @@ export default function AdminNavbarLinks() {
         var token = result.credential.accessToken;
         // The signed-in user info.
         var user = result.user;
-        window.user = user;
+        setProfile(user);
+        console.log("user logged in");
+        // window.user = user;
         // ...
       })
       .catch(function (error) {
-        console.log("error");
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -72,6 +78,7 @@ export default function AdminNavbarLinks() {
         var email = error.email;
         // The firebase.auth.AuthCredential type that was used.
         var credential = error.credential;
+        console.log("error: " + errorCode + ":" + errorMessage);
         // ...
       });
 
@@ -244,7 +251,7 @@ export default function AdminNavbarLinks() {
               <Paper>
                 <ClickAwayListener onClickAway={handleCloseProfile}>
                   <MenuList role="menu">
-                    {window.user != null ? (
+                    {profileActive ? (
                       <div>
                         <MenuItem
                           onClick={handleCloseProfile}
