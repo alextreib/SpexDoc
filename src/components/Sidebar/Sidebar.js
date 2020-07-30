@@ -25,8 +25,6 @@ const useStyles = makeStyles(styles);
 
 
 
-
-
 export default function Sidebar(props) {
   const classes = useStyles();
   // verifies if routeName is the one active (in browser input)
@@ -38,7 +36,7 @@ export default function Sidebar(props) {
     <List className={classes.list}>
       {routes.map((prop, key) => {
           console.log(AdminNavbarLinks);
-          if ((prop.path != "/user" && window.user == null)) {
+          // if ((prop.path != "/user" && window.user == null)) {
 
         var activePro = " ";
         var listItemClasses;
@@ -88,7 +86,7 @@ export default function Sidebar(props) {
             </ListItem>
           </NavLink>
         );
-}})}
+})}
     </List>
   );
   var brand = (

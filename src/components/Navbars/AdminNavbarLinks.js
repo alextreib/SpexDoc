@@ -27,10 +27,6 @@ import "firebase/firestore";
 
 const useStyles = makeStyles(styles);
 
-
-
-
-
 export default function AdminNavbarLinks() {
   const classes = useStyles();
   const [profileActive, setProfile] = React.useState(null);
