@@ -24,6 +24,7 @@ import LocationOn from "@material-ui/icons/LocationOn";
 import Alarm from "@material-ui/icons/Alarm";
 import Notifications from "@material-ui/icons/Notifications";
 import SmartDocIcon from "@material-ui/icons/TabletMac";
+import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import ShareIcon from "@material-ui/icons/Share";
 import Unarchive from "@material-ui/icons/Unarchive";
 import Language from "@material-ui/icons/Language";
@@ -31,6 +32,7 @@ import Language from "@material-ui/icons/Language";
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import TableList from "views/TableList/TableList.js";
+import Emergency from "views/Emergency/Emergency.js";
 import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
 import Maps from "views/Maps/Maps.js";
@@ -67,21 +69,13 @@ const dashboardRoutes = [
     icon: "content_paste",
     component: TableList,
     layout: "/admin"
-  },
+  }, 
   {
     path: "/typography",
     name: "Termine",
     rtlName: "طباعة",
     icon: LibraryBooks,
     component: Typography,
-    layout: "/admin"
-  },
-  {
-    path: "/icons",
-    name: "Icons",
-    rtlName: "الرموز",
-    icon: BubbleChart,
-    component: Icons,
     layout: "/admin"
   },
   {
@@ -99,6 +93,14 @@ const dashboardRoutes = [
     rtlName: "خرائط",
     icon: Alarm,
     component: Vaccination,
+    layout: "/admin"
+  },
+  {
+    path: "/emergency",
+    name: "Notfalldaten",
+    rtlName: "إخطارات",
+    icon: LocalHospitalIcon,
+    component: Emergency,
     layout: "/admin"
   },
   {

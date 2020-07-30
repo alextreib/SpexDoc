@@ -45,8 +45,8 @@ const useStyles = makeStyles(styles);
 export default function UserProfile() {
   const classes = useStyles();
   const [profileActive, setProfile] = React.useState(null);
- var [email, setEmail] = React.useState("");
-
+  var [email, setEmail] = React.useState("");
+  var [firstName, setfirstName] = React.useState("");
 
   const handleLoginProfile = () => {
     var provider = new firebase.auth.GoogleAuthProvider();
@@ -59,8 +59,10 @@ export default function UserProfile() {
         var token = result.credential.accessToken;
         // The signed-in user info.
         var user = result.user;
+
         setProfile(user);
         setEmail(user.email);
+        setfirstName(user.displayName);
         console.log(user);
         console.log("user logged in");
         // window.user = user;
@@ -77,7 +79,38 @@ export default function UserProfile() {
         console.log("error: " + errorCode + ":" + errorMessage);
         // ...
       });
+  };
 
+  var handleChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  var updateProf = () => {
+    console.log("updateProf");
+
+    var user = firebase.auth().currentUser;
+    
+    console.log(user);
+    // updateProfile()
+    // Updates the user attributes:
+    user
+      .updateProfile({
+        email: email,
+        displayName: firstName,
+        // photoURL: "https://example.com/jane-q-user/profile.jpg",
+      })
+      .then(
+        function () {
+          // Profile updated successfully!
+          // "Jane Q. User"
+          var displayName = user.displayName;
+          // "https://example.com/jane-q-user/profile.jpg"
+          var photoURL = user.photoURL;
+        },
+        function (error) {
+          // An error happened.
+        }
+      );
   };
 
   return (
@@ -95,22 +128,28 @@ export default function UserProfile() {
             </CardHeader>
             <CardBody>
               <GridContainer>
-                <GridItem xs={12} sm={12} md={5}>
+                <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
-                    labelText="Company (disabled)"
-                    id="company-disabled"
+                    labelText="Email"
+                    id="email-address"
+                    inputProps={{
+                      onChange: handleChange,
+                      value: email,
+                    }}
                     formControlProps={{
                       fullWidth: true,
+                      color: "secondary",
                     }}
-                    inputProps={{
-                      disabled: true,
-                    }}
-                  />
+                  ></CustomInput>
                 </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
+                <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
-                    labelText="Username"
-                    id="username"
+                    labelText="Vorname"
+                    id="first-name"
+                    inputProps={{
+                      onChange: handleChange,
+                      value: email,
+                    }}
                     formControlProps={{
                       fullWidth: true,
                     }}
@@ -118,31 +157,7 @@ export default function UserProfile() {
                 </GridItem>
                 <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
-                    labelText="Email"
-                    id="email-address"
-                    inputProps={{
-                      value:email
-                    }}
-                    formControlProps={{
-                      fullWidth: true,
-                      color:"secondary"
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="First Name"
-                    id="first-name"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
-                    labelText="Last Name"
+                    labelText="Nachname"
                     id="last-name"
                     formControlProps={{
                       fullWidth: true,
@@ -153,7 +168,16 @@ export default function UserProfile() {
               <GridContainer>
                 <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
-                    labelText="City"
+                    labelText="Postleitzahl"
+                    id="postal-code"
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={4}>
+                  <CustomInput
+                    labelText="Wohnort"
                     id="city"
                     formControlProps={{
                       fullWidth: true,
@@ -162,17 +186,8 @@ export default function UserProfile() {
                 </GridItem>
                 <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
-                    labelText="Country"
+                    labelText="Land"
                     id="country"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Postal Code"
-                    id="postal-code"
                     formControlProps={{
                       fullWidth: true,
                     }}
@@ -197,7 +212,9 @@ export default function UserProfile() {
               </GridContainer>
             </CardBody>
             <CardFooter>
-              <Button color="primary">Update Profile</Button>
+              <Button color="primary" onClick={updateProf} round>
+                Update Profile
+              </Button>
             </CardFooter>
           </Card>
         </GridItem>
@@ -216,7 +233,7 @@ export default function UserProfile() {
                 human foundation in truth And I love you like Kanye loves Kanye
                 I love Rick Owens’ bed design but the back is...
               </p>
-              <Button color="primary" round>
+              <Button color="primary" onClick={updateProf} round>
                 Follow
               </Button>
             </CardBody>
