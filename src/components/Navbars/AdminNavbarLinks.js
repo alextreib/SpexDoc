@@ -31,7 +31,7 @@ export default function AdminNavbarLinks() {
   const classes = useStyles();
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
-  const handleClickNotification = event => {
+  const handleClickNotification = (event) => {
     if (openNotification && openNotification.contains(event.target)) {
       setOpenNotification(null);
     } else {
@@ -41,38 +41,80 @@ export default function AdminNavbarLinks() {
   const handleCloseNotification = () => {
     setOpenNotification(null);
   };
-  const handleClickProfile = event => {
+  const handleClickProfile = (event) => {
     if (openProfile && openProfile.contains(event.target)) {
       setOpenProfile(null);
     } else {
       setOpenProfile(event.currentTarget);
     }
   };
-  const handleCloseProfile = () => {
+
+  const handleLoginProfile = () => {
     var provider = new firebase.auth.GoogleAuthProvider();
 
-    firebase.auth().signOut().then(function() {
-      console.log("logged out");
-      // Sign-out successful.
-    }).catch(function(error) {
-      console.log("errortl");
-      // An error happened.
-    });
+    firebase
+      .auth()
+      .signInWithPopup(provider)
+      .then(function (result) {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        var token = result.credential.accessToken;
+        // The signed-in user info.
+        var user = result.user;
+        window.user = user;
+        // ...
+      })
+      .catch(function (error) {
+        console.log("error");
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+        // ...
+      });
 
-    setOpenProfile(false);
+    handleCloseProfile();
   };
+
+  const handleLogoutProfile = () => {
+    var provider = new firebase.auth.GoogleAuthProvider();
+
+    var auth = firebase.auth();
+    var currentUser = auth.currentUser;
+
+    firebase
+      .auth()
+      .signOut()
+      .then(function () {
+        window.user = null;
+        console.log("logged out");
+        // Sign-out successful.
+      })
+      .catch(function (error) {
+        console.log("error while logging out");
+        // An error happened.
+      });
+    handleCloseProfile();
+  };
+
+  const handleCloseProfile = () => {
+    setOpenProfile(null);
+  };
+
   return (
     <div>
       <div className={classes.searchWrapper}>
         <CustomInput
           formControlProps={{
-            className: classes.margin + " " + classes.search
+            className: classes.margin + " " + classes.search,
           }}
           inputProps={{
             placeholder: "Search",
             inputProps: {
-              "aria-label": "Search"
-            }
+              "aria-label": "Search",
+            },
           }}
         />
         <Button color="white" aria-label="edit" justIcon round>
@@ -127,7 +169,7 @@ export default function AdminNavbarLinks() {
               id="notification-menu-list-grow"
               style={{
                 transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom"
+                  placement === "bottom" ? "center top" : "center bottom",
               }}
             >
               <Paper>
@@ -196,31 +238,44 @@ export default function AdminNavbarLinks() {
               id="profile-menu-list-grow"
               style={{
                 transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom"
+                  placement === "bottom" ? "center top" : "center bottom",
               }}
             >
               <Paper>
                 <ClickAwayListener onClickAway={handleCloseProfile}>
                   <MenuList role="menu">
-                    <MenuItem
-                      onClick={handleCloseProfile}
-                      className={classes.dropdownItem}
-                    >
-                      Profile
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseProfile}
-                      className={classes.dropdownItem}
-                    >
-                      Settings
-                    </MenuItem>
-                    <Divider light />
-                    <MenuItem
-                      onClick={handleCloseProfile}
-                      className={classes.dropdownItem}
-                    >
-                      Logout
-                    </MenuItem>
+                    {window.user != null ? (
+                      <div>
+                        <MenuItem
+                          onClick={handleCloseProfile}
+                          className={classes.dropdownItem}
+                        >
+                          Profile
+                        </MenuItem>
+                        <MenuItem
+                          onClick={handleCloseProfile}
+                          className={classes.dropdownItem}
+                        >
+                          Settings
+                        </MenuItem>
+                        <Divider light />
+                        <MenuItem
+                          onClick={(handleCloseProfile, handleLogoutProfile)}
+                          className={classes.dropdownItem}
+                        >
+                          Logout
+                        </MenuItem>
+                      </div>
+                    ) : (
+                      <div>
+                        <MenuItem
+                          onClick={(handleCloseProfile, handleLoginProfile)}
+                          className={classes.dropdownItem}
+                        >
+                          Login
+                        </MenuItem>
+                      </div>
+                    )}
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
