@@ -9,6 +9,7 @@ import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import FileDialogue from "components/Test/Test.js";
+import TodoApp from "components/TodoApp/TodoApp.js";
 import CardBody from "components/Card/CardBody.js";
 import Test from "views/Test/Test.js";
 import IconButton from "@material-ui/core/IconButton";
@@ -145,6 +146,7 @@ export default function TableList() {
             />
           </IconButton>
         </Card>
+        <TodoApp />
       </GridItem>
     </GridContainer>
   );
