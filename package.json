@@ -19,7 +19,10 @@
     "react-router-dom": "5.2.0",
     "react-scripts": "3.4.1",
     "react-swipeable-views": "0.13.9",
-    "firebase": "^7.8.2"
+    "firebase": "^7.8.2",
+    "react-table": "7.3.3",
+    "namor": "^1.1.2",
+    "styled-components": "^4.3.2"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -3,8 +3,8 @@ import styled from 'styled-components'
 import { useTable, usePagination } from 'react-table'
 
 import makeData from 'makeData'
- 
-const Styles = styled.div` 
+
+const Styles = styled.div`
   padding: 1rem;
 
   table {
@@ -44,10 +44,6 @@ const Styles = styled.div`
   }
 `
 
-
-
-
-
 // Create an editable cell renderer
 const EditableCell = ({
   value: initialValue,
@@ -55,10 +51,12 @@ const EditableCell = ({
   column: { id },
   updateMyData, // This is a custom function that we supplied to our table instance
 }) => {
+  console.log("update");
+
   // We need to keep and update the state of the cell normally
   const [value, setValue] = React.useState(initialValue)
 
-  const onChange = e => {
+  const onChange = e => { 
     setValue(e.target.value)
   }
 
@@ -82,7 +80,6 @@ const defaultColumn = {
 
 // Be sure to pass our updateMyData and the skipPageReset option
 function Table({ columns, data, updateMyData, skipPageReset }) {
-  console.log("Table");
   // For this example, we're using pagination to illustrate how to stop
   // the current page from resetting when our data changes
   // Otherwise, nothing is different here.
@@ -193,6 +190,7 @@ function Table({ columns, data, updateMyData, skipPageReset }) {
 }
 
 function ReactTestTable () {
+
   const columns = React.useMemo(
     () => [
       {
