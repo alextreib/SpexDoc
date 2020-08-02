@@ -22,7 +22,8 @@
     "firebase": "^7.8.2",
     "react-table": "7.3.3",
     "namor": "^1.1.2",
-    "styled-components": "^4.3.2"
+    "styled-components": "^4.3.2",
+    "material-table": "latest"
   },
   "scripts": {
     "start": "react-scripts start",

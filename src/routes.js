@@ -32,6 +32,7 @@ import Language from "@material-ui/icons/Language";
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import TableList from "views/TableList/TableList.js";
+import MaterialTableDemo from "views/Test/Test.js";
 import Emergency from "views/Emergency/Emergency.js";
 import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
@@ -67,7 +68,7 @@ const dashboardRoutes = [
     name: "Befunde",
     rtlName: "قائمة الجدول",
     icon: "content_paste",
-    component: TableList,
+    component: MaterialTableDemo,
     layout: "/admin"
   }, 
   {

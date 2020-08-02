@@ -6,7 +6,7 @@ import GridContainer from "components/Grid/GridContainer.js";
 import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-import ReactTestTable from "components/Test/Test.js";
+import MaterialTableDemo from "components/Test/Test.js";
 // import ReactTestTable from "components/ReactTestTable/ReactTestTable.js";
 import CardBody from "components/Card/CardBody.js";
 import Test from "views/Test/Test.js";
@@ -75,94 +75,7 @@ class TodoApp extends React.Component {
     render() {
         return (
 
-            <CardBody>
-                <Table tableHeaderColor="primary"
-                    tableHead={
-                        ["ID", "Arzt", "Datum", "Ort"]
-                    }
-                    tableData={
-                        this.state.students
-                    }/> {/* {
-                this.state.students.map((item, key) => {
-
-                    const editField = (value, index) => { // Clone students data before mutation
-                        const students = this.state.students.map(item => ({
-                            ...item
-                        }))
-
-                        // Update field by index of current student
-                        students[key][index] = value
-
-                        // Trigger re-render
-                        this.setState({students})
-                    }
-
-                    return (
-                        <tr key={key}
-                            className={
-                                item.editing ? 'editing' : ''
-                            }
-                            onClick={
-                                () => { // Clone students data before mutation
-                                    const students = this.state.students.map(i => ({
-                                        ...i,
-                                        editing: item.editing && i === item
-                                    }))
-
-                                    // Toggle editing flag of this current student (ie table row)
-                                    students[key].editing = true;
-
-                                    // Trigger re-render
-                                    this.setState({
-                                        clientIsEditing: true, // This might not be needed ?
-                                        students
-                                    })
-                                }
-                        }>
-                            <td>{
-                                item.editing ? <input value={
-                                        item[1]
-                                    }
-                                    onChange={
-                                        e => editField(e.target.value, 1)
-                                    }/> : <span>{
-                                    item[1]
-                                }</span>
-                            }</td>
-                            <td>{
-                                item.editing ? <input value={
-                                        item[2]
-                                    }
-                                    onChange={
-                                        e => editField(e.target.value, 2)
-                                    }/> : <span>{
-                                    item[2]
-                                }</span>
-                            }</td>
-                            <td>{
-                                item.editing ? <input value={
-                                        item[3]
-                                    }
-                                    onChange={
-                                        e => editField(e.target.value, 3)
-                                    }/> : <span>{
-                                    item[3]
-                                }</span>
-                            }</td>
-                            <td>{
-                                item.editing ? <input value={
-                                        item[4]
-                                    }
-                                    onChange={
-                                        e => editField(e.target.value, 4)
-                                    }/> : <span>{
-                                    item[4]
-                                }</span>
-                            }</td>
-                        </tr>
-                    )
-                })
-            }  */} </CardBody>
+            <MaterialTableDemo/>
 
 
         )

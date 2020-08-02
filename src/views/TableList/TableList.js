@@ -14,7 +14,9 @@ import CardBody from "components/Card/CardBody.js";
 import Test from "views/Test/Test.js";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
-import ReactTestTable from "components/Test/Test.js";
+
+import MaterialTableDemo from "components/Test/Test.js";
+
 
 
 import AddAlert from "@material-ui/icons/AddAlert";
@@ -174,8 +176,7 @@ export default function TableList() {
                     </IconButton>
                 </Card>
 
-                <ReactTestTable/>
-                <TodoApp/>
+                <MaterialTableDemo/>
             </GridItem>
         </GridContainer>
 
@@ -183,10 +184,6 @@ export default function TableList() {
 }
 
 
-ReactDOM.render (
-    <ReactTestTable/>,
-    document.getElementById('root')
-)
 
 
 // ReactDOM.render(<FileDialogue />, document.getElementById("app"));
