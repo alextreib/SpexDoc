@@ -8,19 +8,16 @@ import GridContainer from "components/Grid/GridContainer.js";
 import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-import FileDialogue from "components/Test/Test.js";
-import TodoApp from "components/TodoApp/TodoApp.js";
+import EditableTableReport from "components/EditableTableReport/EditableTableReport.js";
 import CardBody from "components/Card/CardBody.js";
-import Test from "views/Test/Test.js";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 
-import MaterialTableDemo from "components/Test/Test.js";
+import UploadFile from "components/UploadFile/UploadFile.js";
 import MaterialTable from 'material-table';
 
 
 import AddAlert from "@material-ui/icons/AddAlert";
-import Button from "components/CustomButtons/Button.js";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import Snackbar from "components/Snackbar/Snackbar.js";
 
@@ -166,15 +163,6 @@ export default function ReportOverview() {
                                 ]
                             }/>
                     </CardBody>
-                    <IconButton 
-                        style={
-                            {
-                                marginRight: "4vw",
-                                alignSelf: "flex-end"
-                            }
-                    }>
-                        <Icon fontSize="large" className="fa fa-plus-circle" color="primary"/>
-                    </IconButton>
                 </Card>
 
             </GridItem>
@@ -191,30 +179,11 @@ export default function ReportOverview() {
                         }>Untertitel</p>
                     </CardHeader>
                     <CardBody>
-
-                        <TodoApp/>
+                        <EditableTableReport/>
                     </CardBody>
-                    <IconButton onClick={handleFilePicker}
-                        style={
-                            {
-                                marginRight: "4vw",
-                                alignSelf: "flex-end"
-                            }
-                    }>
-                        <Icon fontSize="large" className="fa fa-plus-circle" color="primary"/>
-                    </IconButton>
                 </Card>
-
-
             </GridItem>
-            <TodoApp/>
-            <MaterialTableDemo/>
-
+            <UploadFile/>
         </GridContainer>
-
-
     );
 }
-
-
-// ReactDOM.render(<FileDialogue />, document.getElementById("app"));

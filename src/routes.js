@@ -31,8 +31,7 @@ import Language from "@material-ui/icons/Language";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
-import ReportOverview from "views/TableList/TableList.js";
-// import MaterialTableDemo from "views/Test/Test.js";
+import ReportOverview from "views/ReportOverview/ReportOverview.js";
 import Emergency from "views/Emergency/Emergency.js";
 import Typography from "views/Typography/Typography.js";
 import Icons from "views/Icons/Icons.js";
