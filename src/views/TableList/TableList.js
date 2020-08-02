@@ -76,7 +76,7 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function TableList() {
+export default function ReportOverview() {
     const [fileName, setFileName] = React.useState();
     const [selectedFile, setSelectedFile] = React.useState();
 
@@ -176,13 +176,18 @@ export default function TableList() {
                     </IconButton>
                 </Card>
 
-                <MaterialTableDemo/>
             </GridItem>
+            <TodoApp/>
+            <MaterialTableDemo/>
+            
         </GridContainer>
+
 
     );
 }
 
+
+    
 
 
 

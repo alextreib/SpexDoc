@@ -18,7 +18,7 @@ export default function MaterialTableDemo() {
       {
         name: 'Zerya Betül',
         surname: 'Baran',
-        birthYear: 2017,
+        birthYear: 2017, 
         birthCity: 34,
       },
     ],
