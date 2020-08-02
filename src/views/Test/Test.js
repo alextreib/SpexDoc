@@ -16,7 +16,7 @@ export default function MaterialTableDemo() {
     data: [
       { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
       {
-        name: 'Zerya Betül',
+        name: 'Zerya Betüld',
         surname: 'Baran',
         birthYear: 2017, 
         birthCity: 34,

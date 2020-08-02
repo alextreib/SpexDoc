@@ -50,10 +50,7 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 
-class MaterialTableDemo extends React.Component {
-
-    
-
+class TodoApp extends React.Component {
 
     constructor(props) {
         super(props);
@@ -67,7 +64,7 @@ class MaterialTableDemo extends React.Component {
               {
                 title: 'Birth Place',
                 field: 'birthCity',
-                lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
+                lookup: { 34: 'İstanbuld', 63: 'Şanlıurfa' },
               },
             ],
             data: [
@@ -146,5 +143,5 @@ class MaterialTableDemo extends React.Component {
     }
 }
 
-export default MaterialTableDemo;
+export default TodoApp;
 // ReactDOM.render(<TodoApp />, document.querySelector("#app"))

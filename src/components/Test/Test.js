@@ -38,6 +38,7 @@ class FileDialogue extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
+        
         <label>
           Upload file:
           <input type="file" ref={this.fileInput} />

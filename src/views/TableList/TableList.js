@@ -16,7 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 
 import MaterialTableDemo from "components/Test/Test.js";
-
+import MaterialTable from 'material-table';
 
 
 import AddAlert from "@material-ui/icons/AddAlert";
@@ -166,29 +166,55 @@ export default function ReportOverview() {
                                 ]
                             }/>
                     </CardBody>
-                    <IconButton style={
-                        {
-                            marginRight: "4vw",
-                            alignSelf: "flex-end"
-                        }
+                    <IconButton 
+                        style={
+                            {
+                                marginRight: "4vw",
+                                alignSelf: "flex-end"
+                            }
                     }>
                         <Icon fontSize="large" className="fa fa-plus-circle" color="primary"/>
                     </IconButton>
                 </Card>
 
             </GridItem>
+            <GridItem xs={12}
+                sm={12}
+                md={12}>
+                <Card>
+                    <CardHeader color="primary">
+                        <h4 className={
+                            classes.cardTitleWhite
+                        }>Allergologie</h4>
+                        <p className={
+                            classes.cardCategoryWhite
+                        }>Untertitel</p>
+                    </CardHeader>
+                    <CardBody>
+
+                        <TodoApp/>
+                    </CardBody>
+                    <IconButton onClick={handleFilePicker}
+                        style={
+                            {
+                                marginRight: "4vw",
+                                alignSelf: "flex-end"
+                            }
+                    }>
+                        <Icon fontSize="large" className="fa fa-plus-circle" color="primary"/>
+                    </IconButton>
+                </Card>
+
+
+            </GridItem>
             <TodoApp/>
             <MaterialTableDemo/>
-            
+
         </GridContainer>
 
 
     );
 }
-
-
-    
-
 
 
 // ReactDOM.render(<FileDialogue />, document.getElementById("app"));
