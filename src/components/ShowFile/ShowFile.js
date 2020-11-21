@@ -16,14 +16,13 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 
 import Dialog from "@material-ui/core/Dialog";
+import LoginAlert from "components/LoginAlert/LoginAlert.js";
+
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import CloseIcon from "@material-ui/icons/Close";
 
-import ModalFile from "components/ModalFile/ModalFile.js";
-
-// const { FloatingActionButton, SvgIcon, MuiThemeProvider, getMuiTheme } = MaterialUI;
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
 import AddIcon from "@material-ui/icons/Add";
@@ -82,68 +81,62 @@ const DialogActions = withStyles((theme) => ({
 class ShowFile extends React.Component {
   constructor(props) {
     super(props);
-    const script = document.createElement("script");
 
+    // Integrate script
+    const script = document.createElement("script");
     script.src =
       "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js";
     script.async = true;
-
     document.body.appendChild(script);
-    // highlight-range{3}
-    this.handleSubmit = this.handleSubmit.bind(this);
-    // this.fileInput = React.createRef();
-    // Data pipeline to child class ModalFile
-    this.propName = "testName";
-    // this.child = React.createRef();
 
     this.state = {
       open: false,
+      displayLogin: false,
     };
   }
 
-  openModal = () => {
-    // this.state.open=true;
-    this.setState({ open: true });
+  handleClick = () => {
+    console.log("parent handleClick");
   };
+
+  loginFirst = () => {
+    this.setState({
+      displayLogin: true,
+    });
+  };
+
+  checkUser = () => {
+    var user = firebase.auth().currentUser;
+    console.log(user);
+
+    if (user) {
+      // User is signed in.
+      return true;
+    } else {
+      // No user is signed in.
+      this.loginFirst();
+      return false;
+    }
+  };
+
+  openModal = () => {
+    if (this.checkUser() == true) {
+      this.setState({ open: true });
+    }
+  };
+
   handleClose = () => {
     this.setState({ open: false });
   };
 
-  onChangeHandler = (event) => {
-    // this.child.current.openModal(event);
-
-    console.log("fired");
-    console.log(this.propName);
-  };
-
-  handleSubmit(event) {
-    // highlight-range{3}
-    event.preventDefault();
-
-    console.log("fired");
-
-    var fileToUpload = event.target.files[0];
-    var fileName = fileToUpload.name;
-
-    console.log(fileToUpload);
-    alert(`Uploaded file - ${fileName}`);
-
-    // Create a root reference
-    var storageRef = firebase.storage().ref();
-
-    var uploadTask = storageRef
-      .child(fileName)
-      .put(fileToUpload)
-      .then(function (snapshot) {
-        console.log("Uploaded file!");
-      });
-  }
+  onChangeHandler = (event) => {};
 
   render() {
     const { classes } = this.props;
 
     return (
       <Card className={classes.root2}>
+        <LoginAlert stateLogin={this.state} />
         <CardActionArea onClick={this.openModal}>
           <CardMedia
             component="img"
@@ -201,7 +194,6 @@ class ShowFile extends React.Component {
                 Therapie
               </Typography>
               <Typography variant="body1" gutterBottom>
-                
                 Es wurde eine Hyposensibilisierung durchgeführt. Keine weiteren
                 Komplikationen bekannt.,
               </Typography>

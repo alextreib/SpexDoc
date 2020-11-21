@@ -5,8 +5,7 @@ import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/firestore";
 import { makeStyles } from "@material-ui/core/styles";
-import { withStyles } from '@material-ui/core/styles';
-
+import { withStyles } from "@material-ui/core/styles";
 
 // const { FloatingActionButton, SvgIcon, MuiThemeProvider, getMuiTheme } = MaterialUI;
 import IconButton from "@material-ui/core/IconButton";
@@ -16,6 +15,7 @@ import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
 
 import PropTypes from "prop-types";
+import LoginAlert from "components/LoginAlert/LoginAlert.js";
 
 const styles = (theme) => ({
   // This group of buttons will be aligned to the right
@@ -40,23 +40,44 @@ class FileDialogue extends React.Component {
     // highlight-range{3}
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.fileInput = React.createRef();
+
+    this.state = {
+      displayLogin: false,
+    };
   }
 
-  onChangeHandler = (event) => {
-    console.log("fired");
-    console.log(event.target.files[0]);
+  loginFirst = () => {
+    this.setState({
+      displayLogin: true,
+    });
+  };
+
+  checkUser = () => {
+    var user = firebase.auth().currentUser;
+    console.log(user);
+
+    if (user) {
+      // User is signed in.
+      return true;
+    } else {
+      // No user is signed in.
+      this.loginFirst();
+      return false;
+    }
   };
 
   handleSubmit(event) {
-    // highlight-range{3}
-    event.preventDefault();
+      event.preventDefault();
+    if (this.checkUser() == false) {
+      return;
+    }
 
-    var fileToUpload=event.target.files[0];
-    var fileName=fileToUpload.name;
-
-    console.log(fileToUpload);
-    alert(`Uploaded file - ${fileName}`);
+    var fileToUpload = event.target.files[0];
+    if(fileToUpload==null)
+    {
+        return;
+    }
+    var fileName = fileToUpload.name;
 
     // Create a root reference
     var storageRef = firebase.storage().ref();
@@ -65,9 +86,15 @@ class FileDialogue extends React.Component {
       .child(fileName)
       .put(fileToUpload)
       .then(function (snapshot) {
-        console.log("Uploaded file!");
+        console.log("File uploaded");
+        console.log(snapshot);
+        snapshot.ref.getDownloadURL().then(function (downloadURL) {
+          // Push to server with profileID
+          console.log("File available at", downloadURL);
+        });
       });
 
+    console.log("finished");
   }
 
   render() {
@@ -85,6 +112,8 @@ class FileDialogue extends React.Component {
           />
 
           {/* Only button */}
+          <LoginAlert stateLogin={this.state} />
+
           <Fab
             color="primary"
             aria-label="add"
