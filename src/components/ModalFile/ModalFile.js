@@ -10,6 +10,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import CardMedia from "@material-ui/core/CardMedia";
 
+import PropTypes from "prop-types";
+
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -54,61 +56,85 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-export default function CustomizedDialogs() {
-  const [open, setOpen] = React.useState(false);
+class ModalFile extends React.Component {
+  constructor(props) {
+    super(props);
+    console.log(props.testProp)
+    this.testProp=props.testProp;
 
-  const handleClickOpen = () => {
-    setOpen(true);
+
+    this.state = {
+      open: false,
+    };
+  }
+
+  openModal() {
+    console.log(this.testProp);
+    this.setState({ open: true });
+    this.testProp="testuntenchanged";
   };
-  const handleClose = () => {
-    setOpen(false);
+  handleClose = () => {
+    this.setState({ open: false });
   };
 
-  return (
-    <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Open dialog
-      </Button>
-      <Dialog
-        fullWidth={true}
-        maxWidth={"xl"}
-        onClose={handleClose}
-        aria-labelledby="customized-dialog-title"
-        open={open}
-      >
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Befund
-        </DialogTitle>
-        <DialogContent dividers>
-          <CardMedia
-            component="img"
-            alt="Contemplative Reptile"
-            square
-            image="https://firebasestorage.googleapis.com/v0/b/spexdoc.appspot.com/o/digital-doctor.jpg?alt=media&token=8aaa0e5a-c75f-4047-9e39-c6a99e4de451"
-            title="Contemplative Reptile"
-          />
-          <Typography gutterBottom>
-            Es wurde eine Hyposensibilisierung
-            dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta
-            ac consectetur ac, vestibulum at eros.
-          </Typography>
-          <Typography gutterBottom>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et.
-            Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
-            auctor.
-          </Typography>
-          <Typography gutterBottom>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
-            cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
-            dui. Donec ullamcorper nulla non metus auctor fringilla.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button autoFocus onClick={handleClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
-  );
+  render() {
+    const { classes } = this.props;
+    return (
+      <div>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={this.openModal}
+        >
+          Open dialog
+        </Button>
+        <Dialog
+          fullWidth={true}
+          maxWidth={"xl"}
+          onClose={this.handleClose}
+          aria-labelledby="customized-dialog-title"
+          open={this.state.open}
+        >
+          <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
+            Befund
+          </DialogTitle>
+          <DialogContent dividers>
+            <CardMedia
+              component="img"
+              alt="Contemplative Reptile"
+              square
+              image="https://firebasestorage.googleapis.com/v0/b/spexdoc.appspot.com/o/digital-doctor.jpg?alt=media&token=8aaa0e5a-c75f-4047-9e39-c6a99e4de451"
+              title="Contemplative Reptile"
+            />
+            <Typography gutterBottom>
+              Es wurde eine Hyposensibilisierung dapibus ac facilisis in,
+              egestas eget quam. Morbi leo risus, porta ac consectetur ac,
+              vestibulum at eros.
+            </Typography>
+            <Typography gutterBottom>
+              Praesent commodo cursus magna, vel scelerisque nisl consectetur
+              et. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor
+              auctor.
+            </Typography>
+            <Typography gutterBottom>
+              Aenean lacinia bibendum nulla sed consectetur. Praesent commodo
+              cursus magna, vel scelerisque nisl consectetur et. Donec sed odio
+              dui. Donec ullamcorper nulla non metus auctor fringilla.
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={this.handleClose} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
+    );
+  }
 }
+
+ModalFile.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(ModalFile);

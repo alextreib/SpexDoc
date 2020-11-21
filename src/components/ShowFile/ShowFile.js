@@ -17,7 +17,6 @@ import Typography from '@material-ui/core/Typography';
 
 import ModalFile from "components/ModalFile/ModalFile.js";
 
-
 // const { FloatingActionButton, SvgIcon, MuiThemeProvider, getMuiTheme } = MaterialUI;
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
@@ -35,7 +34,6 @@ const styles = (theme) => ({
 });
 
 
-
 class ShowFile extends React.Component {
   constructor(props) {
     const script = document.createElement("script");
@@ -48,11 +46,18 @@ class ShowFile extends React.Component {
     // highlight-range{3}
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.fileInput = React.createRef();
+    // this.fileInput = React.createRef();
+    // Data pipeline to child class ModalFile
+    this.propName="testName";
+    // this.child = React.createRef();
+
   }
 
   onChangeHandler = (event) => {
+    // this.child.current.openModal(event);
+
     console.log("fired");
+    console.log(this.propName)
   };
 
   handleSubmit(event) {
@@ -83,8 +88,10 @@ class ShowFile extends React.Component {
     const { classes } = this.props;
 
     return (
+      
       <Card className={classes.root} >
-      <CardActionArea onClick={ this.onChangeHandler}>
+      <ModalFile testProp={this.propName}/>
+      <CardActionArea onClick={this.onChangeHandler}>
         <CardMedia 
           component="img"
           alt="Contemplative Reptile"
@@ -108,7 +115,6 @@ class ShowFile extends React.Component {
           Teilen
         </Button>
       </CardActions>
-      <ModalFile/>
     </Card>
     );
   }
