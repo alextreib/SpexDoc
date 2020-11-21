@@ -4,6 +4,7 @@ import ReactDOM from "react-dom";
 import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/firestore";
+import "firebase/auth";
 import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -16,6 +17,7 @@ import Fab from "@material-ui/core/Fab";
 
 import PropTypes from "prop-types";
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
+import Button from "components/CustomButtons/Button.js";
 
 const styles = (theme) => ({
   // This group of buttons will be aligned to the right
@@ -27,6 +29,26 @@ const styles = (theme) => ({
     marginLeft: -12,
   },
 });
+
+
+async function saveDocToUser(docLink) {
+  // event.preventDefault();
+  // this.checkUser();
+  console.log(docLink);
+
+  var defaultDatabase = firebase.firestore();
+  var user = firebase.auth().currentUser;
+  if (user == null) {
+    return;
+  }
+
+  const docRef = defaultDatabase.collection("userStorage").doc("docLinks");
+  var id = user.uid;
+
+  docRef.update({
+    [id]: firebase.firestore.FieldValue.arrayUnion(docLink)
+  });
+}
 
 class FileDialogue extends React.Component {
   constructor(props) {
@@ -52,9 +74,8 @@ class FileDialogue extends React.Component {
     });
   };
 
-  checkUser = () => {
+  checkUser() {
     var user = firebase.auth().currentUser;
-    console.log(user);
 
     if (user) {
       // User is signed in.
@@ -64,18 +85,22 @@ class FileDialogue extends React.Component {
       this.loginFirst();
       return false;
     }
-  };
+  }
 
-  handleSubmit(event) {
-      event.preventDefault();
+  testFunc()
+  {
+    console.log("test123");
+  }
+
+  async handleSubmit(event) {
+    event.preventDefault();
     if (this.checkUser() == false) {
       return;
     }
 
     var fileToUpload = event.target.files[0];
-    if(fileToUpload==null)
-    {
-        return;
+    if (fileToUpload == null) {
+      return;
     }
     var fileName = fileToUpload.name;
 
@@ -91,10 +116,10 @@ class FileDialogue extends React.Component {
         snapshot.ref.getDownloadURL().then(function (downloadURL) {
           // Push to server with profileID
           console.log("File available at", downloadURL);
+          // this.testFunc();
+         saveDocToUser(downloadURL);
         });
       });
-
-    console.log("finished");
   }
 
   render() {
@@ -113,6 +138,9 @@ class FileDialogue extends React.Component {
 
           {/* Only button */}
           <LoginAlert stateLogin={this.state} />
+          <Button autoFocus onClick={this.saveDocToUser} color="primary">
+            Close
+          </Button>
 
           <Fab
             color="primary"
