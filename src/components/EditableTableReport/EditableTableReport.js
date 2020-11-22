@@ -1,6 +1,13 @@
 import React from "react";
 import MaterialTable from "material-table";
 
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+import "firebase/database";
+
+import Button from "components/CustomButtons/Button.js";
+
 class EditableTableReport extends React.Component {
   constructor(props) {
     super(props);
@@ -8,70 +15,143 @@ class EditableTableReport extends React.Component {
     this.state = {
       columns: [
         { title: "Name", field: "name" },
-        { title: "Surname", field: "surname" },
-        { title: "Birth Year", field: "birthYear", type: "numeric" },
+        { title: "Vorname", field: "surname" },
+        { title: "Geburtsjahr", field: "birthYear" },
         {
-          title: "Birth Place",
+          title: "Geburtsort",
           field: "birthCity",
-          lookup: { 34: "İstanbuld", 63: "Şanlıurfa" },
         },
       ],
+      // Default data
       data: [
-        { name: "Mehmet", surname: "Baran", birthYear: 1987, birthCity: 63 },
         {
-          name: "Zerya Betül",
-          surname: "Baran",
-          birthYear: 2017,
-          birthCity: 34,
+          name: "Max",
+          surname: "Mustermann",
+          birthYear: "1995",
+          birthCity: "Berlin",
+        },
+        {
+          name: "Alexa",
+          surname: "Zimmer",
+          birthYear: "2002",
+          birthCity: "Hamburg",
         },
       ],
     };
+
+    
+    this.init= this.init.bind(this);
+    this.tableChanged = this.tableChanged.bind(this);
+    this.fetchTable = this.fetchTable.bind(this);
+    
+    this.init();
+  }
+
+  init()
+  {
+    this.fetchTable();
+  }
+  
+  // Is called when table is changed
+  tableChanged() {
+    // Working
+    console.log("table changed");
+
+    var user = firebase.auth().currentUser;
+    if (user == null) {
+      return;
+    }
+    var user_id = user.uid;
+    firebase
+      .database()
+      .ref("users/" + user_id)
+      .set([this.state.data]);
+    // this.updateTable();
+  }
+
+  // Fetch the table from Firebase (Original data)
+  fetchTable() {
+    //todo: Check login + call at beginning
+    console.log("update table");
+
+    var user = firebase.auth().currentUser;
+    if (user == null) {
+      return;
+    }
+    var user_id = user.uid;
+    // Reading
+    firebase
+      .database()
+      .ref("users/" + user_id)
+      .once("value")
+      .then((snapshot) => {
+        console.log(snapshot.val());
+        return snapshot.val();
+      })
+      .then((snapshot_data) => {
+        if (this.state.data != snapshot_data) {
+          this.setState({ data: snapshot_data[0] });
+        }
+      });
+  }
+
+  componentDidUpdate(prevProps) {
+    // Why do I need this?
+    // this.setState({ showFileParams: this.props.showFileParams });
   }
 
   render() {
     return (
-      <MaterialTable
-        title="Editable Example"
-        columns={this.state.columns}
-        data={this.state.data}
-        editable={{
-          onRowAdd: (newData) =>
-            new Promise((resolve) => {
-              setTimeout(() => {
-                resolve();
-                this.setState((prevState) => {
-                  const data = [...prevState.data];
-                  data.push(newData);
-                  return { ...prevState, data };
-                });
-              }, 600);
-            }),
-          onRowUpdate: (newData, oldData) =>
-            new Promise((resolve) => {
-              setTimeout(() => {
-                resolve();
-                if (oldData) {
+      <div>
+        <Button onClick={this.fetchTable} color="primary" autoFocus>
+          Magic
+        </Button>
+        <MaterialTable
+          title="Editable Example"
+          columns={this.state.columns}
+          data={this.state.data}
+          editable={{
+            onRowAdd: (newData) =>
+              new Promise((resolve) => {
+                setTimeout(() => {
+                  resolve();
                   this.setState((prevState) => {
                     const data = [...prevState.data];
-                    data[data.indexOf(oldData)] = newData;
+                    data.push(newData);
                     return { ...prevState, data };
                   });
-                }
-              }, 600);
-            }),
-          onRowDelete: (oldData) =>
-            new Promise((resolve) => {
-              setTimeout(() => {
-                resolve();
-                this.setState((prevState) => {
-                  const data = [...prevState.data];
-                  data.splice(data.indexOf(oldData), 1);
-                  return { ...prevState, data };
-                });
-              }, 600);
-            }),
-        }}
-      />
+                  this.tableChanged();
+                }, 600);
+              }),
+            onRowUpdate: (newData, oldData) =>
+              new Promise((resolve) => {
+                setTimeout(() => {
+                  resolve();
+                  if (oldData) {
+                    this.setState((prevState) => {
+                      const data = [...prevState.data];
+                      data[data.indexOf(oldData)] = newData;
+                      return { ...prevState, data };
+                    });
+                  }
+                  this.tableChanged();
+                }, 600);
+              }),
+            onRowDelete: (oldData) =>
+              new Promise((resolve) => {
+                setTimeout(() => {
+                  resolve();
+                  this.setState((prevState) => {
+                    const data = [...prevState.data];
+                    data.splice(data.indexOf(oldData), 1);
+                    return { ...prevState, data };
+                  });
+                  this.tableChanged();
+                }, 600);
+              }),
+          }}
+        />
+      </div>
     );
   }
 }
