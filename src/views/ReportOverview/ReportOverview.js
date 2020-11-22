@@ -12,6 +12,7 @@ import EditableTableReport from "components/EditableTableReport/EditableTableRep
 import CardBody from "components/Card/CardBody.js";
 import IconButton from "@material-ui/core/IconButton";
 import Icon from "@material-ui/core/Icon";
+import Button from "components/CustomButtons/Button.js";
 
 import UploadFile from "components/UploadFile/UploadFile.js";
 import ShowFile from "components/ShowFile/ShowFile.js";
@@ -24,6 +25,9 @@ import Snackbar from "components/Snackbar/Snackbar.js";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
 
 // import FileBrowser from "react-keyed-file-browser";
 
@@ -39,7 +43,6 @@ const firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-
 
 const styles = {
   cardCategoryWhite: {
@@ -74,11 +77,49 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-export default function ReportOverview() {
-  const [fileName, setFileName] = React.useState();
-  const [selectedFile, setSelectedFile] = React.useState();
+const RenderList = (props) => {
+  const animals = ["Dog", "Bird", "Cat", "Mouse", "Horse"];
 
-  const handleFilePicker = async (e) => {
+  return (
+    <ul>
+      {animals.map((animal) => (
+        <li>{animal}</li>
+      ))}
+    </ul>
+  );
+};
+
+class ReportOverview extends React.Component {
+  constructor(props) {
+    const script = document.createElement("script");
+
+    script.src =
+      "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js";
+    script.async = true;
+
+    document.body.appendChild(script);
+    // highlight-range{3}
+    super(props);
+
+    this.state = {
+      displayLogin: false,
+      showFiles: [],
+    };
+    // this.loadDoc();
+
+    const numbers = ["test1", "test2"];
+    console.log(numbers);
+    console.log(typeof numbers[0]);
+
+    this.listItems = numbers.map((docLink) => (
+      <ShowFile showFileParams={{ docLink: docLink }}></ShowFile>
+    ));
+    this.loadDoc = this.loadDoc.bind(this);
+
+    // console.log(listItems);
+  }
+
+  handleFilePicker = async (e) => {
     console.log("go");
     let file = e.target.files[0];
     // read data from the blob objects(file)
@@ -88,78 +129,138 @@ export default function ReportOverview() {
     // reads it finish with either success or failure
     reader.onloadend = () => {
       // reader.result is the result of the reading in base64 string
-      setFileName(file.name);
-      setSelectedFile(reader.result);
     };
     this.sendImageData();
   };
 
-  var mount = document.querySelectorAll("div.browser-mount");
+  async loadDoc() {
+    var defaultDatabase = firebase.firestore();
 
-  const classes = useStyles();
-  return (
-    <GridContainer>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Dermatologie</h4>
-            <p className={classes.cardCategoryWhite}>Untertitel</p>
-          </CardHeader>
-          <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["ID", "Arzt", "Datum", "Ort"]}
-              tableData={[
-                ["213aer", "Dr. Wilder", "24.03.2020", "Stuttgart"],
-                ["234aef", "Dr. med. Fechtele", "12.03.2020", "Berl ain"],
-              ]}
-            />
-          </CardBody>
-          <IconButton
-            style={{
-              marginRight: "4vw",
-              alignSelf: "flex-end",
-            }}
-          >
-            <Icon
-              fontSize="large"
-              className="fa fa-plus-circle"
-              color="primary"
-            />
-          </IconButton>
-        </Card>
-      </GridItem>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Allergologie</h4>
-            <p className={classes.cardCategoryWhite}>Untertitel</p>
-          </CardHeader>
-          <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["ID", "Arzt", "Datum", "Ort"]}
-              tableData={[
-                ["232efr", "Dr. Haut", "24.07.2020", "Offenburg"],
-                ["asj2ef", "Dr. med. Hornung", "12.03.2020", "Freiburg"],
-              ]}
-            />
-          </CardBody>
-        </Card>
-      </GridItem>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Allergologie</h4>
-            <p className={classes.cardCategoryWhite}>Untertitel</p>
-          </CardHeader>
-          <CardBody>
-            <EditableTableReport />
-            <ShowFile />
-            <UploadFile />
-          </CardBody>
-        </Card>
-      </GridItem>
-    </GridContainer>
-  );
+    var docRef = defaultDatabase.collection("userStorage").doc("docLinks");
+    console.log("docRef");
+    console.log(docRef);
+
+    var user = firebase.auth().currentUser;
+    if (user == null) {
+      return;
+    }
+    var user_id = user.uid;
+
+    var docLinks = [];
+
+    docRef
+      .get()
+      .then(function (doc) {
+        if (doc.exists) {
+          // debugger;
+          //   console.log("Document data:", doc.data()[user_id]);
+          //   console.log("Document data:", doc.data().user_id[0]);
+          //   var docLinks = doc.data();
+          //   console.log(docLinks);
+
+          //     var docLinks=doc.data()[user_id];
+          //   const numbers = [1, 2, 3, 4, 5];
+          //   ShowFiles = docLinks.map((docLink_URL) =>
+          //     <ShowFile showFileParams={{ docLink: docLink_URL }}>{docLink_URL}</ShowFile>
+          //   );
+
+          for (const docLink of doc.data()[user_id]) {
+            docLinks.push(docLink);
+          }
+          //   this.setState({ showFiles: docLinks });
+          //   this.showFiles=docLinks;
+          console.log("new state:");
+            console.log(docLinks);
+          //   this.forceUpdate();
+          return docLinks;
+        }
+      })
+
+      .then((docLinks) => {
+        console.log(docLinks);
+        this.setState({ showFiles: docLinks });
+      });
+  }
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Dermatologie</h4>
+              <p className={classes.cardCategoryWhite}>Untertitel</p>
+            </CardHeader>
+            <CardBody>
+              <Table
+                tableHeaderColor="primary"
+                tableHead={["ID", "Arzt", "Datum", "Ort"]}
+                tableData={[
+                  ["213aer", "Dr. Wilder", "24.03.2020", "Stuttgart"],
+                  ["234aef", "Dr. med. Fechtele", "12.03.2020", "Berl ain"],
+                ]}
+              />
+            </CardBody>
+            <IconButton
+              style={{
+                marginRight: "4vw",
+                alignSelf: "flex-end",
+              }}
+            >
+              <Icon
+                fontSize="large"
+                className="fa fa-plus-circle"
+                color="primary"
+              />
+            </IconButton>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Allergologie</h4>
+              <p className={classes.cardCategoryWhite}>Untertitel</p>
+            </CardHeader>
+            <CardBody>
+              <Table
+                tableHeaderColor="primary"
+                tableHead={["ID", "Arzt", "Datum", "Ort"]}
+                tableData={[
+                  ["232efr", "Dr. Haut", "24.07.2020", "Offenburg"],
+                  ["asj2ef", "Dr. med. Hornung", "12.03.2020", "Freiburg"],
+                ]}
+              />
+            </CardBody>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Allergologie</h4>
+              <p className={classes.cardCategoryWhite}>Untertitel</p>
+            </CardHeader>
+            <CardBody>
+              <EditableTableReport />
+              {this.state.showFiles.map((docLink) => (
+                <ShowFile key={docLink} showFileParams={{ docLink: "test" }} />
+              ))}
+
+              <UploadFile />
+              <Button onClick={this.loadDoc} color="primary" autoFocus>
+                loadDoc
+              </Button>
+            </CardBody>
+          </Card>
+        </GridItem>
+      </GridContainer>
+    );
+  }
 }
+
+ReportOverview.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(ReportOverview);

@@ -82,6 +82,8 @@ class ShowFile extends React.Component {
   constructor(props) {
     super(props);
 
+    this.showFileParams=props.showFileParams;
+
     // Integrate script
     const script = document.createElement("script");
     script.src =
@@ -92,7 +94,12 @@ class ShowFile extends React.Component {
     this.state = {
       open: false,
       displayLogin: false,
+      showFileParams: "Empty"
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    this.setState({ showFileParams: this.props.showFileParams });
   }
 
   handleClick = () => {
@@ -142,7 +149,7 @@ class ShowFile extends React.Component {
             component="img"
             alt="Contemplative Reptile"
             square
-            image="https://firebasestorage.googleapis.com/v0/b/spexdoc.appspot.com/o/digital-doctor.jpg?alt=media&token=8aaa0e5a-c75f-4047-9e39-c6a99e4de451"
+            image={this.state.showFileParams.docLink}
             title="Contemplative Reptile"
           />
           <CardContent>
@@ -181,7 +188,7 @@ class ShowFile extends React.Component {
                 component="img"
                 alt="Contemplative Reptile"
                 square
-                image="https://firebasestorage.googleapis.com/v0/b/spexdoc.appspot.com/o/digital-doctor.jpg?alt=media&token=8aaa0e5a-c75f-4047-9e39-c6a99e4de451"
+                image={this.state.showFileParams.docLink}
                 title="Contemplative Reptile"
               />
               <Typography variant="h3" gutterBottom>
