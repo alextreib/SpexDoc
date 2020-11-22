@@ -105,18 +105,9 @@ class ReportOverview extends React.Component {
       displayLogin: false,
       showFiles: [],
     };
-    // this.loadDoc();
 
-    const numbers = ["test1", "test2"];
-    console.log(numbers);
-    console.log(typeof numbers[0]);
-
-    this.listItems = numbers.map((docLink) => (
-      <ShowFile showFileParams={{ docLink: docLink }}></ShowFile>
-    ));
+    //Bindings
     this.loadDoc = this.loadDoc.bind(this);
-
-    // console.log(listItems);
   }
 
   handleFilePicker = async (e) => {
@@ -137,8 +128,6 @@ class ReportOverview extends React.Component {
     var defaultDatabase = firebase.firestore();
 
     var docRef = defaultDatabase.collection("userStorage").doc("docLinks");
-    console.log("docRef");
-    console.log(docRef);
 
     var user = firebase.auth().currentUser;
     if (user == null) {
@@ -152,30 +141,12 @@ class ReportOverview extends React.Component {
       .get()
       .then(function (doc) {
         if (doc.exists) {
-          // debugger;
-          //   console.log("Document data:", doc.data()[user_id]);
-          //   console.log("Document data:", doc.data().user_id[0]);
-          //   var docLinks = doc.data();
-          //   console.log(docLinks);
-
-          //     var docLinks=doc.data()[user_id];
-          //   const numbers = [1, 2, 3, 4, 5];
-          //   ShowFiles = docLinks.map((docLink_URL) =>
-          //     <ShowFile showFileParams={{ docLink: docLink_URL }}>{docLink_URL}</ShowFile>
-          //   );
-
           for (const docLink of doc.data()[user_id]) {
             docLinks.push(docLink);
           }
-          //   this.setState({ showFiles: docLinks });
-          //   this.showFiles=docLinks;
-          console.log("new state:");
-            console.log(docLinks);
-          //   this.forceUpdate();
           return docLinks;
         }
       })
-
       .then((docLinks) => {
         console.log(docLinks);
         this.setState({ showFiles: docLinks });
@@ -244,7 +215,7 @@ class ReportOverview extends React.Component {
             <CardBody>
               <EditableTableReport />
               {this.state.showFiles.map((docLink) => (
-                <ShowFile key={docLink} showFileParams={{ docLink: "test" }} />
+                <ShowFile showFileParams={{ docLink: docLink }} />
               ))}
 
               <UploadFile />

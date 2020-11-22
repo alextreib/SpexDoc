@@ -87,19 +87,18 @@ class FileDialogue extends React.Component {
     }
   }
 
-  testFunc()
-  {
-    console.log("test123");
-  }
-
   async handleSubmit(event) {
+    console.log("HandleSubmit");
+
     event.preventDefault();
     if (this.checkUser() == false) {
+        console.log("User not logged in - Abort.");
       return;
     }
 
     var fileToUpload = event.target.files[0];
     if (fileToUpload == null) {
+        console.log("No file selected - Abort.");
       return;
     }
     var fileName = fileToUpload.name;

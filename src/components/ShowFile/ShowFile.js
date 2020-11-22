@@ -82,8 +82,6 @@ class ShowFile extends React.Component {
   constructor(props) {
     super(props);
 
-    this.showFileParams=props.showFileParams;
-
     // Integrate script
     const script = document.createElement("script");
     script.src =
@@ -94,12 +92,13 @@ class ShowFile extends React.Component {
     this.state = {
       open: false,
       displayLogin: false,
-      showFileParams: "Empty"
+      showFileParams: props.showFileParams
     };
   }
 
   componentDidUpdate(prevProps) {
-    this.setState({ showFileParams: this.props.showFileParams });
+    // Why do I need this?
+    // this.setState({ showFileParams: this.props.showFileParams });
   }
 
   handleClick = () => {
