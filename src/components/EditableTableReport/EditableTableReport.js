@@ -7,7 +7,6 @@ import "firebase/firestore";
 import "firebase/database";
 
 import Button from "components/CustomButtons/Button.js";
-
 class EditableTableReport extends React.Component {
   constructor(props) {
     super(props);
@@ -38,7 +37,6 @@ class EditableTableReport extends React.Component {
         },
       ],
     };
-
     
     this.init= this.init.bind(this);
     this.tableChanged = this.tableChanged.bind(this);
@@ -51,7 +49,7 @@ class EditableTableReport extends React.Component {
   {
     this.fetchTable();
   }
-  
+
   // Is called when table is changed
   tableChanged() {
     // Working
@@ -103,12 +101,14 @@ class EditableTableReport extends React.Component {
   render() {
     return (
       <div>
-        <Button onClick={this.fetchTable} color="primary" autoFocus>
-          Magic
-        </Button>
         <MaterialTable
-          title="Editable Example"
+          title=""
           columns={this.state.columns}
+          options={{
+            headerStyle: {
+              color: '#9c27b0'
+            }
+          }}
           data={this.state.data}
           editable={{
             onRowAdd: (newData) =>
