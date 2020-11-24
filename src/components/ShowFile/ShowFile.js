@@ -24,6 +24,8 @@ import MuiDialogActions from "@material-ui/core/DialogActions";
 import CloseIcon from "@material-ui/icons/Close";
 
 import IconButton from "@material-ui/core/IconButton";
+// import Button from "@material-ui/core/Button";
+
 import Icon from "@material-ui/core/Icon";
 import AddIcon from "@material-ui/icons/Add";
 
@@ -32,7 +34,15 @@ import Fab from "@material-ui/core/Fab";
 import PropTypes from "prop-types";
 
 const styles = (theme) => ({
-  root: {
+  card: {
+    maxWidth: 345,
+    marginBottom: 100,
+    paddingBottom: theme.spacing(1),
+  },
+  media: {
+    height: 140,
+  },
+  dialogtitle: {
     margin: 0,
     padding: theme.spacing(2),
   },
@@ -42,15 +52,16 @@ const styles = (theme) => ({
     top: theme.spacing(1),
     color: theme.palette.grey[500],
   },
-  root2: {
-    maxWidth: 345,
-  },
 });
 
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
-    <MuiDialogTitle disableTypography className={classes.root} {...other}>
+    <MuiDialogTitle
+      disableTypography
+      className={classes.dialogtitle}
+      {...other}
+    >
       <Typography variant="h6">{children}</Typography>
       {onClose ? (
         <IconButton
@@ -83,27 +94,16 @@ class ShowFile extends React.Component {
     super(props);
 
     // Integrate script
-    const script = document.createElement("script");
-    script.src =
-      "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js";
-    script.async = true;
-    document.body.appendChild(script);
-
     this.state = {
       open: false,
       displayLogin: false,
-      showFileParams: props.showFileParams
+      showFileParams: props.showFileParams,
     };
   }
 
   componentDidUpdate(prevProps) {
-    // Why do I need this?
-    // this.setState({ showFileParams: this.props.showFileParams });
+    this.setState({ showFileParams: this.props.showFileParams });
   }
-
-  handleClick = () => {
-    console.log("parent handleClick");
-  };
 
   loginFirst = () => {
     this.setState({
@@ -127,98 +127,96 @@ class ShowFile extends React.Component {
 
   openModal = () => {
     if (this.checkUser() == true) {
-      this.setState({ open: true });
+      // this.setState({ open: false });
     }
+  };
+
+  removeFile = () => {
+    console.log("Remove file");
+  };
+
+  magicFunc = () => {
+    console.log("magic func");
   };
 
   handleClose = () => {
     this.setState({ open: false });
   };
 
-  onChangeHandler = (event) => {};
-
   render() {
     const { classes } = this.props;
 
     return (
-      <Card className={classes.root2}>
+      <Card className={classes.card}>
         <LoginAlert stateLogin={this.state} />
         <CardActionArea onClick={this.openModal}>
           <CardMedia
+            className={classes.media}
             component="img"
             alt="Contemplative Reptile"
-            square
             image={this.state.showFileParams.docLink}
             title="Contemplative Reptile"
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
-              Dr. Wilder
+              Befund Nr.
             </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
+            {/* <Typography variant="body2" color="textSecondary" component="p">
               20.11.2020
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
               Stuttgart
-            </Typography>
+            </Typography> */}
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" align="center" color="primary">
-            Teilen
+          <Button onClick={this.removeFile} style={{ marginLeft: "auto", backgroundColor: "darkred" }}>
+            Remove
+          </Button>
+          <Button onClick={this.magicFunc} style={{ marginLeft: "auto" }}>
+            Details
           </Button>
         </CardActions>
-        <div>
-          <Dialog
-            fullWidth={true}
-            maxWidth={"xl"}
-            onClose={this.handleClose}
-            aria-labelledby="customized-dialog-title"
-            open={this.state.open}
-          >
-            <DialogTitle
-              id="customized-dialog-title"
-              onClose={this.handleClose}
-            >
-              Befund
-            </DialogTitle>
-            <DialogContent dividers>
-              <CardMedia
-                component="img"
-                alt="Contemplative Reptile"
-                square
-                image={this.state.showFileParams.docLink}
-                title="Contemplative Reptile"
-              />
-              <Typography variant="h3" gutterBottom>
-                Diagnose
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Allergie festgestellt.
-              </Typography>
-              <Typography variant="h3" gutterBottom>
-                Therapie
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Es wurde eine Hyposensibilisierung durchgeführt. Keine weiteren
-                Komplikationen bekannt.,
-              </Typography>
-              <Typography
-                variant="h4"
-                component="h2"
-                align="center"
-                gutterBottom
-              >
-                18.11.2020, Dr. Wilder
-              </Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button autoFocus onClick={this.handleClose} color="primary">
-                Close
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
+        <Dialog
+          fullWidth={true}
+          maxWidth={"xl"}
+          onClose={this.handleClose}
+          aria-labelledby="customized-dialog-title"
+          open={this.state.open}
+        >
+          <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
+            Befund
+          </DialogTitle>
+          <DialogContent dividers>
+            <CardMedia
+              component="img"
+              alt="Contemplative Reptile"
+              image={this.state.showFileParams.docLink}
+              title="Contemplative Reptile"
+            />
+            {/* <Typography variant="h3" gutterBottom>
+              Diagnose
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Allergie festgestellt.
+            </Typography>
+            <Typography variant="h3" gutterBottom>
+              Therapie
+            </Typography>
+            <Typography variant="body1" gutterBottom>
+              Es wurde eine Hyposensibilisierung durchgeführt. Keine weiteren
+              Komplikationen bekannt.,
+            </Typography>
+            <Typography variant="h4" component="h2" align="center" gutterBottom>
+              18.11.2020, Dr. Wilder
+            </Typography> */}
+          </DialogContent>
+          <DialogActions>
+            <Button autoFocus onClick={this.handleClose} color="primary">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Card>
     );
   }

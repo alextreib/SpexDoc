@@ -21,6 +21,7 @@ import MaterialTable from "material-table";
 import AddAlert from "@material-ui/icons/AddAlert";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import Snackbar from "components/Snackbar/Snackbar.js";
+import Grid from "@material-ui/core/Grid";
 
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -57,6 +58,14 @@ const styles = {
       color: "#FFFFFF",
     },
   },
+  fab: {
+    margin: 0,
+    top: "auto",
+    right: 20,
+    bottom: 20,
+    left: "auto",
+    position: "fixed",
+  },
   cardTitleWhite: {
     color: "#FFFFFF",
     marginTop: "0px",
@@ -75,30 +84,8 @@ const styles = {
   ref: "https://google.de",
 };
 
-const useStyles = makeStyles(styles);
-
-const RenderList = (props) => {
-  const animals = ["Dog", "Bird", "Cat", "Mouse", "Horse"];
-
-  return (
-    <ul>
-      {animals.map((animal) => (
-        <li>{animal}</li>
-      ))}
-    </ul>
-  );
-};
-
 class ReportOverview extends React.Component {
   constructor(props) {
-    const script = document.createElement("script");
-
-    script.src =
-      "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js";
-    script.async = true;
-
-    document.body.appendChild(script);
-    // highlight-range{3}
     super(props);
 
     this.state = {
@@ -108,6 +95,8 @@ class ReportOverview extends React.Component {
 
     //Bindings
     this.loadDoc = this.loadDoc.bind(this);
+
+    this.loadDoc();
   }
 
   handleFilePicker = async (e) => {
@@ -125,6 +114,7 @@ class ReportOverview extends React.Component {
   };
 
   async loadDoc() {
+    console.log("loadDoc");
     var defaultDatabase = firebase.firestore();
 
     var docRef = defaultDatabase.collection("userStorage").doc("docLinks");
@@ -161,67 +151,21 @@ class ReportOverview extends React.Component {
         <GridItem xs={12} sm={12} md={12}>
           <Card>
             <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Dermatologie</h4>
-              <p className={classes.cardCategoryWhite}>Untertitel</p>
+              <h4 className={classes.cardTitleWhite}>Hochgeladene Befunde</h4>
+              <p className={classes.cardCategoryWhite}>
+                Verwalte und teile deine Befunde
+              </p>
             </CardHeader>
             <CardBody>
-              <Table
-                tableHeaderColor="primary"
-                tableHead={["ID", "Arzt", "Datum", "Ort"]}
-                tableData={[
-                  ["213aer", "Dr. Wilder", "24.03.2020", "Stuttgart"],
-                  ["234aef", "Dr. med. Fechtele", "12.03.2020", "Berl ain"],
-                ]}
-              />
-            </CardBody>
-            <IconButton
-              style={{
-                marginRight: "4vw",
-                alignSelf: "flex-end",
-              }}
-            >
-              <Icon
-                fontSize="large"
-                className="fa fa-plus-circle"
-                color="primary"
-              />
-            </IconButton>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Allergologie</h4>
-              <p className={classes.cardCategoryWhite}>Untertitel</p>
-            </CardHeader>
-            <CardBody>
-              <Table
-                tableHeaderColor="primary"
-                tableHead={["ID", "Arzt", "Datum", "Ort"]}
-                tableData={[
-                  ["232efr", "Dr. Haut", "24.07.2020", "Offenburg"],
-                  ["asj2ef", "Dr. med. Hornung", "12.03.2020", "Freiburg"],
-                ]}
-              />
-            </CardBody>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Allergologie</h4>
-              <p className={classes.cardCategoryWhite}>Untertitel</p>
-            </CardHeader>
-            <CardBody>
-              <EditableTableReport />
-              {this.state.showFiles.map((docLink) => (
-                <ShowFile showFileParams={{ docLink: docLink }} />
-              ))}
+              <Grid container>
+                {this.state.showFiles.map((docLink) => (
+                  <Grid key={docLink} item md={6}>
+                    <ShowFile showFileParams={{ docLink: docLink }} />
+                  </Grid>
+                ))}
+              </Grid>
 
               <UploadFile />
-              <Button onClick={this.loadDoc} color="primary" autoFocus>
-                loadDoc
-              </Button>
             </CardBody>
           </Card>
         </GridItem>

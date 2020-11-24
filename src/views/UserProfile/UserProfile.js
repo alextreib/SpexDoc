@@ -12,12 +12,18 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import Switch from '@material-ui/core/Switch';
 
-import avatar from "assets/img/faces/marc.jpg";
+import LoginAlert from "components/LoginAlert/LoginAlert.js";
+
+import avatar from "assets/img/faces/profile_white.png";
 
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = {
   cardCategoryWhite: {
@@ -41,62 +47,78 @@ const styles = {
 const useStyles = makeStyles(styles);
 
 // Display Login Screen here -> Login from Profile NavBar should also point here
+class UserProfile extends React.Component {
+  constructor(props) {
+    super(props);
 
-export default function UserProfile() {
-  const classes = useStyles();
-  const [profileActive, setProfile] = React.useState(null);
-  var [email, setEmail] = React.useState("");
-  var [firstName, setfirstName] = React.useState("");
+    // const [profileActive, setProfile] = React.useState(null);
+    // var [email, setEmail] = React.useState("");
+    // var [firstName, setfirstName] = React.useState("");
 
-  const handleLoginProfile = () => {
-    var provider = new firebase.auth.GoogleAuthProvider();
+    this.state = {
+      email: "",
+      firstName: "",
+      lastName: "",
+      plz: "",
+      city: "",
+      street: "",
+      aboutMe: "",
+    };
+  }
 
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then(function (result) {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        var token = result.credential.accessToken;
-        // The signed-in user info.
-        var user = result.user;
+  // handleLoginProfile = () => {
+  //   var provider = new firebase.auth.GoogleAuthProvider();
 
-        setProfile(user);
-        setEmail(user.email);
-        setfirstName(user.displayName);
-        console.log(user);
-        console.log("user logged in");
-        // window.user = user;
-        // ...
-      })
-      .catch(function (error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // The email of the user's account used.
-        var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        var credential = error.credential;
-        console.log("error: " + errorCode + ":" + errorMessage);
-        // ...
-      });
+  //   firebase
+  //     .auth()
+  //     .signInWithPopup(provider)
+  //     .then(function (result) {
+  //       // This gives you a Google Access Token. You can use it to access the Google API.
+  //       var token = result.credential.accessToken;
+  //       // The signed-in user info.
+  //       var user = result.user;
+
+  //       // setProfile(user);
+  //       this.setState({ email: user.email });
+  //       this.setState({ firstName: user.displayName });
+
+  //       console.log(user);
+  //       console.log("user logged in");
+  //       // window.user = user;
+  //       // ...
+  //     })
+  //     .catch(function (error) {
+  //       // Handle Errors here.
+  //       var errorCode = error.code;
+  //       var errorMessage = error.message;
+  //       // The email of the user's account used.
+  //       var email = error.email;
+  //       // The firebase.auth.AuthCredential type that was used.
+  //       var credential = error.credential;
+  //       console.log("error: " + errorCode + ":" + errorMessage);
+  //       // ...
+  //     });
+  // };
+
+  // Nice function: Sets states automatically 
+  handleChange(property, event) {
+    console.log("handleChange")
+var changedValue=event.target.value;
+    this.setState({ [property]: changedValue });
   };
 
-  var handleChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  var updateProf = () => {
+  updateProf = () => {
     console.log("updateProf");
 
     var user = firebase.auth().currentUser;
-    
+
     console.log(user);
     // updateProfile()
     // Updates the user attributes:
     user
       .updateProfile({
-        email: email,
-        displayName: firstName,
+        email: this.state.email,
+        displayName: this.state.firstName,
         // photoURL: "https://example.com/jane-q-user/profile.jpg",
       })
       .then(
@@ -113,134 +135,153 @@ export default function UserProfile() {
       );
   };
 
-  return (
-    <div>
-      <Button onClick={handleLoginProfile} color="primary">
-        Login
-      </Button>
-
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={8}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
-              <p className={classes.cardCategoryWhite}>Complete your profile</p>
-            </CardHeader>
-            <CardBody>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
+  render() {
+    const { classes } = this.props;
+    return (
+      <div>
+        <GridContainer>
+          <GridItem xs={12} sm={12} md={8}>
+            <Card>
+              <CardHeader color="primary">
+                <h4 className={classes.cardTitleWhite}>Edit Profil</h4>
+                <p className={classes.cardCategoryWhite}>
+                  Complete your profile
+                </p>
+              </CardHeader>
+              <CardBody>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={4}>
+                    <CustomInput
+                      labelText="Email"
+                      id="email"
+                      inputProps={{
+                        onChange: (e) => this.handleChange("email", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                        color: "secondary",
+                      }}
+                      />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={4}>
+                    <CustomInput
+                      labelText="Vorname"
+                      id="firstName"
+                      inputProps={{
+                        onChange: (e) => this.handleChange("firstName", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                    />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
-                    labelText="Email"
-                    id="email-address"
-                    inputProps={{
-                      onChange: handleChange,
-                      value: email,
-                    }}
-                    formControlProps={{
-                      fullWidth: true,
-                      color: "secondary",
-                    }}
-                  ></CustomInput>
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
+                      labelText="Nachname"
+                      id="lastName"
+                      inputProps={{
+                        onChange: (e) => this.handleChange("lastName", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                        color: "secondary",
+                      }}
+                      />
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
-                    labelText="Vorname"
-                    id="first-name"
-                    inputProps={{
-                      onChange: handleChange,
-                      value: email,
-                    }}
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
+                      labelText="Postleitzahl"
+                      id="plz"
+                      inputProps={{
+                        onChange: (e) => this.handleChange("plz", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                        color: "secondary",
+                      }}
+                      />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
-                    labelText="Nachname"
-                    id="last-name"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
+                      labelText="Wohnort"
+                      id="city"
+                      inputProps={{
+                        onChange: (e) => this.handleChange("city", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                        color: "secondary",
+                      }}
+                      />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={4}>
                   <CustomInput
-                    labelText="Postleitzahl"
-                    id="postal-code"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Wohnort"
-                    id="city"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Land"
-                    id="country"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                  <InputLabel style={{ color: "#AAAAAA" }}>About me</InputLabel>
-                  <CustomInput
-                    labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
-                    id="about-me"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    inputProps={{
-                      multiline: true,
-                      rows: 5,
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-            </CardBody>
-            <CardFooter>
-              <Button color="primary" onClick={updateProf} round>
-                Update Profile
-              </Button>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card profile>
-            <CardAvatar profile>
-              <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                <img src={avatar} alt="..." />
-              </a>
-            </CardAvatar>
-            <CardBody profile>
-              <h6 className={classes.cardCategory}>CEO / CO-FOUNDER</h6>
-              <h4 className={classes.cardTitle}>Alec Thompson</h4>
-              <p className={classes.description}>
-                Don{"'"}t be scared of the truth because we need to restart the
-                human foundation in truth And I love you like Kanye loves Kanye
-                I love Rick Owens’ bed design but the back is...
-              </p>
-              <Button color="primary" onClick={updateProf} round>
-                Follow
-              </Button>
-            </CardBody>
-          </Card>
-        </GridItem>
-
-      </GridContainer>
-    </div>
-  );
+                      labelText="Straße"
+                      id="street"
+                      inputProps={{
+                        onChange: (e) => this.handleChange("street", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                        color: "secondary",
+                      }}
+                      />
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <CustomInput
+                      labelText="Über mich"
+                      id="aboutMe"
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                      inputProps={{
+                        onChange: (e) => this.handleChange("aboutMe", e),
+                        multiline: true,
+                        rows: 5,
+                      }}
+                    />
+                  </GridItem>
+                </GridContainer>
+              </CardBody>
+              <CardFooter>
+                <Button color="primary" onClick={this.updateProf} round>
+                  Speichern
+                </Button>
+              </CardFooter>
+            </Card>
+          </GridItem>
+          <GridItem xs={12} sm={12} md={4}>
+            <Card profile>
+              <CardAvatar profile>
+                <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                  <img src={avatar} alt="..." />
+                </a>
+              </CardAvatar>
+              <CardBody profile>
+                <h6 className={classes.cardCategory}>Patient</h6>
+                <h4 className={classes.cardTitle}>{this.state.firstName} {this.state.lastName}</h4>
+                <h4 className={classes.cardTitle}>{this.state.city}</h4>
+                <p className={classes.description}>
+                {this.state.aboutMe}
+                </p>
+                <Button color="primary" onClick={this.updateProf} round>
+                  Share
+                </Button>
+              </CardBody>
+            </Card>
+          </GridItem>
+        </GridContainer>
+      </div>
+    );
+  }
 }
+
+UserProfile.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(UserProfile);

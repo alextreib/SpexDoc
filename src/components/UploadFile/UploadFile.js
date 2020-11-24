@@ -17,19 +17,26 @@ import Fab from "@material-ui/core/Fab";
 
 import PropTypes from "prop-types";
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
+import Notifications from "components/Notifications/Notifications.js";
 import Button from "components/CustomButtons/Button.js";
 
 const styles = (theme) => ({
   // This group of buttons will be aligned to the right
+  
   rightToolbar: {
-    marginLeft: "auto",
+    position: "relative",
+    minHeight:100
   },
   menuButton: {
     marginRight: 16,
     marginLeft: -12,
   },
+  fab: {
+    position:"absolute",
+    bottom: 15,
+    right: 15,
+  },
 });
-
 
 async function saveDocToUser(docLink) {
   // event.preventDefault();
@@ -46,31 +53,28 @@ async function saveDocToUser(docLink) {
   var id = user.uid;
 
   docRef.update({
-    [id]: firebase.firestore.FieldValue.arrayUnion(docLink)
+    [id]: firebase.firestore.FieldValue.arrayUnion(docLink),
   });
 }
 
 class FileDialogue extends React.Component {
   constructor(props) {
-    const script = document.createElement("script");
-
-    script.src =
-      "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js";
-    script.async = true;
-
-    document.body.appendChild(script);
-    // highlight-range{3}
     super(props);
+    // highlight-range{3}
     this.handleSubmit = this.handleSubmit.bind(this);
 
+    console.log("consturctor");
+    console.log(this.LoginAlert);
+
     this.state = {
-      displayLogin: false,
+      openLoginRequired: false,
+      openNotification: false,
     };
   }
 
   loginFirst = () => {
     this.setState({
-      displayLogin: true,
+      openLoginRequired: true,
     });
   };
 
@@ -87,18 +91,26 @@ class FileDialogue extends React.Component {
     }
   }
 
+  magicFunc = () => 
+  {
+    console.log("state changed in parent");
+    this.setState({
+      openNotification: true,
+    });
+  }
+
   async handleSubmit(event) {
     console.log("HandleSubmit");
 
     event.preventDefault();
     if (this.checkUser() == false) {
-        console.log("User not logged in - Abort.");
+      console.log("User not logged in - Abort.");
       return;
     }
 
     var fileToUpload = event.target.files[0];
     if (fileToUpload == null) {
-        console.log("No file selected - Abort.");
+      console.log("No file selected - Abort.");
       return;
     }
     var fileName = fileToUpload.name;
@@ -114,9 +126,9 @@ class FileDialogue extends React.Component {
         console.log(snapshot);
         snapshot.ref.getDownloadURL().then(function (downloadURL) {
           // Push to server with profileID
+          //todo: notification
           console.log("File available at", downloadURL);
-          // this.testFunc();
-         saveDocToUser(downloadURL);
+          saveDocToUser(downloadURL);
         });
       });
   }
@@ -126,30 +138,28 @@ class FileDialogue extends React.Component {
 
     return (
       <section className={classes.rightToolbar}>
-        <div>
-          <input
-            id="myInput"
-            type="file"
-            ref={(ref) => (this.myInput = ref)}
-            style={{ display: "none" }}
-            onChange={this.handleSubmit}
-          />
+        <LoginAlert loginState={this.state} />
+        <Notifications notifications={this.state} />
+        <input
+          id="myInput"
+          type="file"
+          ref={(ref) => (this.myInput = ref)}
+          style={{ display: "none" }}
+          onChange={this.handleSubmit}
+        />
 
-          {/* Only button */}
-          <LoginAlert stateLogin={this.state} />
-          <Button autoFocus onClick={this.saveDocToUser} color="primary">
-            Close
-          </Button>
-
-          <Fab
-            color="primary"
-            aria-label="add"
-            style={{ right: "0px" }}
-            onClick={(e) => this.myInput.click()}
-          >
-            <AddIcon />
-          </Fab>
-        </div>
+        {/* Only button */}
+        <Fab
+          className={classes.fab}
+          color="primary"
+          aria-label="add"
+          onClick={(e) => this.myInput.click()}
+        >
+          <AddIcon />
+        </Fab>
+        <Button onClick={this.magicFunc} color="primary" autoFocus>
+              Verstanden
+            </Button>
       </section>
     );
   }

@@ -19,6 +19,7 @@
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
+import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
 import BubbleChart from "@material-ui/icons/BubbleChart";
 import LocationOn from "@material-ui/icons/LocationOn";
 import Alarm from "@material-ui/icons/Alarm";
@@ -74,7 +75,7 @@ const dashboardRoutes = [
     path: "/typography",
     name: "Termine",
     rtlName: "طباعة",
-    icon: LibraryBooks,
+    icon: CalendarTodayIcon,
     component: Typography,
     layout: "/admin"
   },

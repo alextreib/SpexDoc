@@ -15,6 +15,8 @@ import Snackbar from "components/Snackbar/Snackbar.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import Switch from '@material-ui/core/Switch';
+
 
 const styles = {
   cardCategoryWhite: {
@@ -122,6 +124,12 @@ export default function Notifications() {
   };
   return (
     <Card>
+           <Switch
+        // checked={state.checkedA}
+        // onChange={handleChange}
+        name="checkedA"
+        inputProps={{ 'aria-label': 'secondary checkbox' }}
+      />
       <CardHeader color="primary">
         <h4 className={classes.cardTitleWhite}>Notifications</h4>
         <p className={classes.cardCategoryWhite}>

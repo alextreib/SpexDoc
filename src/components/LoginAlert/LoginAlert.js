@@ -15,22 +15,20 @@ class AlertDialog extends React.Component {
     };
   }
 
+  // Listens to own and assigned parent state
   componentDidUpdate(prevProps) {
+    // Is called when the corresponding state is changed in parent class (indirect trigger) 
     // Is also called a 2nd time when setState{open:true} is called inside this function
-    if (this.props.stateLogin.displayLogin == true) {
+    if (this.props.loginState.openLoginRequired == true) {
       console.log("Login required");
+      // Open Dialog
       this.setState({
         open: true,
       });
-      this.props.stateLogin.displayLogin = false;
+      // Reset it in parent class
+      this.props.loginState.openLoginRequired = false;
     }
   }
-
-  handleClick = () => {
-    this.setState({
-      open: true,
-    });
-  };
 
   handleClose = () => {
     this.setState({
