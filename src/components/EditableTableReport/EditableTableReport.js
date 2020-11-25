@@ -22,7 +22,7 @@ class EditableTableReport extends React.Component {
         },
       ],
       // Default data
-      data: [
+      data: [ //todo: remove [] and save [0] below?
         {
           name: "Max",
           surname: "Mustermann",

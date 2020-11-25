@@ -52,9 +52,6 @@ class AlertDialog extends React.Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleClose} color="primary" autoFocus>
-              Verstanden
-            </Button>
           </DialogActions>
         </Dialog>
       </div>

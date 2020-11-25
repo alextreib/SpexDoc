@@ -1,16 +1,12 @@
 import React from "react";
-import ReactDOM from "react-dom";
 
 import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/firestore";
 import "firebase/auth";
-import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
 
 // const { FloatingActionButton, SvgIcon, MuiThemeProvider, getMuiTheme } = MaterialUI;
-import IconButton from "@material-ui/core/IconButton";
-import Icon from "@material-ui/core/Icon";
 import AddIcon from "@material-ui/icons/Add";
 
 import Fab from "@material-ui/core/Fab";
@@ -20,58 +16,43 @@ import LoginAlert from "components/LoginAlert/LoginAlert.js";
 import Notifications from "components/Notifications/Notifications.js";
 import Button from "components/CustomButtons/Button.js";
 
-const styles = (theme) => ({
+const styles = () => ({
   // This group of buttons will be aligned to the right
-  
   rightToolbar: {
     position: "relative",
-    minHeight:100
+    minHeight: 100,
   },
   menuButton: {
     marginRight: 16,
     marginLeft: -12,
   },
   fab: {
-    position:"absolute",
+    position: "absolute",
     bottom: 15,
     right: 15,
   },
 });
 
-async function saveDocToUser(docLink) {
-  // event.preventDefault();
-  // this.checkUser();
-  console.log(docLink);
-
-  var defaultDatabase = firebase.firestore();
-  var user = firebase.auth().currentUser;
-  if (user == null) {
-    return;
-  }
-
-  const docRef = defaultDatabase.collection("userStorage").doc("docLinks");
-  var id = user.uid;
-
-  docRef.update({
-    [id]: firebase.firestore.FieldValue.arrayUnion(docLink),
-  });
-}
-
 class FileDialogue extends React.Component {
   constructor(props) {
     super(props);
-    // highlight-range{3}
-    this.handleSubmit = this.handleSubmit.bind(this);
-
-    console.log("consturctor");
-    console.log(this.LoginAlert);
 
     this.state = {
       openLoginRequired: false,
-      openNotification: false,
+      notificationProps: this.NotificationProps,
     };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.saveDocToUser = this.saveDocToUser.bind(this);
   }
 
+  // Structs
+  NotificationProps = {
+    openNotification: false,
+    message: "File Successfully uploaded",
+  };
+
+  // Functions
   loginFirst = () => {
     this.setState({
       openLoginRequired: true,
@@ -91,15 +72,17 @@ class FileDialogue extends React.Component {
     }
   }
 
-  magicFunc = () => 
-  {
+  magicFunc = () => {
     console.log("state changed in parent");
     this.setState({
-      openNotification: true,
+      notificationProps: {
+        openNotification: true,
+        message: "File successfully uploaded",
+      },
     });
-  }
+  };
 
-  async handleSubmit(event) {
+  handleSubmit = (event) => {
     console.log("HandleSubmit");
 
     event.preventDefault();
@@ -121,17 +104,42 @@ class FileDialogue extends React.Component {
     var uploadTask = storageRef
       .child(fileName)
       .put(fileToUpload)
-      .then(function (snapshot) {
+      .then((snapshot) => {
         console.log("File uploaded");
         console.log(snapshot);
-        snapshot.ref.getDownloadURL().then(function (downloadURL) {
+        snapshot.ref.getDownloadURL().then((downloadURL) => {
           // Push to server with profileID
-          //todo: notification
+
           console.log("File available at", downloadURL);
-          saveDocToUser(downloadURL);
+          this.saveDocToUser(downloadURL);
+          this.setState({
+            notificationProps: {
+              openNotification: true,
+              message: "File successfully uploaded",
+            },
+          });
         });
       });
-  }
+  };
+
+  saveDocToUser = (docLink) => {
+    // event.preventDefault();
+    // this.checkUser();
+    console.log(docLink);
+
+    var defaultDatabase = firebase.firestore();
+    var user = firebase.auth().currentUser;
+    if (user == null) {
+      return;
+    }
+
+    const docRef = defaultDatabase.collection("userStorage").doc("docLinks");
+    var id = user.uid;
+
+    docRef.update({
+      [id]: firebase.firestore.FieldValue.arrayUnion(docLink),
+    });
+  };
 
   render() {
     const { classes } = this.props;
@@ -139,7 +147,7 @@ class FileDialogue extends React.Component {
     return (
       <section className={classes.rightToolbar}>
         <LoginAlert loginState={this.state} />
-        <Notifications notifications={this.state} />
+        <Notifications notifications={this.state.notificationProps} />
         <input
           id="myInput"
           type="file"
@@ -153,13 +161,10 @@ class FileDialogue extends React.Component {
           className={classes.fab}
           color="primary"
           aria-label="add"
-          onClick={(e) => this.myInput.click()}
+          onClick={() => this.myInput.click()}
         >
           <AddIcon />
         </Fab>
-        <Button onClick={this.magicFunc} color="primary" autoFocus>
-              Verstanden
-            </Button>
       </section>
     );
   }

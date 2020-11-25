@@ -12,7 +12,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-import Switch from '@material-ui/core/Switch';
+import Switch from "@material-ui/core/Switch";
 
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
 
@@ -56,6 +56,7 @@ class UserProfile extends React.Component {
     // var [firstName, setfirstName] = React.useState("");
 
     this.state = {
+      userProfile:{
       email: "",
       firstName: "",
       lastName: "",
@@ -63,7 +64,13 @@ class UserProfile extends React.Component {
       city: "",
       street: "",
       aboutMe: "",
+      }
     };
+
+        //Bindings
+        this.loadDoc = this.loadDoc.bind(this);
+
+        this.loadDoc();
   }
 
   // handleLoginProfile = () => {
@@ -100,39 +107,74 @@ class UserProfile extends React.Component {
   //     });
   // };
 
-  // Nice function: Sets states automatically 
+  loadDoc() {
+    console.log("loadDoc userProfile");
+
+    var user = firebase.auth().currentUser;
+    if (user == null) {
+      return;
+    }
+    var user_id = user.uid;
+
+    var docRef = firebase.firestore().collection("userStorage").doc("userProfile_"+user_id);
+
+    docRef
+      .get()
+      .then((doc) =>  {
+        if (doc.exists) {
+          return doc.data();
+        }
+      })
+      .then((userProfile_in) => {
+        console.log(userProfile_in);
+
+        // this.setState({ userProfile:{city:"test"}});
+
+        // todo: assign properties
+        this.setState({ userProfile: userProfile_in });
+        console.log(this.state.userProfile);
+      });
+  }
+
+  // Nice function: Sets states automatically
   handleChange(property, event) {
-    console.log("handleChange")
-var changedValue=event.target.value;
-    this.setState({ [property]: changedValue });
-  };
+    console.log("handleChange");
+    var changedValue = event.target.value;
+
+    this.setState({ userProfile: { ...this.state.userProfile, [property]: changedValue} });
+  }
 
   updateProf = () => {
     console.log("updateProf");
 
-    var user = firebase.auth().currentUser;
+    this.saveDocToUser();
+  };
+  
+  saveDocToUser = () => {
+    // event.preventDefault();
+    // this.checkUser();
 
-    console.log(user);
-    // updateProfile()
-    // Updates the user attributes:
-    user
-      .updateProfile({
-        email: this.state.email,
-        displayName: this.state.firstName,
-        // photoURL: "https://example.com/jane-q-user/profile.jpg",
-      })
-      .then(
-        function () {
-          // Profile updated successfully!
-          // "Jane Q. User"
-          var displayName = user.displayName;
-          // "https://example.com/jane-q-user/profile.jpg"
-          var photoURL = user.photoURL;
-        },
-        function (error) {
-          // An error happened.
-        }
-      );
+    var user = firebase.auth().currentUser;
+    if (user == null) {
+      return;
+    }
+    var user_id = user.uid;
+
+    firebase
+    .firestore()
+    .collection("userStorage")
+    .doc("userProfile_"+user_id)
+    .set(this.state.userProfile);
+
+
+    // todo: All 
+  
+//   docRef.set({
+//     this.state.userProfile: 
+//     name: "Los Angeles",
+//     state: "CA",
+//     country: "USA"
+// })
   };
 
   render() {
@@ -155,19 +197,21 @@ var changedValue=event.target.value;
                       labelText="Email"
                       id="email"
                       inputProps={{
+                        value: this.state.userProfile.email,
                         onChange: (e) => this.handleChange("email", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
                         color: "secondary",
                       }}
-                      />
+                    />
                   </GridItem>
                   <GridItem xs={12} sm={12} md={4}>
                     <CustomInput
                       labelText="Vorname"
                       id="firstName"
                       inputProps={{
+                        value: this.state.userProfile.firstName,
                         onChange: (e) => this.handleChange("firstName", e),
                       }}
                       formControlProps={{
@@ -176,58 +220,62 @@ var changedValue=event.target.value;
                     />
                   </GridItem>
                   <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
+                    <CustomInput
                       labelText="Nachname"
                       id="lastName"
                       inputProps={{
+                        value: this.state.userProfile.lastName,
                         onChange: (e) => this.handleChange("lastName", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
                         color: "secondary",
                       }}
-                      />
+                    />
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
+                    <CustomInput
                       labelText="Postleitzahl"
                       id="plz"
                       inputProps={{
+                        value: this.state.userProfile.plz,
                         onChange: (e) => this.handleChange("plz", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
                         color: "secondary",
                       }}
-                      />
+                    />
                   </GridItem>
                   <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
+                    <CustomInput
                       labelText="Wohnort"
                       id="city"
                       inputProps={{
+                        value: this.state.userProfile.city,
                         onChange: (e) => this.handleChange("city", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
                         color: "secondary",
                       }}
-                      />
+                    />
                   </GridItem>
                   <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
+                    <CustomInput
                       labelText="Straße"
                       id="street"
                       inputProps={{
+                        value: this.state.userProfile.street,
                         onChange: (e) => this.handleChange("street", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
                         color: "secondary",
                       }}
-                      />
+                    />
                   </GridItem>
                 </GridContainer>
                 <GridContainer>
@@ -239,6 +287,7 @@ var changedValue=event.target.value;
                         fullWidth: true,
                       }}
                       inputProps={{
+                        value: this.state.userProfile.aboutMe,
                         onChange: (e) => this.handleChange("aboutMe", e),
                         multiline: true,
                         rows: 5,
@@ -263,11 +312,11 @@ var changedValue=event.target.value;
               </CardAvatar>
               <CardBody profile>
                 <h6 className={classes.cardCategory}>Patient</h6>
-                <h4 className={classes.cardTitle}>{this.state.firstName} {this.state.lastName}</h4>
-                <h4 className={classes.cardTitle}>{this.state.city}</h4>
-                <p className={classes.description}>
-                {this.state.aboutMe}
-                </p>
+                <h4 className={classes.cardTitle}>
+                  {this.state.userProfile.firstName} {this.state.userProfile.lastName}
+                </h4>
+                <h4 className={classes.cardTitle}>{this.state.userProfile.city}</h4>
+                <p className={classes.description}>{this.state.userProfile.aboutMe}</p>
                 <Button color="primary" onClick={this.updateProf} round>
                   Share
                 </Button>

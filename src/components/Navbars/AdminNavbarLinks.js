@@ -81,6 +81,7 @@ export default function AdminNavbarLinks() {
     handleCloseProfile();
   };
 
+  
   const handleLogoutProfile = () => {
     var provider = new firebase.auth.GoogleAuthProvider();
 
