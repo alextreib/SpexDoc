@@ -25,48 +25,81 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+
 const useStyles = makeStyles(styles);
 
-export default function AdminNavbarLinks() {
-  const classes = useStyles();
-  const [profileActive, setProfile] = React.useState(null);
-  const [openNotification, setOpenNotification] = React.useState(null);
-  const [openProfile, setOpenProfile] = React.useState(null);
-  const handleClickNotification = (event) => {
-    if (openNotification && openNotification.contains(event.target)) {
-      setOpenNotification(null);
+class AdminNavbarLinks extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      profileActive: null,
+      openNotification: null,
+      openProfile: null,
+    };
+
+    this.handleClickNotification = this.handleClickNotification.bind(this);
+    this.handleClickProfile = this.handleClickProfile.bind(this);
+    this.handleLoginProfile = this.handleLoginProfile.bind(this);
+  }
+
+  handleClickNotification = (event) => {
+    if (this.state.openNotification && this.state.openNotification.contains(event.target)) {
+      this.setOpenNotification(null);
     } else {
-      setOpenNotification(event.currentTarget);
-    }
-  };
-  const handleCloseNotification = () => {
-    setOpenNotification(null);
-  };
-  const handleClickProfile = (event) => {
-    if (openProfile && openProfile.contains(event.target)) {
-      setOpenProfile(null);
-    } else {
-      setOpenProfile(event.currentTarget);
+      this.setOpenNotification(event.currentTarget);
     }
   };
 
-  const handleLoginProfile = () => {
+  setProfile = (value) => {
+    this.setState({
+      profileActive: value,
+    });
+  };
+
+  setOpenNotification = (value) => {
+    this.setState({
+      openNotification: value,
+    });
+  };
+
+  setOpenProfile = (value) => {
+    this.setState({
+      openProfile: value,
+    });
+  };
+
+  handleCloseNotification = () => {
+    this.setOpenNotification(null);
+  };
+  handleClickProfile = (event) => {
+    if (this.state.openProfile && this.state.openProfile.contains(event.target)) {
+      this.setOpenProfile(null);
+    } else {
+      this.setOpenProfile(event.currentTarget);
+    }
+  };
+
+  handleLoginProfile = () => {
+    console.log("login process")
     var provider = new firebase.auth.GoogleAuthProvider();
 
     firebase
-      .auth()
+      .auth() 
       .signInWithPopup(provider)
-      .then(function (result) {
+      .then((result)=>  {
         // This gives you a Google Access Token. You can use it to access the Google API.
         var token = result.credential.accessToken;
         // The signed-in user info.
         var user = result.user;
-        setProfile(user);
+        this.setProfile(user);
         console.log("user logged in");
         // window.user = user;
         // ...
       })
-      .catch(function (error) {
+      .catch((error) => {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -78,11 +111,11 @@ export default function AdminNavbarLinks() {
         // ...
       });
 
-    handleCloseProfile();
+    this.handleCloseProfile();
   };
 
   
-  const handleLogoutProfile = () => {
+  handleLogoutProfile = () => {
     var provider = new firebase.auth.GoogleAuthProvider();
 
     var auth = firebase.auth();
@@ -100,193 +133,204 @@ export default function AdminNavbarLinks() {
         console.log("error while logging out");
         // An error happened.
       });
-    handleCloseProfile();
+    this.handleCloseProfile();
   };
 
-  const handleCloseProfile = () => {
-    setOpenProfile(null);
+  handleCloseProfile = () => {
+    this.setOpenProfile(null);
   };
 
-  return (
-    <div>
-      <div className={classes.searchWrapper}>
-        <CustomInput
-          formControlProps={{
-            className: classes.margin + " " + classes.search,
-          }}
-          inputProps={{
-            placeholder: "Search",
-            inputProps: {
-              "aria-label": "Search",
-            },
-          }}
-        />
-        <Button color="white" aria-label="edit" justIcon round>
-          <Search />
-        </Button>
-      </div>
-      <Button
-        color={window.innerWidth > 959 ? "transparent" : "white"}
-        justIcon={window.innerWidth > 959}
-        simple={!(window.innerWidth > 959)}
-        aria-label="Dashboard"
-        className={classes.buttonLink}
-      >
-        <Dashboard className={classes.icons} />
-        <Hidden mdUp implementation="css">
-          <p className={classes.linkText}>Dashboard</p>
-        </Hidden>
-      </Button>
-      <div className={classes.manager}>
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <div>
+        <div className={classes.searchWrapper}>
+          <CustomInput
+            formControlProps={{
+              className: classes.margin + " " + classes.search,
+            }}
+            inputProps={{
+              placeholder: "Search",
+              inputProps: {
+                "aria-label": "Search",
+              },
+            }}
+          />
+          <Button color="white" aria-label="edit" justIcon round>
+            <Search />
+          </Button>
+        </div>
         <Button
           color={window.innerWidth > 959 ? "transparent" : "white"}
           justIcon={window.innerWidth > 959}
           simple={!(window.innerWidth > 959)}
-          aria-owns={openNotification ? "notification-menu-list-grow" : null}
-          aria-haspopup="true"
-          onClick={handleClickNotification}
+          aria-label="Dashboard"
           className={classes.buttonLink}
         >
-          <Notifications className={classes.icons} />
-          <span className={classes.notifications}>4</span>
-          {/*todo: count notifications */}
+          <Dashboard className={classes.icons} />
           <Hidden mdUp implementation="css">
-            <p onClick={handleCloseNotification} className={classes.linkText}>
-              Notification
-            </p>
+            <p className={classes.linkText}>Dashboard</p>
           </Hidden>
         </Button>
-        <Poppers
-          open={Boolean(openNotification)}
-          anchorEl={openNotification}
-          transition
-          disablePortal
-          className={
-            classNames({ [classes.popperClose]: !openNotification }) +
-            " " +
-            classes.popperNav
-          }
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              id="notification-menu-list-grow"
-              style={{
-                transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom",
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleCloseNotification}>
-                  <MenuList role="menu">
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Neuer Befund von Hausarzt Kölmer
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Dermatologie möchte Termin vereinbaren
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Hausarzt beantragt eine Freigabe
-                    </MenuItem>
-                    <MenuItem
-                      onClick={handleCloseNotification}
-                      className={classes.dropdownItem}
-                    >
-                      Dokumentation der Symptome Rückenschmerzen
-                    </MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Poppers>
+        <div className={classes.manager}>
+          <Button
+            color={window.innerWidth > 959 ? "transparent" : "white"}
+            justIcon={window.innerWidth > 959}
+            simple={!(window.innerWidth > 959)}
+            aria-owns={this.state.openNotification ? "notification-menu-list-grow" : null}
+            aria-haspopup="true"
+            onClick={this.handleClickNotification}
+            className={classes.buttonLink}
+          >
+            <Notifications className={classes.icons} />
+            <span className={classes.notifications}>4</span>
+            {/*todo: count notifications */}
+            <Hidden mdUp implementation="css">
+              <p onClick={this.handleCloseNotification} className={classes.linkText}>
+                Notification
+              </p>
+            </Hidden>
+          </Button>
+          <Poppers
+            open={Boolean(this.state.openNotification)}
+            anchorEl={this.state.openNotification}
+            transition
+            disablePortal
+            className={
+              classNames({ [classes.popperClose]: !this.state.openNotification }) +
+              " " +
+              classes.popperNav
+            }
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                id="notification-menu-list-grow"
+                style={{
+                  transformOrigin:
+                    placement === "bottom" ? "center top" : "center bottom",
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={this.handleCloseNotification}>
+                    <MenuList role="menu">
+                      <MenuItem
+                        onClick={this.handleCloseNotification}
+                        className={classes.dropdownItem}
+                      >
+                        Neuer Befund von Hausarzt Kölmer
+                      </MenuItem>
+                      <MenuItem
+                        onClick={this.handleCloseNotification}
+                        className={classes.dropdownItem}
+                      >
+                        Dermatologie möchte Termin vereinbaren
+                      </MenuItem>
+                      <MenuItem
+                        onClick={this.handleCloseNotification}
+                        className={classes.dropdownItem}
+                      >
+                        Hausarzt beantragt eine Freigabe
+                      </MenuItem>
+                      <MenuItem
+                        onClick={this.handleCloseNotification}
+                        className={classes.dropdownItem}
+                      >
+                        Dokumentation der Symptome Rückenschmerzen
+                      </MenuItem>
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Poppers>
+        </div>
+        <div className={classes.manager}>
+          <Button
+            color={window.innerWidth > 959 ? "transparent" : "white"}
+            justIcon={window.innerWidth > 959}
+            simple={!(window.innerWidth > 959)}
+            aria-owns={this.state.openProfile ? "profile-menu-list-grow" : null}
+            aria-haspopup="true"
+            onClick={this.handleClickProfile}
+            className={classes.buttonLink}
+          >
+            <Person className={classes.icons} />
+            <Hidden mdUp implementation="css">
+              <p className={classes.linkText}>Profile</p>
+            </Hidden>
+          </Button>
+          <Poppers
+            open={Boolean(this.state.openProfile)}
+            anchorEl={this.state.openProfile}
+            transition
+            disablePortal
+            className={
+              classNames({ [classes.popperClose]: !this.state.openProfile }) +
+              " " +
+              classes.popperNav
+            }
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                id="profile-menu-list-grow"
+                style={{
+                  transformOrigin:
+                    placement === "bottom" ? "center top" : "center bottom",
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={this.handleCloseProfile}>
+                    <MenuList role="menu">
+                      {this.state.profileActive ? (
+                        <div>
+                          <MenuItem
+                            onClick={this.handleCloseProfile}
+                            className={classes.dropdownItem}
+                          >
+                            Profile
+                          </MenuItem>
+                          <MenuItem
+                            onClick={this.handleCloseProfile}
+                            className={classes.dropdownItem}
+                          >
+                            Settings
+                          </MenuItem>
+                          <Divider light />
+                          <MenuItem
+                            onClick={(this.handleCloseProfile, this.handleLogoutProfile)}
+                            className={classes.dropdownItem}
+                          >
+                            Logout
+                          </MenuItem>
+                        </div>
+                      ) : (
+                        <div>
+                          <MenuItem
+                            onClick={(this.handleCloseProfile, this.handleLoginProfile)}
+                            className={classes.dropdownItem}
+                          >
+                            Login
+                          </MenuItem>
+                        </div>
+                      )}
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Poppers>
+        </div>
       </div>
-      <div className={classes.manager}>
-        <Button
-          color={window.innerWidth > 959 ? "transparent" : "white"}
-          justIcon={window.innerWidth > 959}
-          simple={!(window.innerWidth > 959)}
-          aria-owns={openProfile ? "profile-menu-list-grow" : null}
-          aria-haspopup="true"
-          onClick={handleClickProfile}
-          className={classes.buttonLink}
-        >
-          <Person className={classes.icons} />
-          <Hidden mdUp implementation="css">
-            <p className={classes.linkText}>Profile</p>
-          </Hidden>
-        </Button>
-        <Poppers
-          open={Boolean(openProfile)}
-          anchorEl={openProfile}
-          transition
-          disablePortal
-          className={
-            classNames({ [classes.popperClose]: !openProfile }) +
-            " " +
-            classes.popperNav
-          }
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              id="profile-menu-list-grow"
-              style={{
-                transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom",
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleCloseProfile}>
-                  <MenuList role="menu">
-                    {profileActive ? (
-                      <div>
-                        <MenuItem
-                          onClick={handleCloseProfile}
-                          className={classes.dropdownItem}
-                        >
-                          Profile
-                        </MenuItem>
-                        <MenuItem
-                          onClick={handleCloseProfile}
-                          className={classes.dropdownItem}
-                        >
-                          Settings
-                        </MenuItem>
-                        <Divider light />
-                        <MenuItem
-                          onClick={(handleCloseProfile, handleLogoutProfile)}
-                          className={classes.dropdownItem}
-                        >
-                          Logout
-                        </MenuItem>
-                      </div>
-                    ) : (
-                      <div>
-                        <MenuItem
-                          onClick={(handleCloseProfile, handleLoginProfile)}
-                          className={classes.dropdownItem}
-                        >
-                          Login
-                        </MenuItem>
-                      </div>
-                    )}
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Poppers>
-      </div>
-    </div>
-  );
+    );
+  }
 }
+
+AdminNavbarLinks.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(AdminNavbarLinks);
