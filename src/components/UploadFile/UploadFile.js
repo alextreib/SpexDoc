@@ -101,7 +101,7 @@ class FileDialogue extends React.Component {
     // Create a root reference
     var storageRef = firebase.storage().ref();
 
-    var uploadTask = storageRef
+    storageRef
       .child(fileName)
       .put(fileToUpload)
       .then((snapshot) => {
@@ -123,10 +123,7 @@ class FileDialogue extends React.Component {
   };
 
   saveDocToUser = (docLink) => {
-    // event.preventDefault();
     // this.checkUser();
-    console.log(docLink);
-
     var defaultDatabase = firebase.firestore();
     var user = firebase.auth().currentUser;
     if (user == null) {

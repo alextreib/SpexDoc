@@ -95,25 +95,32 @@ class ShowFile extends React.Component {
 
     // Integrate script
     this.state = {
-      open: false,
-      displayLogin: false,
+      internal: {
+        open: false,
+      },
+      openLoginRequired: false,
+      // todo: split to parent/ interal/child
       showFileParams: props.showFileParams,
     };
+
+    this.openModal = this.openModal.bind(this);
   }
 
   componentDidUpdate(prevProps) {
+    if (this.props == prevProps) {
+      return;
+    }
     this.setState({ showFileParams: this.props.showFileParams });
   }
 
   loginFirst = () => {
     this.setState({
-      displayLogin: true,
+      openLoginRequired: true,
     });
   };
 
   checkUser = () => {
     var user = firebase.auth().currentUser;
-    console.log(user);
 
     if (user) {
       // User is signed in.
@@ -127,12 +134,32 @@ class ShowFile extends React.Component {
 
   openModal = () => {
     if (this.checkUser() == true) {
-      // this.setState({ open: false });
+      console.log("set state to true");
+      this.setState({ internal: { open: true } });
     }
   };
 
   removeFile = () => {
-    console.log("Remove file");
+    console.log("File removed")
+    var user = firebase.auth().currentUser;
+    if (user == null) {
+      return;
+    }
+    var id = user.uid;
+
+    // Get
+    var defaultDatabase = firebase.firestore();
+
+    // Search in 
+    var docLink=this.state.showFileParams.docLink;
+    const docRef = defaultDatabase.collection("userStorage").doc("docLinks");
+
+    docRef.update({
+      [id]: firebase.firestore.FieldValue.arrayRemove(docLink),
+    });
+
+
+    //todo: remove in Cloud Firestore
   };
 
   magicFunc = () => {
@@ -140,7 +167,7 @@ class ShowFile extends React.Component {
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({ internal: { open: false } });
   };
 
   render() {
@@ -148,7 +175,8 @@ class ShowFile extends React.Component {
 
     return (
       <Card className={classes.card}>
-        <LoginAlert stateLogin={this.state} />
+        <LoginAlert loginState={this.state} />
+
         <CardActionArea onClick={this.openModal}>
           <CardMedia
             className={classes.media}
@@ -170,7 +198,10 @@ class ShowFile extends React.Component {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button onClick={this.removeFile} style={{ marginLeft: "auto", backgroundColor: "darkred" }}>
+          <Button
+            onClick={this.removeFile}
+            style={{ marginLeft: "auto", backgroundColor: "darkred" }}
+          >
             Remove
           </Button>
           <Button onClick={this.magicFunc} style={{ marginLeft: "auto" }}>
@@ -182,7 +213,7 @@ class ShowFile extends React.Component {
           maxWidth={"xl"}
           onClose={this.handleClose}
           aria-labelledby="customized-dialog-title"
-          open={this.state.open}
+          open={this.state.internal.open}
         >
           <DialogTitle id="customized-dialog-title" onClose={this.handleClose}>
             Befund
