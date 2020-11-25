@@ -1,7 +1,5 @@
 import React from "react";
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -12,9 +10,6 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-import Switch from "@material-ui/core/Switch";
-
-import LoginAlert from "components/LoginAlert/LoginAlert.js";
 
 import avatar from "assets/img/faces/profile_white.png";
 
@@ -44,116 +39,59 @@ const styles = {
   },
 };
 
-const useStyles = makeStyles(styles);
-
 // Display Login Screen here -> Login from Profile NavBar should also point here
 class UserProfile extends React.Component {
   constructor(props) {
     super(props);
-
-    // const [profileActive, setProfile] = React.useState(null);
-    // var [email, setEmail] = React.useState("");
-    // var [firstName, setfirstName] = React.useState("");
-
     this.state = {
-      userProfile:{
-      email: "",
-      firstName: "",
-      lastName: "",
-      plz: "",
-      city: "",
-      street: "",
-      aboutMe: "",
-      }
+      userProfile: {
+        email: "",
+        firstName: "",
+        lastName: "",
+        plz: "",
+        city: "",
+        street: "",
+        aboutMe: "",
+      },
     };
 
-        //Bindings
-        this.loadDoc = this.loadDoc.bind(this);
+    //Bindings
+    this.loadUserProfile = this.loadUserProfile.bind(this);
 
-        this.loadDoc();
+    this.loadUserProfile();
   }
 
-  // handleLoginProfile = () => {
-  //   var provider = new firebase.auth.GoogleAuthProvider();
-
-  //   firebase
-  //     .auth()
-  //     .signInWithPopup(provider)
-  //     .then(function (result) {
-  //       // This gives you a Google Access Token. You can use it to access the Google API.
-  //       var token = result.credential.accessToken;
-  //       // The signed-in user info.
-  //       var user = result.user;
-
-  //       // setProfile(user);
-  //       this.setState({ email: user.email });
-  //       this.setState({ firstName: user.displayName });
-
-  //       console.log(user);
-  //       console.log("user logged in");
-  //       // window.user = user;
-  //       // ...
-  //     })
-  //     .catch(function (error) {
-  //       // Handle Errors here.
-  //       var errorCode = error.code;
-  //       var errorMessage = error.message;
-  //       // The email of the user's account used.
-  //       var email = error.email;
-  //       // The firebase.auth.AuthCredential type that was used.
-  //       var credential = error.credential;
-  //       console.log("error: " + errorCode + ":" + errorMessage);
-  //       // ...
-  //     });
-  // };
-
-  loadDoc() {
-    console.log("loadDoc userProfile");
-
+  loadUserProfile() {
     var user = firebase.auth().currentUser;
     if (user == null) {
       return;
     }
-    var user_id = user.uid;
-
-    var docRef = firebase.firestore().collection("userStorage").doc("userProfile_"+user_id);
+    var docRef = firebase
+      .firestore()
+      .collection("userStorage")
+      .doc("userProfile_" + user.uid);
 
     docRef
       .get()
-      .then((doc) =>  {
+      .then((doc) => {
         if (doc.exists) {
           return doc.data();
         }
       })
       .then((userProfile_in) => {
-        console.log(userProfile_in);
-
-        // this.setState({ userProfile:{city:"test"}});
-
-        // todo: assign properties
         this.setState({ userProfile: userProfile_in });
-        console.log(this.state.userProfile);
       });
   }
 
   // Nice function: Sets states automatically
-  handleChange(property, event) {
-    console.log("handleChange");
+  profileChange = (property, event) => {
     var changedValue = event.target.value;
-
-    this.setState({ userProfile: { ...this.state.userProfile, [property]: changedValue} });
-  }
-
-  updateProf = () => {
-    console.log("updateProf");
-
-    this.saveDocToUser();
+    this.setState({
+      userProfile: { ...this.state.userProfile, [property]: changedValue },
+    });
   };
-  
-  saveDocToUser = () => {
-    // event.preventDefault();
-    // this.checkUser();
 
+  saveProfile = () => {
     var user = firebase.auth().currentUser;
     if (user == null) {
       return;
@@ -161,20 +99,10 @@ class UserProfile extends React.Component {
     var user_id = user.uid;
 
     firebase
-    .firestore()
-    .collection("userStorage")
-    .doc("userProfile_"+user_id)
-    .set(this.state.userProfile);
-
-
-    // todo: All 
-  
-//   docRef.set({
-//     this.state.userProfile: 
-//     name: "Los Angeles",
-//     state: "CA",
-//     country: "USA"
-// })
+      .firestore()
+      .collection("userStorage")
+      .doc("userProfile_" + user_id)
+      .set(this.state.userProfile);
   };
 
   render() {
@@ -198,7 +126,7 @@ class UserProfile extends React.Component {
                       id="email"
                       inputProps={{
                         value: this.state.userProfile.email,
-                        onChange: (e) => this.handleChange("email", e),
+                        onChange: (e) => this.profileChange("email", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -212,7 +140,7 @@ class UserProfile extends React.Component {
                       id="firstName"
                       inputProps={{
                         value: this.state.userProfile.firstName,
-                        onChange: (e) => this.handleChange("firstName", e),
+                        onChange: (e) => this.profileChange("firstName", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -225,7 +153,7 @@ class UserProfile extends React.Component {
                       id="lastName"
                       inputProps={{
                         value: this.state.userProfile.lastName,
-                        onChange: (e) => this.handleChange("lastName", e),
+                        onChange: (e) => this.profileChange("lastName", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -241,7 +169,7 @@ class UserProfile extends React.Component {
                       id="plz"
                       inputProps={{
                         value: this.state.userProfile.plz,
-                        onChange: (e) => this.handleChange("plz", e),
+                        onChange: (e) => this.profileChange("plz", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -255,7 +183,7 @@ class UserProfile extends React.Component {
                       id="city"
                       inputProps={{
                         value: this.state.userProfile.city,
-                        onChange: (e) => this.handleChange("city", e),
+                        onChange: (e) => this.profileChange("city", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -269,7 +197,7 @@ class UserProfile extends React.Component {
                       id="street"
                       inputProps={{
                         value: this.state.userProfile.street,
-                        onChange: (e) => this.handleChange("street", e),
+                        onChange: (e) => this.profileChange("street", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -288,7 +216,7 @@ class UserProfile extends React.Component {
                       }}
                       inputProps={{
                         value: this.state.userProfile.aboutMe,
-                        onChange: (e) => this.handleChange("aboutMe", e),
+                        onChange: (e) => this.profileChange("aboutMe", e),
                         multiline: true,
                         rows: 5,
                       }}
@@ -297,7 +225,7 @@ class UserProfile extends React.Component {
                 </GridContainer>
               </CardBody>
               <CardFooter>
-                <Button color="primary" onClick={this.updateProf} round>
+                <Button color="primary" onClick={this.saveProfile} round>
                   Speichern
                 </Button>
               </CardFooter>
@@ -313,11 +241,16 @@ class UserProfile extends React.Component {
               <CardBody profile>
                 <h6 className={classes.cardCategory}>Patient</h6>
                 <h4 className={classes.cardTitle}>
-                  {this.state.userProfile.firstName} {this.state.userProfile.lastName}
+                  {this.state.userProfile.firstName}{" "}
+                  {this.state.userProfile.lastName}
                 </h4>
-                <h4 className={classes.cardTitle}>{this.state.userProfile.city}</h4>
-                <p className={classes.description}>{this.state.userProfile.aboutMe}</p>
-                <Button color="primary" onClick={this.updateProf} round>
+                <h4 className={classes.cardTitle}>
+                  {this.state.userProfile.city}
+                </h4>
+                <p className={classes.description}>
+                  {this.state.userProfile.aboutMe}
+                </p>
+                <Button color="primary" onClick={this.shareProfile} round>
                   Share
                 </Button>
               </CardBody>
