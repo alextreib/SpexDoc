@@ -28,6 +28,8 @@ import "firebase/firestore";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 
+import { Link } from "react-router-dom";
+
 const useStyles = makeStyles(styles);
 
 class AdminNavbarLinks extends React.Component {
@@ -43,10 +45,14 @@ class AdminNavbarLinks extends React.Component {
     this.handleClickNotification = this.handleClickNotification.bind(this);
     this.handleClickProfile = this.handleClickProfile.bind(this);
     this.handleLoginProfile = this.handleLoginProfile.bind(this);
+    this.GoToProfilePage = this.GoToProfilePage.bind(this);
   }
 
   handleClickNotification = (event) => {
-    if (this.state.openNotification && this.state.openNotification.contains(event.target)) {
+    if (
+      this.state.openNotification &&
+      this.state.openNotification.contains(event.target)
+    ) {
       this.setOpenNotification(null);
     } else {
       this.setOpenNotification(event.currentTarget);
@@ -75,7 +81,10 @@ class AdminNavbarLinks extends React.Component {
     this.setOpenNotification(null);
   };
   handleClickProfile = (event) => {
-    if (this.state.openProfile && this.state.openProfile.contains(event.target)) {
+    if (
+      this.state.openProfile &&
+      this.state.openProfile.contains(event.target)
+    ) {
       this.setOpenProfile(null);
     } else {
       this.setOpenProfile(event.currentTarget);
@@ -83,13 +92,13 @@ class AdminNavbarLinks extends React.Component {
   };
 
   handleLoginProfile = () => {
-    console.log("login process")
+    console.log("login process");
     var provider = new firebase.auth.GoogleAuthProvider();
 
     firebase
-      .auth() 
+      .auth()
       .signInWithPopup(provider)
-      .then((result)=>  {
+      .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         var token = result.credential.accessToken;
         // The signed-in user info.
@@ -114,7 +123,6 @@ class AdminNavbarLinks extends React.Component {
     this.handleCloseProfile();
   };
 
-  
   handleLogoutProfile = () => {
     var provider = new firebase.auth.GoogleAuthProvider();
 
@@ -124,12 +132,13 @@ class AdminNavbarLinks extends React.Component {
     firebase
       .auth()
       .signOut()
-      .then(function () {
+      .then(() => {
         window.user = null;
         console.log("logged out");
         // Sign-out successful.
+        this.setProfile(null);
       })
-      .catch(function (error) {
+      .catch((error) => {
         console.log("error while logging out");
         // An error happened.
       });
@@ -139,7 +148,6 @@ class AdminNavbarLinks extends React.Component {
   handleCloseProfile = () => {
     this.setOpenProfile(null);
   };
-
 
   render() {
     const { classes } = this.props;
@@ -179,7 +187,9 @@ class AdminNavbarLinks extends React.Component {
             color={window.innerWidth > 959 ? "transparent" : "white"}
             justIcon={window.innerWidth > 959}
             simple={!(window.innerWidth > 959)}
-            aria-owns={this.state.openNotification ? "notification-menu-list-grow" : null}
+            aria-owns={
+              this.state.openNotification ? "notification-menu-list-grow" : null
+            }
             aria-haspopup="true"
             onClick={this.handleClickNotification}
             className={classes.buttonLink}
@@ -188,7 +198,10 @@ class AdminNavbarLinks extends React.Component {
             <span className={classes.notifications}>4</span>
             {/*todo: count notifications */}
             <Hidden mdUp implementation="css">
-              <p onClick={this.handleCloseNotification} className={classes.linkText}>
+              <p
+                onClick={this.handleCloseNotification}
+                className={classes.linkText}
+              >
                 Notification
               </p>
             </Hidden>
@@ -199,7 +212,9 @@ class AdminNavbarLinks extends React.Component {
             transition
             disablePortal
             className={
-              classNames({ [classes.popperClose]: !this.state.openNotification }) +
+              classNames({
+                [classes.popperClose]: !this.state.openNotification,
+              }) +
               " " +
               classes.popperNav
             }
@@ -215,32 +230,37 @@ class AdminNavbarLinks extends React.Component {
               >
                 <Paper>
                   <ClickAwayListener onClickAway={this.handleCloseNotification}>
-                    <MenuList role="menu">
-                      <MenuItem
-                        onClick={this.handleCloseNotification}
-                        className={classes.dropdownItem}
-                      >
-                        Neuer Befund von Hausarzt Kölmer
-                      </MenuItem>
-                      <MenuItem
-                        onClick={this.handleCloseNotification}
-                        className={classes.dropdownItem}
-                      >
-                        Dermatologie möchte Termin vereinbaren
-                      </MenuItem>
-                      <MenuItem
-                        onClick={this.handleCloseNotification}
-                        className={classes.dropdownItem}
-                      >
-                        Hausarzt beantragt eine Freigabe
-                      </MenuItem>
-                      <MenuItem
-                        onClick={this.handleCloseNotification}
-                        className={classes.dropdownItem}
-                      >
-                        Dokumentation der Symptome Rückenschmerzen
-                      </MenuItem>
-                    </MenuList>
+                    <Link
+                      style={{ textDecoration: "none" }}
+                      to="/admin/notifications"
+                    >
+                      <MenuList role="menu">
+                        <MenuItem
+                          onClick={this.GoToProfilePage}
+                          className={classes.dropdownItem}
+                        >
+                          Neuer Befund von Hausarzt Kölmer
+                        </MenuItem>
+                        <MenuItem
+                          onClick={this.handleCloseNotification}
+                          className={classes.dropdownItem}
+                        >
+                          Dermatologie möchte Termin vereinbaren
+                        </MenuItem>
+                        <MenuItem
+                          onClick={this.handleCloseNotification}
+                          className={classes.dropdownItem}
+                        >
+                          Hausarzt beantragt eine Freigabe
+                        </MenuItem>
+                        <MenuItem
+                          onClick={this.handleCloseNotification}
+                          className={classes.dropdownItem}
+                        >
+                          Dokumentation der Symptome Rückenschmerzen
+                        </MenuItem>
+                      </MenuList>
+                    </Link>
                   </ClickAwayListener>
                 </Paper>
               </Grow>
@@ -287,12 +307,18 @@ class AdminNavbarLinks extends React.Component {
                     <MenuList role="menu">
                       {this.state.profileActive ? (
                         <div>
-                          <MenuItem
-                            onClick={this.handleCloseProfile}
-                            className={classes.dropdownItem}
+                          <Link
+                            style={{ textDecoration: "none" }}
+                            to="/admin/user"
                           >
-                            Profile
-                          </MenuItem>
+                            <MenuItem
+                              onClick={this.handleCloseProfile}
+                              className={classes.dropdownItem}
+                            >
+                              Profile
+                            </MenuItem>
+                          </Link>
+
                           <MenuItem
                             onClick={this.handleCloseProfile}
                             className={classes.dropdownItem}
@@ -301,7 +327,10 @@ class AdminNavbarLinks extends React.Component {
                           </MenuItem>
                           <Divider light />
                           <MenuItem
-                            onClick={(this.handleCloseProfile, this.handleLogoutProfile)}
+                            onClick={
+                              (this.handleCloseProfile,
+                              this.handleLogoutProfile)
+                            }
                             className={classes.dropdownItem}
                           >
                             Logout
@@ -310,7 +339,9 @@ class AdminNavbarLinks extends React.Component {
                       ) : (
                         <div>
                           <MenuItem
-                            onClick={(this.handleCloseProfile, this.handleLoginProfile)}
+                            onClick={
+                              (this.handleCloseProfile, this.handleLoginProfile)
+                            }
                             className={classes.dropdownItem}
                           >
                             Login
