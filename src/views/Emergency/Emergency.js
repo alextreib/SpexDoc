@@ -16,6 +16,9 @@ import Button from "components/CustomButtons/Button.js";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import Snackbar from "components/Snackbar/Snackbar.js";
 
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -47,77 +50,102 @@ const styles = {
   ref: "https://google.de",
 };
 
-const useStyles = makeStyles(styles);
+class Emergency extends React.Component {
+  constructor(props) {
+    super(props);
 
-export default function Emergency() {
-  const classes = useStyles();
-  return (
-    <GridContainer>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Vorerkrankungen</h4>
-            <p className={classes.cardCategoryWhite}>Untertitel</p>
-          </CardHeader>
-          <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["Erkrankung", "Erstdiagnose Datum"]}
-              tableData={[
-                ["Leberzirrose", "2010"],
-                ["Diabetes", "2013"],
-              ]}
-            />
-          </CardBody>
-        </Card>
-      </GridItem>
+    this.state = {
+      profileActive: null,
+      openNotification: null,
+      openProfile: null,
+    };
+  }
 
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="warning">
-            <h4 className={classes.cardTitleWhite}>Medikamente</h4>
-            <p className={classes.cardCategoryWhite}>Untertitel</p>
-          </CardHeader>
-          <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["Medikament", "Wirkstoff", "Rhythmus"]}
-              tableData={[
-                ["IbuHEXAL", "Ibuprofen", "Täglich"],
-                ["L-Thyroxin Henning", "Levothyroxin", "2x Täglich"],
-              ]}
-            />
-          </CardBody>
-        </Card>
-      </GridItem>
+  handleClickNotification = (event) => {
+    console.log(window.location.href);
 
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="info">
-            <h4 className={classes.cardTitleWhite}>Angehörige</h4>
-            <p className={classes.cardCategoryWhite}>Kontaktdaten</p>
-          </CardHeader>
-          <CardBody>
-            <Table
-              tableHeaderColor="primary"
-              tableHead={["Name", "Beziehung", "Telefonnummer", "Adresse"]}
-              tableData={[
-                ["Nora", "Mutter", "01522789126", "Seestraße 14, Berlin"],
-                ["Luca", "Bruder", "01522712312", "Seestraße 14, Berlin"],
-              ]}
-            />
-          </CardBody>
-        </Card>
-      </GridItem>
-      <GridItem xs={12} sm={12} md={12}>
-        <Card>
-          <CardHeader color="rose">
-            <h4 className={classes.cardTitleWhite}>Organspende</h4>
-            <p className={classes.cardCategoryWhite}>Untertitel</p>
-          </CardHeader>
-          <CardBody>JA</CardBody>
-        </Card>
-      </GridItem>
-    </GridContainer>
-  );
+  };
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <GridContainer>
+          <Button
+          onClick={this.handleClickNotification}
+        >TestButton</Button>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Vorerkrankungen</h4>
+              <p className={classes.cardCategoryWhite}>Untertitel</p>
+            </CardHeader>
+            <CardBody>
+              <Table
+                tableHeaderColor="primary"
+                tableHead={["Erkrankung", "Erstdiagnose Datum"]}
+                tableData={[
+                  ["Leberzirrose", "2010"],
+                  ["Diabetes", "2013"],
+                ]}
+              />
+            </CardBody>
+          </Card>
+        </GridItem>
+
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="warning">
+              <h4 className={classes.cardTitleWhite}>Medikamente</h4>
+              <p className={classes.cardCategoryWhite}>Untertitel</p>
+            </CardHeader>
+            <CardBody>
+              <Table
+                tableHeaderColor="primary"
+                tableHead={["Medikament", "Wirkstoff", "Rhythmus"]}
+                tableData={[
+                  ["IbuHEXAL", "Ibuprofen", "Täglich"],
+                  ["L-Thyroxin Henning", "Levothyroxin", "2x Täglich"],
+                ]}
+              />
+            </CardBody>
+          </Card>
+        </GridItem>
+
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="info">
+              <h4 className={classes.cardTitleWhite}>Angehörige</h4>
+              <p className={classes.cardCategoryWhite}>Kontaktdaten</p>
+            </CardHeader>
+            <CardBody>
+              <Table
+                tableHeaderColor="primary"
+                tableHead={["Name", "Beziehung", "Telefonnummer", "Adresse"]}
+                tableData={[
+                  ["Nora", "Mutter", "01522789126", "Seestraße 14, Berlin"],
+                  ["Luca", "Bruder", "01522712312", "Seestraße 14, Berlin"],
+                ]}
+              />
+            </CardBody>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="rose">
+              <h4 className={classes.cardTitleWhite}>Organspende</h4>
+              <p className={classes.cardCategoryWhite}>Untertitel</p>
+            </CardHeader>
+            <CardBody>JA</CardBody>
+          </Card>
+        </GridItem>
+      </GridContainer>
+    );
+  }
 }
+
+Emergency.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Emergency);

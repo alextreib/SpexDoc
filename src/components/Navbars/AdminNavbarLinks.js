@@ -18,6 +18,7 @@ import Search from "@material-ui/icons/Search";
 // core components
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
+import NotificationData from "components/NotificationData/NotificationData.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
@@ -40,12 +41,16 @@ class AdminNavbarLinks extends React.Component {
       profileActive: null,
       openNotification: null,
       openProfile: null,
+      notificationList: [
+        "Neuer Befund von Hausarzt Kölmer",
+        "Dermatologie möchte Termin vereinbaren",
+        "Hausarzt beantragt eine Freigabe",
+      ],
     };
 
     this.handleClickNotification = this.handleClickNotification.bind(this);
     this.handleClickProfile = this.handleClickProfile.bind(this);
     this.handleLoginProfile = this.handleLoginProfile.bind(this);
-    this.GoToProfilePage = this.GoToProfilePage.bind(this);
   }
 
   handleClickNotification = (event) => {
@@ -149,12 +154,22 @@ class AdminNavbarLinks extends React.Component {
     this.setOpenProfile(null);
   };
 
+  // When child (NotificationData) triggers change -> this function is called
+  notificationDataChange = (newList) => {
+    this.setState({
+      notificationList: newList,
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
     return (
       <div>
         <div className={classes.searchWrapper}>
+          <NotificationData
+            onNotificationDataChange={this.notificationDataChange}
+          />
           <CustomInput
             formControlProps={{
               className: classes.margin + " " + classes.search,
@@ -195,7 +210,9 @@ class AdminNavbarLinks extends React.Component {
             className={classes.buttonLink}
           >
             <Notifications className={classes.icons} />
-            <span className={classes.notifications}>4</span>
+            <span className={classes.notifications}>
+              {this.state.notificationList.length}
+            </span>
             {/*todo: count notifications */}
             <Hidden mdUp implementation="css">
               <p
@@ -235,30 +252,19 @@ class AdminNavbarLinks extends React.Component {
                       to="/admin/notifications"
                     >
                       <MenuList role="menu">
-                        <MenuItem
-                          onClick={this.GoToProfilePage}
-                          className={classes.dropdownItem}
-                        >
-                          Neuer Befund von Hausarzt Kölmer
-                        </MenuItem>
-                        <MenuItem
-                          onClick={this.handleCloseNotification}
-                          className={classes.dropdownItem}
-                        >
-                          Dermatologie möchte Termin vereinbaren
-                        </MenuItem>
-                        <MenuItem
-                          onClick={this.handleCloseNotification}
-                          className={classes.dropdownItem}
-                        >
-                          Hausarzt beantragt eine Freigabe
-                        </MenuItem>
-                        <MenuItem
-                          onClick={this.handleCloseNotification}
-                          className={classes.dropdownItem}
-                        >
-                          Dokumentation der Symptome Rückenschmerzen
-                        </MenuItem>
+                        {this.state.notificationList.map((notificationItem) => (
+                          <Link
+                            style={{ textDecoration: "none" }}
+                            to="/admin/notifications"
+                          >
+                            <MenuItem
+                              //todo add link
+                              className={classes.dropdownItem}
+                            >
+                              {notificationItem}
+                            </MenuItem>
+                          </Link>
+                        ))}
                       </MenuList>
                     </Link>
                   </ClickAwayListener>
