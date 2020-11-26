@@ -11,6 +11,9 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Test from "views/Test/Test.js";
 
+import EditableTableReport from "components/EditableTableReport/EditableTableReport.js";
+
+
 import AddAlert from "@material-ui/icons/AddAlert";
 import Button from "components/CustomButtons/Button.js";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
@@ -58,6 +61,15 @@ class Emergency extends React.Component {
       profileActive: null,
       openNotification: null,
       openProfile: null,
+      external:{
+        tableOptions:{
+          name: "Emergency",
+          columns:[
+            { title: "Vorerkrankung", field: "predisposition" },
+            { title: "Diagnose seit", field: "diagnosis_year" },
+          ]
+        }
+      }
     };
   }
 
@@ -81,14 +93,8 @@ class Emergency extends React.Component {
               <p className={classes.cardCategoryWhite}>Untertitel</p>
             </CardHeader>
             <CardBody>
-              <Table
-                tableHeaderColor="primary"
-                tableHead={["Erkrankung", "Erstdiagnose Datum"]}
-                tableData={[
-                  ["Leberzirrose", "2010"],
-                  ["Diabetes", "2013"],
-                ]}
-              />
+            <EditableTableReport tableOptions={this.state.external.tableOptions} />
+
             </CardBody>
           </Card>
         </GridItem>

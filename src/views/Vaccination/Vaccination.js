@@ -69,6 +69,16 @@ class Vaccination extends React.Component {
     this.state = {
       displayLogin: false,
       showFiles: [],
+      external:{
+        tableOptions:{
+          name: "Vaccination",
+          columns:[
+            { title: "Impfung", field: "vaccination" },
+            { title: "Jahr", field: "year" },
+            { title: "Arzt", field: "doctor" },
+          ]
+        }
+      }
     };
 
     //Bindings
@@ -85,7 +95,7 @@ class Vaccination extends React.Component {
               <p className={classes.cardCategoryWhite}>Alle Impfungen auf einen Blick</p>
             </CardHeader>
             <CardBody>
-              <EditableTableReport />
+              <EditableTableReport tableOptions={this.state.external.tableOptions} />
 
             </CardBody>
           </Card>

@@ -22,7 +22,7 @@ class EditableTableReport extends React.Component {
         },
       ],
       // Default data
-      data: [ //todo: remove [] and save [0] below?
+      data: [
         {
           name: "Max",
           surname: "Mustermann",
@@ -37,21 +37,22 @@ class EditableTableReport extends React.Component {
         },
       ],
     };
-    
-    this.init= this.init.bind(this);
+
+    this.init = this.init.bind(this);
     this.tableChanged = this.tableChanged.bind(this);
     this.fetchTable = this.fetchTable.bind(this);
-    
+
     this.init();
   }
 
-  init()
-  {
+  init = () => {
     this.fetchTable();
-  }
+  };
 
   // Is called when table is changed
-  tableChanged() {
+  tableChanged = () => {
+    console.log(this.state.data);
+
     // Working
     console.log("table changed");
 
@@ -60,38 +61,55 @@ class EditableTableReport extends React.Component {
       return;
     }
     var user_id = user.uid;
+
     firebase
-      .database()
-      .ref("users/" + user_id)
-      .set([this.state.data]);
-    // this.updateTable();
-  }
+      .firestore()
+      .collection("userStorage")
+      .doc("users")
+      .collection(user_id)
+      .doc(this.props.tableOptions.name)
+      .set({
+        tableData: this.state.data, // Required because array cannot be pushed
+      });
+
+    console.log("successful update");
+  };
 
   // Fetch the table from Firebase (Original data)
-  fetchTable() {
+  // Is called when table is changed
+  fetchTable = () => {
     //todo: Check login + call at beginning
     console.log("update table");
+    console.log(this.props.tableOptions.name);
 
     var user = firebase.auth().currentUser;
     if (user == null) {
       return;
     }
     var user_id = user.uid;
-    // Reading
-    firebase
-      .database()
-      .ref("users/" + user_id)
-      .once("value")
-      .then((snapshot) => {
-        console.log(snapshot.val());
-        return snapshot.val();
-      })
-      .then((snapshot_data) => {
-        if (this.state.data != snapshot_data) {
-          this.setState({ data: snapshot_data[0] });
+
+    var docRef = firebase
+      .firestore()
+      .collection("userStorage")
+      .doc("users")
+      .collection(user_id)
+      .doc(this.props.tableOptions.name);
+
+    console.log(docRef);
+    docRef
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          console.log(doc.data());
+          return doc.data();
         }
+      })
+      .then((doc_data) => {
+        console.log(doc_data);
+        this.setState({ data: doc_data["tableData"] });
       });
-  }
+
+  };
 
   componentDidUpdate(prevProps) {
     // Why do I need this?
@@ -103,11 +121,11 @@ class EditableTableReport extends React.Component {
       <div>
         <MaterialTable
           title=""
-          columns={this.state.columns}
+          columns={this.props.tableOptions.columns}
           options={{
             headerStyle: {
-              color: '#9c27b0'
-            }
+              color: "#9c27b0",
+            },
           }}
           data={this.state.data}
           editable={{
