@@ -12,30 +12,8 @@ class EditableTableReport extends React.Component {
     super(props);
 
     this.state = {
-      columns: [
-        { title: "Name", field: "name" },
-        { title: "Vorname", field: "surname" },
-        { title: "Geburtsjahr", field: "birthYear" },
-        {
-          title: "Geburtsort",
-          field: "birthCity",
-        },
-      ],
       // Default data
-      data: [
-        {
-          name: "Max",
-          surname: "Mustermann",
-          birthYear: "1995",
-          birthCity: "Berlin",
-        },
-        {
-          name: "Alexa",
-          surname: "Zimmer",
-          birthYear: "2002",
-          birthCity: "Hamburg",
-        },
-      ],
+      data:this.props.tableOptions.data,
     };
 
     this.init = this.init.bind(this);
@@ -122,14 +100,20 @@ class EditableTableReport extends React.Component {
   render() {
     return (
       <div>
-        <Button onClick={this.handleClickNotification}>TestButton</Button>
         <MaterialTable
           title=""
           columns={this.props.tableOptions.columns}
           options={{
             headerStyle: {
               color: "#9c27b0",
+              padding:20,
+              paddingLeft: 35,
             },
+            actionsColumnIndex:10,
+            cellStyle: {
+              padding:20,
+              paddingLeft: 35,
+            }
           }}
           data={this.state.data}
           editable={{

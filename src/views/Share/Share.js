@@ -127,6 +127,7 @@ class Share extends React.Component {
             <Switch
               checked={this.state.emergency.Switchactive}
               onChange={(ev) => this.handleChange("emergency", ev)}
+              color="secondary"
               name="Emergency_switch"
               inputProps={{ "aria-label": "secondary checkbox" }}
             />
@@ -165,6 +166,7 @@ class Share extends React.Component {
             <Switch
               checked={this.state.medRecords.Switchactive}
               onChange={(ev) => this.handleChange("medRecords", ev)}
+              color="primary"
               name="medRecords_switch"
               inputProps={{ "aria-label": "secondary checkbox" }}
             />

@@ -34,7 +34,7 @@ import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import ReportOverview from "views/ReportOverview/ReportOverview.js";
 import Emergency from "views/Emergency/Emergency.js";
-import Typography from "views/Typography/Typography.js";
+import Appointments from "views/Appointments/Appointments.js";
 import Icons from "views/Icons/Icons.js";
 import Maps from "views/Maps/Maps.js";
 import Vaccination from "views/Vaccination/Vaccination.js";
@@ -72,11 +72,11 @@ const dashboardRoutes = [
     layout: "/admin"
   }, 
   {
-    path: "/typography",
+    path: "/appointments",
     name: "Termine",
     rtlName: "طباعة",
     icon: CalendarTodayIcon,
-    component: Typography,
+    component: Appointments,
     layout: "/admin"
   },
   {

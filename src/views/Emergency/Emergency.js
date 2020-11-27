@@ -65,20 +65,27 @@ class Emergency extends React.Component {
             { title: "Vorerkrankung", field: "predisposition" },
             { title: "Diagnose seit", field: "diagnosis_year" },
           ],
+          data:  [
+            {
+              predisposition: "Kreislaufschwäche",
+              diagnosis_year: "2010",
+            },
+            {
+              predisposition: "Beispielerkrankung",
+              diagnosis_year: "1997",
+            },
+          ]
         },
       },
     };
 
-
     this.linkAccess = this.linkAccess.bind(this);
-
   }
 
   componentDidMount()
   {
     console.log("now");
     this.linkAccess();
-
   }
 
   linkAccess = () => {

@@ -26,6 +26,8 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
+import grey from "@material-ui/core/colors/grey";
+
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -186,18 +188,20 @@ class AdminNavbarLinks extends React.Component {
             <Search />
           </Button>
         </div>
-        <Button
-          color={window.innerWidth > 959 ? "transparent" : "white"}
-          justIcon={window.innerWidth > 959}
-          simple={!(window.innerWidth > 959)}
-          aria-label="Dashboard"
-          className={classes.buttonLink}
-        >
-          <Dashboard className={classes.icons} />
-          <Hidden mdUp implementation="css">
-            <p className={classes.linkText}>Dashboard</p>
-          </Hidden>
-        </Button>
+
+        <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
+          <Button
+            color={window.innerWidth > 959 ? "transparent" : "white"}
+            justIcon={window.innerWidth > 959}
+            simple={!(window.innerWidth > 959)}
+            aria-label="Dashboard"
+          >
+            <Dashboard style={{ color: grey[700] }} />
+            <Hidden mdUp implementation="css">
+              <p className={classes.linkText}>Dashboard</p>
+            </Hidden>
+          </Button>
+        </Link>
         <div className={classes.manager}>
           <Button
             color={window.innerWidth > 959 ? "transparent" : "white"}

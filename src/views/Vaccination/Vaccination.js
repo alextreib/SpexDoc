@@ -76,6 +76,18 @@ class Vaccination extends React.Component {
             { title: "Impfung", field: "vaccination" },
             { title: "Jahr", field: "year" },
             { title: "Arzt", field: "doctor" },
+          ],
+          data:  [
+            {
+              vaccination: "Beispiel Impfung",
+              year: "2010",
+              doctor: "Dr. Wilder",
+            },
+            {
+              vaccination: "Polio",
+              year: "2012",
+              doctor: "Dr. Müller",
+            },
           ]
         }
       }

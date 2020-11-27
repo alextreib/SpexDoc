@@ -47,6 +47,7 @@ export default function Header(props) {
           {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks />}
         </Hidden>
         <Hidden mdUp implementation="css">
+          {/* Button for opening the menu (only in mobile mode) */}
           <IconButton
             color="inherit"
             aria-label="open drawer"

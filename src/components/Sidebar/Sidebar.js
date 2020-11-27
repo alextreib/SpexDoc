@@ -19,12 +19,6 @@ import styles from "assets/jss/material-dashboard-react/components/sidebarStyle.
 
 const useStyles = makeStyles(styles);
 
-
-
-
-
-
-
 export default function Sidebar(props) {
   const classes = useStyles();
   // verifies if routeName is the one active (in browser input)
@@ -56,6 +50,7 @@ export default function Sidebar(props) {
             className={activePro + classes.item}
             activeClassName="active"
             key={key}
+            onClick={props.closeSidebar}
           >
             <ListItem button className={classes.itemLink + listItemClasses}>
               {typeof prop.icon === "string" ? (
