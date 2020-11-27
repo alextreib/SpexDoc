@@ -13,7 +13,6 @@ import Test from "views/Test/Test.js";
 
 import EditableTableReport from "components/EditableTableReport/EditableTableReport.js";
 
-
 import AddAlert from "@material-ui/icons/AddAlert";
 import Button from "components/CustomButtons/Button.js";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
@@ -58,24 +57,44 @@ class Emergency extends React.Component {
     super(props);
 
     this.state = {
-      profileActive: null,
-      openNotification: null,
-      openProfile: null,
-      external:{
-        tableOptions:{
+      external: {
+        tableOptions: {
           name: "Emergency",
-          columns:[
+          publicKey: null,
+          columns: [
             { title: "Vorerkrankung", field: "predisposition" },
             { title: "Diagnose seit", field: "diagnosis_year" },
-          ]
-        }
-      }
+          ],
+        },
+      },
     };
+
+
+    this.linkAccess = this.linkAccess.bind(this);
+
   }
 
-  handleClickNotification = (event) => {
-    console.log(window.location.href);
+  componentDidMount()
+  {
+    console.log("now");
+    this.linkAccess();
 
+  }
+
+  linkAccess = () => {
+    var keyWord = "publicKey=";
+    if (window.location.href.includes(keyWord)) {
+      console.log("Public Key is provided");
+      var link_without_info_length = window.location.href.indexOf(keyWord); // 38
+
+      var publicKey_link = window.location.href.substr(
+        link_without_info_length + keyWord.length
+      );
+      console.log(publicKey_link);
+      this.setState({
+        external: { tableOptions: {...this.state.external.tableOptions, publicKey: publicKey_link }},
+      });
+    }
   };
 
   render() {
@@ -83,9 +102,6 @@ class Emergency extends React.Component {
 
     return (
       <GridContainer>
-          <Button
-          onClick={this.handleClickNotification}
-        >TestButton</Button>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
             <CardHeader color="primary">
@@ -93,8 +109,9 @@ class Emergency extends React.Component {
               <p className={classes.cardCategoryWhite}>Untertitel</p>
             </CardHeader>
             <CardBody>
-            <EditableTableReport tableOptions={this.state.external.tableOptions} />
-
+              <EditableTableReport
+                tableOptions={this.state.external.tableOptions}
+              />
             </CardBody>
           </Card>
         </GridItem>

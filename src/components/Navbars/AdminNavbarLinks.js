@@ -140,6 +140,7 @@ class AdminNavbarLinks extends React.Component {
       .then(() => {
         window.user = null;
         console.log("logged out");
+        // todo: PopUp
         // Sign-out successful.
         this.setProfile(null);
       })

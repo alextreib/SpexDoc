@@ -15,8 +15,30 @@ import Snackbar from "components/Snackbar/Snackbar.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import Switch from '@material-ui/core/Switch';
+import Switch from "@material-ui/core/Switch";
 
+var QRCode = require("qrcode.react");
+
+// Both versions
+const BitlyClient = require('bitly').BitlyClient;
+const bitly = new BitlyClient("10f3147740e04fd0ea4c68788a84147cc6034dfa");
+ 
+
+// const BitlyClient = require('bitly').BitlyClient;
+// import { BitlyClient } from "bitly-react";
+// const bitly = new BitlyClient("10f3147740e04fd0ea4c68788a84147cc6034dfa", {});
+
+async function init() {
+  let result;
+  try {
+    //todo: window.location.href (/share weg und /emergency hintendran)
+    const result = await bitly.shorten("https://github.com/tanepiper/node-bitly");
+    console.log(result);
+  } catch (e) {
+    throw e;
+  }
+  return result;
+}
 
 const styles = {
   cardCategoryWhite: {
@@ -25,11 +47,11 @@ const styles = {
       margin: "0",
       fontSize: "14px",
       marginTop: "0",
-      marginBottom: "0"
+      marginBottom: "0",
     },
     "& a,& a:hover,& a:focus": {
-      color: "#FFFFFF"
-    }
+      color: "#FFFFFF",
+    },
   },
   cardTitleWhite: {
     color: "#FFFFFF",
@@ -43,12 +65,17 @@ const styles = {
       color: "#777",
       fontSize: "65%",
       fontWeight: "400",
-      lineHeight: "1"
-    }
-  }
+      lineHeight: "1",
+    },
+  },
 };
 
 const useStyles = makeStyles(styles);
+
+async function example(url) {
+  const response = await bitly.shorten(url);
+  console.log(`Your shortened bitlink is ${response.link}`);
+}
 
 export default function Notifications() {
   const classes = useStyles();
@@ -68,12 +95,14 @@ export default function Notifications() {
       }
     };
   });
-  const showNotification = place => {
+  const showNotification = (place) => {
     switch (place) {
       case "tl":
         if (!tl) {
+          init();
+          // example("https://google.com")
           setTL(true);
-          setTimeout(function() {
+          setTimeout(function () {
             setTL(false);
           }, 6000);
         }
@@ -81,7 +110,7 @@ export default function Notifications() {
       case "tc":
         if (!tc) {
           setTC(true);
-          setTimeout(function() {
+          setTimeout(function () {
             setTC(false);
           }, 6000);
         }
@@ -89,7 +118,7 @@ export default function Notifications() {
       case "tr":
         if (!tr) {
           setTR(true);
-          setTimeout(function() {
+          setTimeout(function () {
             setTR(false);
           }, 6000);
         }
@@ -97,7 +126,7 @@ export default function Notifications() {
       case "bl":
         if (!bl) {
           setBL(true);
-          setTimeout(function() {
+          setTimeout(function () {
             setBL(false);
           }, 6000);
         }
@@ -105,7 +134,7 @@ export default function Notifications() {
       case "bc":
         if (!bc) {
           setBC(true);
-          setTimeout(function() {
+          setTimeout(function () {
             setBC(false);
           }, 6000);
         }
@@ -113,7 +142,7 @@ export default function Notifications() {
       case "br":
         if (!br) {
           setBR(true);
-          setTimeout(function() {
+          setTimeout(function () {
             setBR(false);
           }, 6000);
         }
@@ -124,11 +153,12 @@ export default function Notifications() {
   };
   return (
     <Card>
-           <Switch
+      <QRCode value="http://facebook.github.io/react/" />,
+      <Switch
         // checked={state.checkedA}
         // onChange={handleChange}
         name="checkedA"
-        inputProps={{ 'aria-label': 'secondary checkbox' }}
+        inputProps={{ "aria-label": "secondary checkbox" }}
       />
       <CardHeader color="primary">
         <h4 className={classes.cardTitleWhite}>Notifications</h4>

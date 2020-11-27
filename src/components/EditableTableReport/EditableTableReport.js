@@ -51,11 +51,6 @@ class EditableTableReport extends React.Component {
 
   // Is called when table is changed
   tableChanged = () => {
-    console.log(this.state.data);
-
-    // Working
-    console.log("table changed");
-
     var user = firebase.auth().currentUser;
     if (user == null) {
       return;
@@ -71,22 +66,28 @@ class EditableTableReport extends React.Component {
       .set({
         tableData: this.state.data, // Required because array cannot be pushed
       });
-
-    console.log("successful update");
   };
 
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
   fetchTable = () => {
     //todo: Check login + call at beginning
-    console.log("update table");
-    console.log(this.props.tableOptions.name);
-
-    var user = firebase.auth().currentUser;
-    if (user == null) {
-      return;
+    var user_id;
+    if (
+      this.props.tableOptions.name == "Emergency" &&
+      this.props.tableOptions.publicKey != null
+    ) {
+      // Get user information from link
+      user_id = this.props.tableOptions.publicKey;
+    } else {
+      // Read information from logged in user
+      var user = firebase.auth().currentUser;
+      if (user == null) {
+        // No login -> return
+        return;
+      }
+      user_id = user.uid;
     }
-    var user_id = user.uid;
 
     var docRef = firebase
       .firestore()
@@ -95,23 +96,25 @@ class EditableTableReport extends React.Component {
       .collection(user_id)
       .doc(this.props.tableOptions.name);
 
-    console.log(docRef);
     docRef
       .get()
       .then((doc) => {
         if (doc.exists) {
-          console.log(doc.data());
           return doc.data();
         }
       })
       .then((doc_data) => {
-        console.log(doc_data);
         this.setState({ data: doc_data["tableData"] });
       });
-
   };
 
+  // Will trigger update from e.g. Emergency->linkAccess that will be triggered after componentdidmount
   componentDidUpdate(prevProps) {
+    if (prevProps == this.props) {
+      // No change from above (currently nothing else is needed)
+      return;
+    }
+    this.fetchTable();
     // Why do I need this?
     // this.setState({ showFileParams: this.props.showFileParams });
   }
@@ -119,6 +122,7 @@ class EditableTableReport extends React.Component {
   render() {
     return (
       <div>
+        <Button onClick={this.handleClickNotification}>TestButton</Button>
         <MaterialTable
           title=""
           columns={this.props.tableOptions.columns}
