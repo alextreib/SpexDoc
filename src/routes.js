@@ -64,7 +64,7 @@ const dashboardRoutes = [
     layout: "/admin"
   },
   {
-    path: "/table",
+    path: "/medRecords",
     name: "Befunde",
     rtlName: "قائمة الجدول",
     icon: "content_paste",
