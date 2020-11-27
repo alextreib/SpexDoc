@@ -1,45 +1,16 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import Button from "components/CustomButtons/Button.js";
 
-import firebase from "firebase/app";
 import "firebase/storage";
 import "firebase/firestore";
-import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
 
 import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Typography from "@material-ui/core/Typography";
-
-import Dialog from "@material-ui/core/Dialog";
-import LoginAlert from "components/LoginAlert/LoginAlert.js";
-
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
-import MuiDialogContent from "@material-ui/core/DialogContent";
-import MuiDialogActions from "@material-ui/core/DialogActions";
 
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import Snackbar from "components/Snackbar/Snackbar.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
 import AddAlert from "@material-ui/icons/AddAlert";
-
-import CloseIcon from "@material-ui/icons/Close";
-
-import IconButton from "@material-ui/core/IconButton";
-// import Button from "@material-ui/core/Button";
-
-import Icon from "@material-ui/core/Icon";
-import AddIcon from "@material-ui/icons/Add";
-
-import Fab from "@material-ui/core/Fab";
 
 import PropTypes from "prop-types";
 
@@ -73,7 +44,8 @@ const styles = {
   },
 };
 
-class Notifications extends React.Component {
+// Class for displaying a PopUp
+class PopUp extends React.Component {
   constructor(props) {
     super(props);
 
@@ -89,26 +61,23 @@ class Notifications extends React.Component {
       message: "Test Message",
       type: "info", //info, success, warning, danger, primary
       position: "tc", // tc, tl
-      // showFileParams: props.,
-      // DelayTime
     };
 
-    // this.showNotification=showNotification
-    this.showNotification.bind(this);
+    this.showPopUp.bind(this);
   }
 
   // Listens to own and assigned parent state
   componentDidUpdate(prevProps) {
     // Is called when the corresponding state is changed in parent class (indirect trigger)
     // Is also called a 2nd time when setState{open:true} is called inside this function
-    if (this.props.notifications.openNotification == true) {
-      this.showgenericNotification();
+    if (this.props.popUp.openPopUp == true) {
+      this.showgenericPopUp();
       // Open Dialog
       this.setState({
         open: true,
       });
       // Reset it in parent class
-      this.props.notifications.openNotification = false;
+      this.props.popUp.openPopUp = false;
     }
   }
 
@@ -119,21 +88,21 @@ class Notifications extends React.Component {
   };
 
   magicFunc = () => {
-    this.showgenericNotification();
+    this.showgenericPopUp();
   };
 
   handleClose = () => {
     this.setState({ open: false });
   };
 
-  showgenericNotification = () => {
+  showgenericPopUp = () => {
     this.setState({ [this.state.position]: true });
     setTimeout(() => {
       this.setState({ [this.state.position]: false });
     }, this.state.duration);
   };
 
-  showNotification = (place) => {
+  showPopUp = (place) => {
     if (!this.state.$place) {
       this.setState({ [place]: true });
       setTimeout(() => {
@@ -143,7 +112,6 @@ class Notifications extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
     return (
       <Card>
         <GridContainer justify="center">
@@ -165,7 +133,7 @@ class Notifications extends React.Component {
                   place="tc"
                   color="info"
                   icon={AddAlert}
-                  message={this.props.notifications.message}
+                  message={this.props.popUp.message}
                   open={this.state.tc}
                   closeNotification={() => this.setState({ tc: false })}
                   close
@@ -176,7 +144,7 @@ class Notifications extends React.Component {
                   place="tr"
                   color="info"
                   icon={AddAlert}
-                  message={this.props.notifications.message}
+                  message={this.props.popUp.message}
                   open={this.state.tr}
                   closeNotification={() => this.setState({ tr: false })}
                   close
@@ -229,8 +197,8 @@ class Notifications extends React.Component {
   }
 }
 
-Notifications.propTypes = {
+PopUp.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Notifications);
+export default withStyles(styles)(PopUp);

@@ -13,7 +13,7 @@ import Fab from "@material-ui/core/Fab";
 
 import PropTypes from "prop-types";
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
-import Notifications from "components/Notifications/Notifications.js";
+import PopUp from "components/PopUp/PopUp.js";
 import Button from "components/CustomButtons/Button.js";
 
 const styles = () => ({
@@ -39,7 +39,7 @@ class FileDialogue extends React.Component {
 
     this.state = {
       openLoginRequired: false,
-      notificationProps: this.NotificationProps,
+      popUpProps: this.PopUpProps,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -47,8 +47,8 @@ class FileDialogue extends React.Component {
   }
 
   // Structs
-  NotificationProps = {
-    openNotification: false,
+  PopUpProps = {
+    openPopUp: false,
     message: "File Successfully uploaded",
   };
 
@@ -75,8 +75,8 @@ class FileDialogue extends React.Component {
   magicFunc = () => {
     console.log("state changed in parent");
     this.setState({
-      notificationProps: {
-        openNotification: true,
+      popUpProps: {
+        openPopUp: true,
         message: "File successfully uploaded",
       },
     });
@@ -113,8 +113,8 @@ class FileDialogue extends React.Component {
           console.log("File available at", downloadURL);
           this.saveDocToUser(downloadURL);
           this.setState({
-            notificationProps: {
-              openNotification: true,
+            popUpProps: {
+              openPopUp: true,
               message: "File successfully uploaded",
             },
           });
@@ -144,7 +144,7 @@ class FileDialogue extends React.Component {
     return (
       <section className={classes.rightToolbar}>
         <LoginAlert loginState={this.state} />
-        <Notifications notifications={this.state.notificationProps} />
+        <PopUp popUp={this.state.popUpProps} />
         <input
           id="myInput"
           type="file"
