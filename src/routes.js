@@ -41,7 +41,6 @@ import Vaccination from "views/Vaccination/Vaccination.js";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import SmartDoc from "views/SmartDoc/SmartDoc.js";
 import Share from "views/Share/Share.js";
-import Test from "views/Test/Test.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
