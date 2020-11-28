@@ -7,8 +7,14 @@ import "firebase/firestore";
 import "firebase/database";
 
 import Button from "components/CustomButtons/Button.js";
-import { writeDBData, readDBData,displayLogin } from "components/Internal/DBFunctions.js";
+import {
+  writeDBData,
+  readDBData,
+  displayLogin,
+} from "components/Internal/DBFunctions.js";
 import { getPublicKey } from "components/Internal/Extraction.js";
+
+import { connect } from "react-redux";
 
 class EditableTableReport extends React.Component {
   constructor(props) {
@@ -30,14 +36,18 @@ class EditableTableReport extends React.Component {
     this.fetchTable();
   };
 
-    // Fetch the table from Firebase (Original data)
+  // Fetch the table from Firebase (Original data)
   // Is called when table is changed
   fetchTable = () => {
-    readDBData(this.props.tableOptions.name,this.props.tableOptions.name == "Emergency")
-    .then((doc_data) => {
-      this.setState({ data: doc_data });
+    return readDBData(
+      this.props.tableOptions.name,
+      this.props.tableOptions.name == "Emergency"
+    ).then((doc_data) => {
+      if (doc_data == null)
+        // Cannot get data -> set default data from parent class
+        this.setState({ data: this.props.tableOptions.data });
+      else this.setState({ data: doc_data });
     });
-    return;
   };
 
   // Is called when table is changed
@@ -50,8 +60,10 @@ class EditableTableReport extends React.Component {
     if (prevProps == this.props) {
       // No change from above (currently nothing else is needed)
       return;
+    } else {
+      this.fetchTable();
     }
-    this.fetchTable();
+
     // Why do I need this?
     // this.setState({ showFileParams: this.props.showFileParams });
   }
@@ -121,4 +133,12 @@ class EditableTableReport extends React.Component {
   }
 }
 
-export default EditableTableReport;
+const mapStateToProps = (state) => ({
+  loginState: state.loginState,
+});
+
+const EditableTableReportWithRedux = connect(mapStateToProps)(
+  EditableTableReport
+);
+
+export default EditableTableReportWithRedux;
