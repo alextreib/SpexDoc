@@ -17,7 +17,6 @@ import CardBody from "components/Card/CardBody.js";
 import Switch from "@material-ui/core/Switch";
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
 
-
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
@@ -66,7 +65,7 @@ class Share extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      openLoginRequired:false,
+      openLoginRequired: false,
       emergency: {
         QRCodeactive: false,
         Switchactive: false,
@@ -123,6 +122,11 @@ class Share extends React.Component {
         </CardHeader>
         <CardBody>
           <div id="Emergency">
+            Jeder kann in eine Notsituation kommen. Zeigen Sie ihm einfach den
+            folgenden QR Code und der Notfallsanitärer bekommt Zugriff auf Ihre
+            Notfalldaten. Drucken Sie am besten den Code aus.
+            <br />
+            <br />
             Notfalldaten
             <Switch
               checked={this.state.emergency.Switchactive}
