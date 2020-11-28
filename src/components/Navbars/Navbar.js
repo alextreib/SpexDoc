@@ -16,54 +16,66 @@ import Button from "components/CustomButtons/Button.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerStyle.js";
 
+import { withStyles } from "@material-ui/core/styles";
+
 const useStyles = makeStyles(styles);
 
-export default function Header(props) {
-  const classes = useStyles();
-  function makeBrand() {
+class Navbar extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  makeBrand = () => {
     var name;
-    props.routes.map(prop => {
+    this.props.routes.map((prop) => {
       if (window.location.href.indexOf(prop.layout + prop.path) !== -1) {
-        name = props.rtlActive ? prop.rtlName : prop.name;
+        name = this.props.rtlActive ? prop.rtlName : prop.name;
       }
       return null;
     });
     return name;
+  };
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <AppBar className={classes.appBar}>
+        <Toolbar className={classes.container}>
+          <div className={classes.flex}>
+            {/* Here we create navbar brand, based on route name */}
+            <Button color="transparent" href="#" className={classes.title}>
+              {this.makeBrand()}
+            </Button>
+          </div>
+          <Hidden smDown implementation="css">
+            {this.props.rtlActive ? (
+              <RTLNavbarLinks />
+            ) : (
+              <AdminNavbarLinks/>
+            )}
+          </Hidden>
+          <Hidden mdUp implementation="css">
+            {/* Button for opening the menu (only in mobile mode) */}
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={this.props.handleDrawerToggle}
+            >
+              <Menu />
+            </IconButton>
+          </Hidden>
+        </Toolbar>
+      </AppBar>
+    );
   }
-  const { color } = props;
-  const appBarClasses = classNames({
-    [" " + classes[color]]: color
-  });
-  return (
-    <AppBar className={classes.appBar + appBarClasses}>
-      <Toolbar className={classes.container}>
-        <div className={classes.flex}>
-          {/* Here we create navbar brand, based on route name */}
-          <Button color="transparent" href="#" className={classes.title}>
-            {makeBrand()}
-          </Button>
-        </div>
-        <Hidden smDown implementation="css">
-          {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks />}
-        </Hidden>
-        <Hidden mdUp implementation="css">
-          {/* Button for opening the menu (only in mobile mode) */}
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={props.handleDrawerToggle}
-          >
-            <Menu />
-          </IconButton>
-        </Hidden>
-      </Toolbar>
-    </AppBar>
-  );
 }
 
-Header.propTypes = {
+Navbar.propTypes = {
   color: PropTypes.oneOf(["primary", "info", "success", "warning", "danger"]),
   rtlActive: PropTypes.bool,
   handleDrawerToggle: PropTypes.func,
-  routes: PropTypes.arrayOf(PropTypes.object)
+  routes: PropTypes.arrayOf(PropTypes.object),
 };
+
+export default withStyles(styles)(Navbar);

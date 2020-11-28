@@ -33,6 +33,9 @@ import { withStyles } from "@material-ui/core/styles";
 
 import { Link } from "react-router-dom";
 
+import { connect } from "react-redux";
+import { activateGeod, closeGeod } from "components/Internal/Redux.js";
+
 const useStyles = makeStyles(styles);
 
 class AdminNavbarLinks extends React.Component {
@@ -111,9 +114,8 @@ class AdminNavbarLinks extends React.Component {
         // The signed-in user info.
         var user = result.user;
         this.setProfile(user);
-        console.log("user logged in");
-        // window.user = user;
-        // ...
+        console.log("User successfully logged in ");
+        this.props.activateGeod({ title: "I am a geo dude!" });
       })
       .catch((error) => {
         // Handle Errors here.
@@ -145,6 +147,7 @@ class AdminNavbarLinks extends React.Component {
         // todo: PopUp
         // Sign-out successful.
         this.setProfile(null);
+        this.props.closeGeod();
       })
       .catch((error) => {
         console.log("error while logging out");
@@ -375,4 +378,19 @@ AdminNavbarLinks.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AdminNavbarLinks);
+
+const mapStateToProps = (state) => ({
+  geod: state.geod,
+});
+
+const mapDispatchToProps = {
+  activateGeod,
+  closeGeod,
+};
+
+const AdminNavbarLinksWithRedux = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AdminNavbarLinks);
+
+export default withStyles(styles)(AdminNavbarLinksWithRedux);
