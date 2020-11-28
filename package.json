@@ -25,7 +25,8 @@
     "styled-components": "^4.3.2",
     "material-table": "latest",
     "bitly": "7.1.0",
-    "qrcode.react": "1.0.0"
+    "qrcode.react": "1.0.0",
+    "redux": "4.0.5"
   },
   "scripts": {
     "start": "react-scripts start",

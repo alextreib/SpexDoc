@@ -6,7 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-class AlertDialog extends React.Component {
+class LoginAlert extends React.Component {
   constructor(props) {
     super(props);
 
@@ -62,4 +62,4 @@ class AlertDialog extends React.Component {
   }
 }
 
-export default AlertDialog;
+export default LoginAlert;

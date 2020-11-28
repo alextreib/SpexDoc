@@ -7,7 +7,7 @@ import "firebase/firestore";
 import "firebase/database";
 
 import Button from "components/CustomButtons/Button.js";
-import { writeDBData, readDBData } from "components/Internal/DBFunctions.js";
+import { writeDBData, readDBData,displayLogin } from "components/Internal/DBFunctions.js";
 import { getPublicKey } from "components/Internal/Extraction.js";
 
 class EditableTableReport extends React.Component {
@@ -30,12 +30,7 @@ class EditableTableReport extends React.Component {
     this.fetchTable();
   };
 
-  // Is called when table is changed
-  tableChanged = () => {
-    writeDBData(this.props.tableOptions.name, this.state.data);
-  };
-
-  // Fetch the table from Firebase (Original data)
+    // Fetch the table from Firebase (Original data)
   // Is called when table is changed
   fetchTable = () => {
     readDBData(this.props.tableOptions.name,this.props.tableOptions.name == "Emergency")
@@ -43,7 +38,11 @@ class EditableTableReport extends React.Component {
       this.setState({ data: doc_data });
     });
     return;
+  };
 
+  // Is called when table is changed
+  tableChanged = () => {
+    writeDBData(this.props.tableOptions.name, this.state.data);
   };
 
   // Will trigger update from e.g. Emergency->linkAccess that will be triggered after componentdidmount
