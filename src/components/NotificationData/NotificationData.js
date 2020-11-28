@@ -5,7 +5,7 @@ import "firebase/firestore";
 
 import Button from "components/CustomButtons/Button.js";
 
-import {writeDBData} from "components/DBCommunication/WritingDB.js";
+import {writeDBData} from "components/Internal/DBFunctions.js";
 
 
 // Contains only data to visualize the

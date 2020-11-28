@@ -7,13 +7,16 @@ import "firebase/firestore";
 import "firebase/database";
 
 import Button from "components/CustomButtons/Button.js";
+import { writeDBData, readDBData } from "components/Internal/DBFunctions.js";
+import { getPublicKey } from "components/Internal/Extraction.js";
+
 class EditableTableReport extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       // Default data
-      data:this.props.tableOptions.data,
+      data: this.props.tableOptions.data,
     };
 
     this.init = this.init.bind(this);
@@ -29,61 +32,18 @@ class EditableTableReport extends React.Component {
 
   // Is called when table is changed
   tableChanged = () => {
-    var user = firebase.auth().currentUser;
-    if (user == null) {
-      return;
-    }
-    var user_id = user.uid;
-
-    firebase
-      .firestore()
-      .collection("userStorage")
-      .doc("users")
-      .collection(user_id)
-      .doc(this.props.tableOptions.name)
-      .set({
-        tableData: this.state.data, // Required because array cannot be pushed
-      });
+    writeDBData(this.props.tableOptions.name, this.state.data);
   };
 
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
   fetchTable = () => {
-    //todo: Check login + call at beginning
-    var user_id;
-    if (
-      this.props.tableOptions.name == "Emergency" &&
-      this.props.tableOptions.publicKey != null
-    ) {
-      // Get user information from link
-      user_id = this.props.tableOptions.publicKey;
-    } else {
-      // Read information from logged in user
-      var user = firebase.auth().currentUser;
-      if (user == null) {
-        // No login -> return
-        return;
-      }
-      user_id = user.uid;
-    }
+    readDBData(this.props.tableOptions.name,this.props.tableOptions.name == "Emergency")
+    .then((doc_data) => {
+      this.setState({ data: doc_data });
+    });
+    return;
 
-    var docRef = firebase
-      .firestore()
-      .collection("userStorage")
-      .doc("users")
-      .collection(user_id)
-      .doc(this.props.tableOptions.name);
-
-    docRef
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          return doc.data();
-        }
-      })
-      .then((doc_data) => {
-        this.setState({ data: doc_data["tableData"] });
-      });
   };
 
   // Will trigger update from e.g. Emergency->linkAccess that will be triggered after componentdidmount
@@ -106,14 +66,14 @@ class EditableTableReport extends React.Component {
           options={{
             headerStyle: {
               color: "#9c27b0",
-              padding:20,
+              padding: 20,
               paddingLeft: 35,
             },
-            actionsColumnIndex:10,
+            actionsColumnIndex: 10,
             cellStyle: {
-              padding:20,
+              padding: 20,
               paddingLeft: 35,
-            }
+            },
           }}
           data={this.state.data}
           editable={{

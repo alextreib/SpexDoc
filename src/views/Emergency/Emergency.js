@@ -59,7 +59,6 @@ class Emergency extends React.Component {
       external: {
         tableOptions: {
           name: "Emergency",
-          publicKey: null,
           columns: [
             { title: "Vorerkrankung", field: "predisposition" },
             { title: "Diagnose seit", field: "diagnosis_year" },
@@ -78,30 +77,13 @@ class Emergency extends React.Component {
       },
     };
 
-    this.linkAccess = this.linkAccess.bind(this);
   }
 
   componentDidMount()
   {
     console.log("now");
-    this.linkAccess();
   }
 
-  linkAccess = () => {
-    var keyWord = "publicKey=";
-    if (window.location.href.includes(keyWord)) {
-      console.log("Public Key is provided");
-      var link_without_info_length = window.location.href.indexOf(keyWord); // 38
-
-      var publicKey_link = window.location.href.substr(
-        link_without_info_length + keyWord.length
-      );
-      console.log(publicKey_link);
-      this.setState({
-        external: { tableOptions: {...this.state.external.tableOptions, publicKey: publicKey_link }},
-      });
-    }
-  };
 
   render() {
     const { classes } = this.props;
