@@ -30,6 +30,9 @@ import CommonComps from "components/Internal/CommonComps.js";
 
 import QRCode from "qrcode.react";
 
+import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
+import { connect } from "react-redux";
+
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -65,16 +68,23 @@ class Share extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      openLoginRequired: false,
-      emergency: {
-        QRCodeactive: false,
-        Switchactive: false,
-        shortLink: "",
+      commonProps: {
+        LoginAlertProps: {
+          openLoginRequired: false,
+          FuncParams: "test",
+        },
       },
-      medRecords: {
-        QRCodeactive: false,
-        Switchactive: false,
-        shortLink: "",
+      data: {
+        emergency: {
+          QRCodeactive: false,
+          Switchactive: false,
+          shortLink: "",
+        },
+        medRecords: {
+          QRCodeactive: false,
+          Switchactive: false,
+          shortLink: "",
+        },
       },
     };
 
@@ -82,26 +92,60 @@ class Share extends React.Component {
     this.handleSwitchChange = this.handleSwitchChange.bind(this);
   }
 
+  // For redux and others
+  componentDidUpdate(prevProps) {
+    if (prevProps == this.props) {
+      // No change from above (currently nothing else is needed)
+      return;
+    } else {
+      this.fetchTable();
+    }
+  }
+
+  componentDidMount() {
+    this.fetchTable();
+  }
+
+  // Fetch the table from Firebase (Original data)
+  fetchTable = () => {
+    return readDBData("Share", false).then((doc_data) => {
+      if (doc_data != null) this.setState({ data: doc_data });
+    });
+  };
+
+  upload = () => {
+    var user_id = getUserID();
+    if (user_id == null) {
+      this.displayLogin();
+      return false;
+    }
+    var success = writeDBData("Share", this.state.data);
+    if (success == false) this.displayLogin();
+  };
+
   handleSwitchChange = async (property, event) => {
+    console.log("handleSwitch")
     var checked = event.target.checked;
 
-    var user_id=getUserID();
-    if(user_id==null)
-    {
+    var user_id = getUserID();
+    if (user_id == null) {
       this.displayLogin();
       return false;
     }
 
-    var shortLink=await getShortLink(property);
-    console.log(shortLink);
+    var shortLink = await getShortLink(property);
 
     this.setState({
-      [property]: {
+      data:{...this.state.data,[property]: {
         shortLink: shortLink,
         Switchactive: checked,
         QRCodeactive: checked,
       },
+    }
     });
+
+    // Upload
+    this.upload();
   };
 
   // todo: Find a way to cluster/extract it to a common place
@@ -136,7 +180,7 @@ class Share extends React.Component {
             <br />
             Notfalldaten
             <Switch
-              checked={this.state.emergency.Switchactive}
+              checked={this.state.data.emergency.Switchactive}
               onChange={(ev) => this.handleSwitchChange("emergency", ev)}
               color="secondary"
               name="Emergency_switch"
@@ -145,10 +189,10 @@ class Share extends React.Component {
             {/* todo: Layout without br and maybe one component */}
             <br />
             <br />
-            {this.state.emergency.QRCodeactive ? (
+            {this.state.data.emergency.QRCodeactive ? (
               <div>
                 <QRCode
-                  value={this.state.emergency.shortLink}
+                  value={this.state.data.emergency.shortLink}
                   size={250}
                   bgColor={"#ffffff"}
                   fgColor={"#000000"}
@@ -166,8 +210,8 @@ class Share extends React.Component {
                   }}
                 />
                 <br />
-                <a href={this.state.emergency.shortLink}>
-                  {this.state.emergency.shortLink}
+                <a href={this.state.data.emergency.shortLink}>
+                  {this.state.data.emergency.shortLink}
                 </a>
               </div>
             ) : null}
@@ -175,7 +219,7 @@ class Share extends React.Component {
           <div id="medRecords">
             Befunde
             <Switch
-              checked={this.state.medRecords.Switchactive}
+              checked={this.state.data.medRecords.Switchactive}
               onChange={(ev) => this.handleSwitchChange("medRecords", ev)}
               color="primary"
               name="medRecords_switch"
@@ -183,10 +227,10 @@ class Share extends React.Component {
             />
             <br />
             <br />
-            {this.state.medRecords.QRCodeactive ? (
+            {this.state.data.medRecords.QRCodeactive ? (
               <div>
                 <QRCode
-                  value={this.state.medRecords.shortLink}
+                  value={this.state.data.medRecords.shortLink}
                   size={250}
                   bgColor={"#ffffff"}
                   fgColor={"#000000"}
@@ -204,8 +248,8 @@ class Share extends React.Component {
                   }}
                 />
                 <br />
-                <a href={this.state.medRecords.shortLink}>
-                  {this.state.medRecords.shortLink}
+                <a href={this.state.data.medRecords.shortLink}>
+                  {this.state.data.medRecords.shortLink}
                 </a>
               </div>
             ) : null}
@@ -220,4 +264,11 @@ Share.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Share);
+// Required for each component that relies on the loginState
+const mapStateToProps = (state) => ({
+  loginState: state.loginState,
+});
+
+const ShareWithRedux = connect(mapStateToProps)(Share);
+
+export default withStyles(styles)(ShareWithRedux);

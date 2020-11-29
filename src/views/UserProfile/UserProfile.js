@@ -67,6 +67,7 @@ class UserProfile extends React.Component {
     };
   }
 
+  // For redux and others
   componentDidUpdate(prevProps) {
     if (prevProps == this.props) {
       // No change from above (currently nothing else is needed)
