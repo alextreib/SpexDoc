@@ -59,7 +59,8 @@ export const readDBData = (docName, allowPublicKey) => {
         }
       })
       .then((doc_data) => {
-        resolve(doc_data["data"]);
+        if (doc_data != null) resolve(doc_data["data"]);
+        else resolve(null);
       });
   });
 };

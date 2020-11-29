@@ -7,11 +7,7 @@ import "firebase/firestore";
 import "firebase/database";
 
 import Button from "components/CustomButtons/Button.js";
-import {
-  writeDBData,
-  readDBData,
-  displayLogin,
-} from "components/Internal/DBFunctions.js";
+import { writeDBData, readDBData } from "components/Internal/DBFunctions.js";
 import { getPublicKey } from "components/Internal/Extraction.js";
 import CommonComps from "components/Internal/CommonComps.js";
 
@@ -27,23 +23,32 @@ class EditableTableReport extends React.Component {
       commonProps: {
         LoginAlertProps: {
           openLoginRequired: false,
-          FuncParams:"test"
+          FuncParams: "test",
         },
-        update:false,
+        update: false,
       },
     };
 
-    this.init = this.init.bind(this);
     this.tableChanged = this.tableChanged.bind(this);
     this.fetchTable = this.fetchTable.bind(this);
-    this.magicFunc = this.magicFunc.bind(this);
-
-    this.init();
   }
 
-  init = () => {
+  // Will trigger update from e.g. Emergency->linkAccess that will be triggered after componentdidmount
+  componentDidUpdate(prevProps) {
+    if (prevProps == this.props) {
+      // No change from above (currently nothing else is needed)
+      return;
+    } else {
+      this.fetchTable();
+    }
+
+    // Why do I need this?
+    // this.setState({ showFileParams: this.props.showFileParams });
+  }
+
+  componentDidMount() {
     this.fetchTable();
-  };
+  }
 
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
@@ -61,30 +66,19 @@ class EditableTableReport extends React.Component {
 
   // Is called when table is changed
   tableChanged = () => {
-    writeDBData(this.props.tableOptions.name, this.state.data);
+    var success = writeDBData(this.props.tableOptions.name, this.state.data);
+    if (success == false) this.displayLogin();
   };
 
-  magicFunc = () => {
-    console.log("magicFunc");
-
+  // todo: Find a way to cluster/extract it to a common place
+  displayLogin = () => {
     // This is how a function in CommonProps is called
     this.setState({
-      commonProps: { LoginAlertProps: { openLoginRequired: true,FuncParams:"test" } },
+      commonProps: {
+        LoginAlertProps: { openLoginRequired: true, FuncParams: "test" },
+      },
     });
   };
-
-  // Will trigger update from e.g. Emergency->linkAccess that will be triggered after componentdidmount
-  componentDidUpdate(prevProps) {
-    if (prevProps == this.props) {
-      // No change from above (currently nothing else is needed)
-      return;
-    } else {
-      this.fetchTable();
-    }
-
-    // Why do I need this?
-    // this.setState({ showFileParams: this.props.showFileParams });
-  }
 
   render() {
     return (

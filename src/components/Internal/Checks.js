@@ -7,6 +7,7 @@ import "firebase/auth";
 export const checkUser = () => {
   if (firebase.auth().currentUser == null) {
     console.log("user not logged in");
+    // Display LoginAlert
     return false;
   } else {
     return true;
