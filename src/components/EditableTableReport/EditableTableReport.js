@@ -13,10 +13,9 @@ import {
   displayLogin,
 } from "components/Internal/DBFunctions.js";
 import { getPublicKey } from "components/Internal/Extraction.js";
+import CommonComps from "components/Internal/CommonComps.js";
 
 import { connect } from "react-redux";
-import { openLoginAlert } from "components/Internal/VisuElements";
-import { openPopUp } from "components/Internal/VisuElements";
 
 class EditableTableReport extends React.Component {
   constructor(props) {
@@ -25,7 +24,13 @@ class EditableTableReport extends React.Component {
     this.state = {
       // Default data
       data: this.props.tableOptions.data,
-      additionalComp:null,
+      commonProps: {
+        LoginAlertProps: {
+          openLoginRequired: false,
+          FuncParams:"test"
+        },
+        update:false,
+      },
     };
 
     this.init = this.init.bind(this);
@@ -59,11 +64,14 @@ class EditableTableReport extends React.Component {
     writeDBData(this.props.tableOptions.name, this.state.data);
   };
 
-  magicFunc = () =>{
-    console.log("magicFunc")
-    // this.setState({ additionalComp: openLoginAlert() });
-    this.setState({ additionalComp: openPopUp() });
-  }
+  magicFunc = () => {
+    console.log("magicFunc");
+
+    // This is how a function in CommonProps is called
+    this.setState({
+      commonProps: { LoginAlertProps: { openLoginRequired: true,FuncParams:"test" } },
+    });
+  };
 
   // Will trigger update from e.g. Emergency->linkAccess that will be triggered after componentdidmount
   componentDidUpdate(prevProps) {
@@ -81,12 +89,8 @@ class EditableTableReport extends React.Component {
   render() {
     return (
       <div>
-          <Button
-                onClick={this.magicFunc}
-              >
-                Download free!
-              </Button>
-              {this.state.additionalComp}
+        <CommonComps commonProps={this.state.commonProps} />
+        <Button onClick={this.magicFunc}>Download fr2ee!</Button>
         <MaterialTable
           title=""
           columns={this.props.tableOptions.columns}
@@ -149,6 +153,7 @@ class EditableTableReport extends React.Component {
   }
 }
 
+// Required for each component that relies on the loginState
 const mapStateToProps = (state) => ({
   loginState: state.loginState,
 });

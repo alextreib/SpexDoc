@@ -11,6 +11,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 
 import EditableTableReport from "components/EditableTableReport/EditableTableReport.js";
+import CommonComps from "components/Internal/CommonComps.js";
 
 import AddAlert from "@material-ui/icons/AddAlert";
 import Button from "components/CustomButtons/Button.js";
