@@ -22,6 +22,11 @@ const styles = () => ({
   },
 });
 
+// How to integrate:
+// 1) Add CommonComps to render of parent
+// 2) Add commonProps: {LoginAlertProps: {openLoginRequired: false,FuncParams: "test",} to parent state
+// 3) Check if Redux is required
+
 // Component that extends each view component. Aka common component
 // Should also be includable in each component (subcomponent like EditabletableReport)
 class CommonComps extends React.Component {
@@ -51,7 +56,6 @@ class CommonComps extends React.Component {
   }
 
   render() {
-
     return <div>{this.state.additionalComp.map((addComp) => addComp)}</div>;
   }
 }

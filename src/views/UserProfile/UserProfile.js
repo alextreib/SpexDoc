@@ -19,6 +19,12 @@ import "firebase/firestore";
 
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import { getUserID } from "components/Internal/Checks.js";
+import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
+
+import CommonComps from "components/Internal/CommonComps.js";
+
+import { connect } from "react-redux";
 
 const styles = {
   cardCategoryWhite: {
@@ -39,49 +45,63 @@ const styles = {
   },
 };
 
-// Display Login Screen here -> Login from Profile NavBar should also point here
 class UserProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      commonProps: {
+        LoginAlertProps: {
+          openLoginRequired: false,
+          FuncParams: "test",
+        },
+      },
       userProfile: {
-        email: "",
-        firstName: "",
-        lastName: "",
-        plz: "",
-        city: "",
-        street: "",
-        aboutMe: "",
+        email: "max.mustermann@gmail.com",
+        firstName: "Maximilian",
+        lastName: "Mustermann",
+        plz: "123456",
+        city: "Musterstadt",
+        street: "Maximilianstraße",
+        aboutMe: "Ich bin Max.",
       },
     };
-
-    //Bindings
-    this.loadUserProfile = this.loadUserProfile.bind(this);
-
-    this.loadUserProfile();
   }
 
-  loadUserProfile() {
-    var user = firebase.auth().currentUser;
-    if (user == null) {
+  componentDidUpdate(prevProps) {
+    if (prevProps == this.props) {
+      // No change from above (currently nothing else is needed)
       return;
+    } else {
+      this.fetchTable();
     }
-    var docRef = firebase
-      .firestore()
-      .collection("userStorage")
-      .doc("userProfile_" + user.uid);
-
-    docRef
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          return doc.data();
-        }
-      })
-      .then((userProfile_in) => {
-        this.setState({ userProfile: userProfile_in });
-      });
   }
+
+  componentDidMount() {
+    this.fetchTable();
+  }
+
+  // Fetch the table from Firebase (Original data)
+  // Is called when table is changed
+  fetchTable = () => {
+    // todo: default parameter
+    return readDBData("UserProfile", false).then((doc_data) => {
+      if (doc_data != null) this.setState({ userProfile: doc_data });
+      // Cannot get data -> set default data from parent class
+      // this.setState({ userProfile: this.state.user });
+      // else ;
+    });
+  };
+
+  // Is called when table is changed
+  uploadProfile = () => {
+    var user_id = getUserID();
+    if (user_id == null) {
+      this.displayLogin();
+      return false;
+    }
+    var success = writeDBData("UserProfile", this.state.userProfile);
+    if (success == false) this.displayLogin();
+  };
 
   // Nice function: Sets states automatically
   profileChange = (property, event) => {
@@ -91,24 +111,23 @@ class UserProfile extends React.Component {
     });
   };
 
-  saveProfile = () => {
-    var user = firebase.auth().currentUser;
-    if (user == null) {
-      return;
-    }
-    var user_id = user.uid;
-
-    firebase
-      .firestore()
-      .collection("userStorage")
-      .doc("userProfile_" + user_id)
-      .set(this.state.userProfile);
+  // todo: Find a way to cluster/extract it to a common place
+  displayLogin = () => {
+    console.log("displaylogin");
+    // This is how a function in CommonProps is called
+    this.setState({
+      commonProps: {
+        LoginAlertProps: { openLoginRequired: true, FuncParams: "test" },
+      },
+    });
   };
 
   render() {
     const { classes } = this.props;
     return (
       <div>
+        <CommonComps commonProps={this.state.commonProps} />
+
         <GridContainer>
           <GridItem xs={12} sm={12} md={8}>
             <Card>
@@ -225,7 +244,7 @@ class UserProfile extends React.Component {
                 </GridContainer>
               </CardBody>
               <CardFooter>
-                <Button color="primary" onClick={this.saveProfile} round>
+                <Button color="primary" onClick={this.uploadProfile} round>
                   Speichern
                 </Button>
               </CardFooter>
@@ -266,4 +285,11 @@ UserProfile.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(UserProfile);
+// Required for each component that relies on the loginState
+const mapStateToProps = (state) => ({
+  loginState: state.loginState,
+});
+
+const UserProfileWithRedux = connect(mapStateToProps)(UserProfile);
+
+export default withStyles(styles)(UserProfileWithRedux);

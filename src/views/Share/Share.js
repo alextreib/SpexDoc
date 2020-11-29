@@ -23,12 +23,12 @@ import "firebase/firestore";
 
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import { getUserID } from "components/Internal/Checks";
+import { getShortLink } from "components/Internal/Checks";
 
-// todo: import ?
-var QRCode = require("qrcode.react");
-// Both versions
-const BitlyClient = require("bitly").BitlyClient;
-const bitly = new BitlyClient("10f3147740e04fd0ea4c68788a84147cc6034dfa");
+import CommonComps from "components/Internal/CommonComps.js";
+
+import QRCode from "qrcode.react";
 
 const styles = {
   cardCategoryWhite: {
@@ -79,25 +79,21 @@ class Share extends React.Component {
     };
 
     //Bindings
-    this.handleChange = this.handleChange.bind(this);
+    this.handleSwitchChange = this.handleSwitchChange.bind(this);
   }
 
-  handleChange = async (property, event) => {
+  handleSwitchChange = async (property, event) => {
     var checked = event.target.checked;
 
-    var user = firebase.auth().currentUser;
-    if (user == null) {
-      this.setState({
-        openLoginRequired: true,
-      });
-      return;
+    var user_id=getUserID();
+    if(user_id==null)
+    {
+      this.displayLogin();
+      return false;
     }
-    var user_id = user.uid;
 
-    var longLink =
-      "https://app.spexdoc.net/admin/" + property + "/publicKey=" + user_id;
-    const response = await bitly.shorten(longLink);
-    const shortLink = response.link;
+    var shortLink=await getShortLink(property);
+    console.log(shortLink);
 
     this.setState({
       [property]: {
@@ -108,11 +104,22 @@ class Share extends React.Component {
     });
   };
 
+  // todo: Find a way to cluster/extract it to a common place
+  displayLogin = () => {
+    // This is how a function in CommonProps is called
+    this.setState({
+      commonProps: {
+        LoginAlertProps: { openLoginRequired: true, FuncParams: "test" },
+      },
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
     return (
       <Card>
+        <CommonComps commonProps={this.state.commonProps} />
         <LoginAlert loginState={this.state} />
         <CardHeader color="primary">
           <h4 className={classes.cardTitleWhite}>Freigaben</h4>
@@ -130,7 +137,7 @@ class Share extends React.Component {
             Notfalldaten
             <Switch
               checked={this.state.emergency.Switchactive}
-              onChange={(ev) => this.handleChange("emergency", ev)}
+              onChange={(ev) => this.handleSwitchChange("emergency", ev)}
               color="secondary"
               name="Emergency_switch"
               inputProps={{ "aria-label": "secondary checkbox" }}
@@ -169,7 +176,7 @@ class Share extends React.Component {
             Befunde
             <Switch
               checked={this.state.medRecords.Switchactive}
-              onChange={(ev) => this.handleChange("medRecords", ev)}
+              onChange={(ev) => this.handleSwitchChange("medRecords", ev)}
               color="primary"
               name="medRecords_switch"
               inputProps={{ "aria-label": "secondary checkbox" }}

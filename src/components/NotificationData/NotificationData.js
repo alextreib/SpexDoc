@@ -57,9 +57,6 @@ class NotificationData extends React.Component {
   render() {
     return (
       <div>
-            <Button
-            onClick={this.changeChange}
-          >TestButton</Button>
       </div>
     );
   }

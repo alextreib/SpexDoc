@@ -3,6 +3,10 @@ import "firebase/storage";
 import "firebase/firestore";
 import "firebase/auth";
 
+const BitlyClient = require("bitly").BitlyClient;
+//todo: Hide key
+const bitly = new BitlyClient("10f3147740e04fd0ea4c68788a84147cc6034dfa");
+
 // Get user_id -> checkUser -> LoginAlert
 export const checkUser = () => {
   if (firebase.auth().currentUser == null) {
@@ -19,4 +23,11 @@ export const getUserID = () => {
     return firebase.auth().currentUser.uid;
   }
   return null;
+};
+
+export const getShortLink = async (property) => {
+  var longLink =
+    "https://app.spexdoc.net/admin/" + property + "/publicKey=" + getUserID();
+  const response = await bitly.shorten(longLink);
+  return response.link;
 };

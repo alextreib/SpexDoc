@@ -84,7 +84,6 @@ class EditableTableReport extends React.Component {
     return (
       <div>
         <CommonComps commonProps={this.state.commonProps} />
-        <Button onClick={this.magicFunc}>Download fr2ee!</Button>
         <MaterialTable
           title=""
           columns={this.props.tableOptions.columns}
