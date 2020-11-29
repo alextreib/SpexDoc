@@ -1,7 +1,13 @@
+import React from "react";
+import MaterialTable from "material-table";
+
 import firebase from "firebase/app";
-import "firebase/storage";
-import "firebase/firestore";
 import "firebase/auth";
+import "firebase/firestore";
+import "firebase/database";
+
+import Button from "components/CustomButtons/Button.js";
+import LoginAlert from "components/LoginAlert/LoginAlert.js";
 
 import { getUserID } from "components/Internal/Checks.js";
 import { getPublicKey } from "components/Internal/Extraction.js";

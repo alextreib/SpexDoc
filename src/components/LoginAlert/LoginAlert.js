@@ -11,7 +11,7 @@ class LoginAlert extends React.Component {
     super(props);
 
     this.state = {
-      open: false,
+      open: this.props.loginState.openLoginRequired,
     };
   }
 
@@ -19,14 +19,10 @@ class LoginAlert extends React.Component {
   componentDidUpdate(prevProps) {
     // Is called when the corresponding state is changed in parent class (indirect trigger)
     // Is also called a 2nd time when setState{open:true} is called inside this function
-    if (this.props.loginState.openLoginRequired == true) {
-      console.log("Login required");
-      // Open Dialog
+    if (prevProps != this.props) {
       this.setState({
-        open: true,
+        open: this.props.loginState.openLoginRequired,
       });
-      // Reset it in parent class
-      this.props.loginState.openLoginRequired = false;
     }
   }
 
@@ -34,6 +30,7 @@ class LoginAlert extends React.Component {
     this.setState({
       open: false,
     });
+    this.props.loginState.openLoginRequired = false;
   };
 
   render() {

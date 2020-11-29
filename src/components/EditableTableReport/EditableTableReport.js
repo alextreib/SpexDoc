@@ -15,6 +15,8 @@ import {
 import { getPublicKey } from "components/Internal/Extraction.js";
 
 import { connect } from "react-redux";
+import { openLoginAlert } from "components/Internal/VisuElements";
+import { openPopUp } from "components/Internal/VisuElements";
 
 class EditableTableReport extends React.Component {
   constructor(props) {
@@ -23,11 +25,13 @@ class EditableTableReport extends React.Component {
     this.state = {
       // Default data
       data: this.props.tableOptions.data,
+      additionalComp:null,
     };
 
     this.init = this.init.bind(this);
     this.tableChanged = this.tableChanged.bind(this);
     this.fetchTable = this.fetchTable.bind(this);
+    this.magicFunc = this.magicFunc.bind(this);
 
     this.init();
   }
@@ -55,6 +59,12 @@ class EditableTableReport extends React.Component {
     writeDBData(this.props.tableOptions.name, this.state.data);
   };
 
+  magicFunc = () =>{
+    console.log("magicFunc")
+    // this.setState({ additionalComp: openLoginAlert() });
+    this.setState({ additionalComp: openPopUp() });
+  }
+
   // Will trigger update from e.g. Emergency->linkAccess that will be triggered after componentdidmount
   componentDidUpdate(prevProps) {
     if (prevProps == this.props) {
@@ -71,6 +81,12 @@ class EditableTableReport extends React.Component {
   render() {
     return (
       <div>
+          <Button
+                onClick={this.magicFunc}
+              >
+                Download free!
+              </Button>
+              {this.state.additionalComp}
         <MaterialTable
           title=""
           columns={this.props.tableOptions.columns}

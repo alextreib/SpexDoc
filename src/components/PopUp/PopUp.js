@@ -50,7 +50,7 @@ class PopUp extends React.Component {
     super(props);
 
     this.state = {
-      open: false,
+      open: this.props.popUp.openPopUp,
       tl: false,
       tc: false,
       tr: false,
@@ -60,53 +60,51 @@ class PopUp extends React.Component {
       duration: 2500, //ms
       message: "Test Message",
       type: "info", //info, success, warning, danger, primary
-      position: "tc", // tc, tl
+      position: "tc", // default position
     };
 
-    this.showPopUp.bind(this);
+    this.checkAction = this.checkAction.bind(this);
+    this.showgenericPopUp = this.showgenericPopUp.bind(this);
   }
 
   // Listens to own and assigned parent state
   componentDidUpdate(prevProps) {
     // Is called when the corresponding state is changed in parent class (indirect trigger)
     // Is also called a 2nd time when setState{open:true} is called inside this function
-    if (this.props.popUp.openPopUp == true) {
-      this.showgenericPopUp();
-      // Open Dialog
-      this.setState({
-        open: true,
-      });
-      // Reset it in parent class
-      this.props.popUp.openPopUp = false;
+    if (prevProps != this.props) {
+      this.state.open = this.props.popUp.openPopUp;
+      this.checkAction();
     }
   }
 
-  loginFirst = () => {
-    this.setState({
-      displayLogin: true,
-    });
+  componentDidMount() {
+    // Not on the beginning because this.state is not available yet
+    this.checkAction();
+  }
+
+  // Open or close PopUp
+  checkAction = () => {
+    if (this.state.open) {
+      this.showgenericPopUp();
+    }
   };
 
-  magicFunc = () => {
-    this.showgenericPopUp();
-  };
-
-  handleClose = () => {
+  handleClose = (position) => {
     this.setState({ open: false });
+    this.setState({ [position]: false });
+
+    this.props.popUp.openPopUp = false;
   };
 
   showgenericPopUp = () => {
-    this.setState({ [this.state.position]: true });
-    setTimeout(() => {
-      this.setState({ [this.state.position]: false });
-    }, this.state.duration);
+    this.showPopUp(this.state.position);
   };
 
-  showPopUp = (place) => {
+  showPopUp = (position) => {
     if (!this.state.$place) {
-      this.setState({ [place]: true });
+      this.setState({ [position]: true });
       setTimeout(() => {
-        this.setState({ [place]: false });
+        this.handleClose(position);
       }, this.state.duration);
     }
   };
@@ -124,7 +122,7 @@ class PopUp extends React.Component {
                   icon={AddAlert}
                   message={this.state.message}
                   open={this.state.tl}
-                  closeNotification={() => this.setState({ tl: false })}
+                  closeNotification={() => this.handleClose("tl")}
                   close
                 />
               </GridItem>
@@ -135,7 +133,7 @@ class PopUp extends React.Component {
                   icon={AddAlert}
                   message={this.props.popUp.message}
                   open={this.state.tc}
-                  closeNotification={() => this.setState({ tc: false })}
+                  closeNotification={() => this.handleClose("tc")}
                   close
                 />
               </GridItem>
@@ -146,7 +144,7 @@ class PopUp extends React.Component {
                   icon={AddAlert}
                   message={this.props.popUp.message}
                   open={this.state.tr}
-                  closeNotification={() => this.setState({ tr: false })}
+                  closeNotification={() => this.handleClose("tr")}
                   close
                 />
               </GridItem>
@@ -163,7 +161,7 @@ class PopUp extends React.Component {
                   icon={AddAlert}
                   message={this.state.message}
                   open={this.state.bl}
-                  closeNotification={() => this.setState({ bl: false })}
+                  closeNotification={() => this.handleClose("bl")}
                   close
                 />
               </GridItem>
@@ -174,7 +172,7 @@ class PopUp extends React.Component {
                   icon={AddAlert}
                   message={this.state.message}
                   open={this.state.bc}
-                  closeNotification={() => this.setState({ bc: false })}
+                  closeNotification={() => this.handleClose("bc")}
                   close
                 />
               </GridItem>
@@ -185,7 +183,7 @@ class PopUp extends React.Component {
                   icon={AddAlert}
                   message={this.state.message}
                   open={this.state.br}
-                  closeNotification={() => this.setState({ br: false })}
+                  closeNotification={() => this.handleClose("br")}
                   close
                 />
               </GridItem>
