@@ -31,6 +31,7 @@ import CommonComps from "components/Internal/CommonComps.js";
 import QRCode from "qrcode.react";
 
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
+import { defaultCommonParams } from "components/Internal/Utils.js";
 import { connect } from "react-redux";
 
 const styles = {
@@ -68,12 +69,7 @@ class Share extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      commonProps: {
-        LoginAlertProps: {
-          openLoginRequired: false,
-          FuncParams: "test",
-        },
-      },
+      commonProps:defaultCommonParams,
       data: {
         emergency: {
           QRCodeactive: false,
