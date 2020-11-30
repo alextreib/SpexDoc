@@ -57,7 +57,6 @@ class ShowFileList extends React.Component {
       medRecords: ["Beispiel"],
     };
     this.loadFiles = this.loadFiles.bind(this);
-
   }
 
   componentDidMount() {
@@ -88,7 +87,7 @@ class ShowFileList extends React.Component {
       if (result == false) {
         // displayLogin
       }
-      
+
       // Success
       this.loadFiles();
     });
@@ -102,7 +101,12 @@ class ShowFileList extends React.Component {
         <Grid container>
           {this.state.medRecords.map((medRecord) => (
             <Grid key={medRecord} item md={6}>
-              <ShowFile showFileParams={{ medRecord: medRecord, updateFunc: this.loadFiles }} />
+              <ShowFile
+                showFileParams={{
+                  medRecord: medRecord,
+                  updateFunc: this.loadFiles,
+                }}
+              />
             </Grid>
           ))}
         </Grid>
@@ -135,16 +139,11 @@ ShowFileList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-
-
 // Required for each component that relies on the loginState
 const mapStateToProps = (state) => ({
   loginState: state.loginState,
 });
 
-const ShowFileListWithRedux = connect(mapStateToProps)(
-  ShowFileList
-);
+const ShowFileListWithRedux = connect(mapStateToProps)(ShowFileList);
 
 export default withStyles(styles)(ShowFileListWithRedux);
-

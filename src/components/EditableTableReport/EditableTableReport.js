@@ -11,6 +11,8 @@ import { writeDBData, readDBData } from "components/Internal/DBFunctions.js";
 import { getPublicKey } from "components/Internal/Extraction.js";
 import CommonComps from "components/Internal/CommonComps.js";
 
+import { Paper } from "@material-ui/core";
+
 import { connect } from "react-redux";
 
 class EditableTableReport extends React.Component {
@@ -85,19 +87,27 @@ class EditableTableReport extends React.Component {
       <div>
         <CommonComps commonProps={this.state.commonProps} />
         <MaterialTable
+          boxShadow={0}
+          components={{
+            Container: (props) => <Paper {...props} elevation={0} />,
+          }}
           title=""
           columns={this.props.tableOptions.columns}
           options={{
             headerStyle: {
               color: "#9c27b0",
-              padding: 20,
-              paddingLeft: 35,
+              padding: 15,
+              paddingLeft: 5,
             },
             actionsColumnIndex: 10,
             cellStyle: {
-              padding: 20,
-              paddingLeft: 35,
+              padding: 5,
+              paddingLeft: 5,
             },
+            rowStyle: {
+              fontSize: 13,
+              fontWeight:300
+            }
           }}
           data={this.state.data}
           editable={{
