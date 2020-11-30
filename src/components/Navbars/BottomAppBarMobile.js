@@ -13,6 +13,7 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListSubheader from "@material-ui/core/ListSubheader";
 import Avatar from "@material-ui/core/Avatar";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import MenuIcon from "@material-ui/icons/Menu";
 import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
@@ -28,12 +29,17 @@ import Hidden from "@material-ui/core/Hidden";
 import Badge from "@material-ui/core/Badge";
 import red from "@material-ui/core/colors/red";
 
+import Grow from "@material-ui/core/Grow";
+import Popper from "@material-ui/core/Popper";
+import Divider from "@material-ui/core/Divider";
+import Person from "@material-ui/icons/Person";
+
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
-
 import NotificationData from "components/NotificationData/NotificationData.js";
+import ProfileButton from "components/Navbars/ProfileButton.js";
 
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import NotificationsIcon from "@material-ui/icons/Notifications";
@@ -48,7 +54,7 @@ import {
   warningColor,
   dangerColor,
   whiteColor,
-  grayColor
+  grayColor,
 } from "assets/jss/material-dashboard-react.js";
 
 const useStyles = makeStyles((theme) => ({
@@ -105,11 +111,13 @@ export default function BottomAppBarMobile() {
     setnotificationList(newList);
   };
 
-  const handleClickNotification = (event) => {
+  //todo: What about the notification on bottom bar? Displaying Popper or only redirect?
+  const handleClickNotification = () => {
     if (openNotification) {
       setOpenNotification(null);
     } else {
-      setOpenNotification(event.currentTarget);
+      console.log("else");
+      // setOpenNotification(event.currentTarget);
     }
   };
 
@@ -117,34 +125,6 @@ export default function BottomAppBarMobile() {
     setOpenNotification(null);
   };
 
- const handleLoginProfile = () =>{
-  console.log("login process");
-  var provider = new firebase.auth.GoogleAuthProvider();
-
-  firebase
-    .auth()
-    .signInWithPopup(provider)
-    .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      var token = result.credential.accessToken;
-      // The signed-in user info.
-      var user = result.user;
-      // this.setProfile(user);
-      console.log("User successfully logged in ");
-      // this.props.loginRedux({ user_id: user.uid });
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // The email of the user's account used.
-      var email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential;
-      console.log("error: " + errorCode + ":" + errorMessage);
-      // ...
-    });
- }
 
   return (
     <React.Fragment>
@@ -170,15 +150,10 @@ export default function BottomAppBarMobile() {
               <NotificationIcon
                 color="black"
                 onClick={handleClickNotification}
-                className={classes.icons}
-              ></NotificationIcon>
+              />
             </Badge>
           </Link>
-          <Link color="inherit" to="/admin/user">
-          <IconButton    onClick={handleLoginProfile} edge="end" color="inherit">
-            <AccountCircle />
-          </IconButton>
-          </Link>
+          <ProfileButton />
         </Toolbar>
       </AppBar>
     </React.Fragment>

@@ -1,5 +1,6 @@
 import React from "react";
 import classNames from "classnames";
+
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -18,6 +19,7 @@ import Search from "@material-ui/icons/Search";
 // core components
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
+import ProfileButton from "components/Navbars/ProfileButton.js";
 import NotificationData from "components/NotificationData/NotificationData.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
@@ -288,95 +290,8 @@ class AdminNavbarLinks extends React.Component {
             </Popper>
           </div>
           <div className={classes.manager}>
-            <Button
-              color={window.innerWidth > 959 ? "transparent" : "white"}
-              justIcon={window.innerWidth > 959}
-              simple={!(window.innerWidth > 959)}
-              aria-owns={
-                this.state.openProfile ? "profile-menu-list-grow" : null
-              }
-              aria-haspopup="true"
-              onClick={this.handleClickProfile}
-              className={classes.buttonLink}
-            >
-              <Person className={classes.icons} />
-              <Hidden mdUp implementation="css">
-                <p className={classes.linkText}>Profile</p>
-              </Hidden>
-            </Button>
-            <Popper
-              open={Boolean(this.state.openProfile)}
-              anchorEl={this.state.openProfile}
-              transition
-              disablePortal
-              className={
-                classNames({ [classes.popperClose]: !this.state.openProfile }) +
-                " " +
-                classes.popperNav
-              }
-            >
-              {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  id="profile-menu-list-grow"
-                  style={{
-                    transformOrigin:
-                      placement === "bottom" ? "center top" : "center bottom",
-                  }}
-                >
-                  <Paper>
-                    <ClickAwayListener onClickAway={this.handleCloseProfile}>
-                      <MenuList role="menu">
-                        {this.state.profileActive ? (
-                          <div>
-                            <Link
-                              style={{ textDecoration: "none" }}
-                              to="/admin/user"
-                            >
-                              <MenuItem
-                                onClick={this.handleCloseProfile}
-                                className={classes.dropdownItem}
-                              >
-                                Profile
-                              </MenuItem>
-                            </Link>
+          <ProfileButton/>
 
-                            <MenuItem
-                              onClick={this.handleCloseProfile}
-                              className={classes.dropdownItem}
-                            >
-                              Settings
-                            </MenuItem>
-                            <Divider light />
-                            <MenuItem
-                              onClick={
-                                (this.handleCloseProfile,
-                                this.handleLogoutProfile)
-                              }
-                              className={classes.dropdownItem}
-                            >
-                              Logout
-                            </MenuItem>
-                          </div>
-                        ) : (
-                          <div>
-                            <MenuItem
-                              onClick={
-                                (this.handleCloseProfile,
-                                this.handleLoginProfile)
-                              }
-                              className={classes.dropdownItem}
-                            >
-                              Login
-                            </MenuItem>
-                          </div>
-                        )}
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
           </div>
         </div>
       </Hidden>
