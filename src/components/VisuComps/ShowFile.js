@@ -124,6 +124,7 @@ class ShowFile extends React.Component {
 
   removeFile = () => {
     removeDBArray("medRecords", this.state.showFileParams.medRecord);
+    this.props.showFileParams.updateFunc();
   };
 
   handleClose = () => {

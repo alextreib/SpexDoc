@@ -13,6 +13,8 @@ import PropTypes from "prop-types";
 import ShowFile from "components/VisuComps/ShowFile.js";
 import { readDBData, uploadFile } from "components/Internal/DBFunctions.js";
 
+import { connect } from "react-redux";
+
 const styles = (theme) => ({
   card: {
     maxWidth: 345,
@@ -54,6 +56,8 @@ class ShowFileList extends React.Component {
     this.state = {
       medRecords: ["Beispiel"],
     };
+    this.loadFiles = this.loadFiles.bind(this);
+
   }
 
   componentDidMount() {
@@ -61,7 +65,11 @@ class ShowFileList extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.state);
+    if (prevProps == this.props) {
+      // No change from above (currently nothing else is needed)
+      return;
+    }
+    this.loadFiles();
   }
 
   loadFiles = () => {
@@ -76,11 +84,14 @@ class ShowFileList extends React.Component {
     event.preventDefault();
 
     var fileToUpload = event.target.files[0];
-    var result = uploadFile("medRecords", fileToUpload);
-
-    if (result == false) {
-      // displayLogin
-    }
+    return uploadFile("medRecords", fileToUpload).then((result) => {
+      if (result == false) {
+        // displayLogin
+      }
+      
+      // Success
+      this.loadFiles();
+    });
   };
 
   render() {
@@ -91,7 +102,7 @@ class ShowFileList extends React.Component {
         <Grid container>
           {this.state.medRecords.map((medRecord) => (
             <Grid key={medRecord} item md={6}>
-              <ShowFile showFileParams={{ medRecord: medRecord }} />
+              <ShowFile showFileParams={{ medRecord: medRecord, updateFunc: this.loadFiles }} />
             </Grid>
           ))}
         </Grid>
@@ -124,4 +135,16 @@ ShowFileList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ShowFileList);
+
+
+// Required for each component that relies on the loginState
+const mapStateToProps = (state) => ({
+  loginState: state.loginState,
+});
+
+const ShowFileListWithRedux = connect(mapStateToProps)(
+  ShowFileList
+);
+
+export default withStyles(styles)(ShowFileListWithRedux);
+
