@@ -171,205 +171,216 @@ class AdminNavbarLinks extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div>
-        <div className={classes.searchWrapper}>
-          <NotificationData
-            onNotificationDataChange={this.notificationDataChange}
-          />
-          <CustomInput
-            formControlProps={{
-              className: classes.margin + " " + classes.search,
-            }}
-            inputProps={{
-              placeholder: "Search",
-              inputProps: {
-                "aria-label": "Search",
-              },
-            }}
-          />
-          <Button color="white" aria-label="edit" justIcon round>
-            <Search />
-          </Button>
-        </div>
+      <Hidden smDown implementation="css">
+        <div>
+          <div className={classes.searchWrapper}>
+            <NotificationData
+              onNotificationDataChange={this.notificationDataChange}
+            />
+            <CustomInput
+              formControlProps={{
+                className: classes.margin + " " + classes.search,
+              }}
+              inputProps={{
+                placeholder: "Search",
+                inputProps: {
+                  "aria-label": "Search",
+                },
+              }}
+            />
+            <Button color="white" aria-label="edit" justIcon round>
+              <Search />
+            </Button>
+          </div>
 
-        <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
-          <Button
-            color={window.innerWidth > 959 ? "transparent" : "white"}
-            justIcon={window.innerWidth > 959}
-            simple={!(window.innerWidth > 959)}
-            aria-label="Dashboard"
-          >
-            <Dashboard style={{ color: grey[700] }} />
-            <Hidden mdUp implementation="css">
-              <p className={classes.linkText}>Dashboard</p>
-            </Hidden>
-          </Button>
-        </Link>
-        <div className={classes.manager}>
-          <Button
-            color={window.innerWidth > 959 ? "transparent" : "white"}
-            justIcon={window.innerWidth > 959}
-            simple={!(window.innerWidth > 959)}
-            aria-owns={
-              this.state.openNotification ? "notification-menu-list-grow" : null
-            }
-            aria-haspopup="true"
-            onClick={this.handleClickNotification}
-            className={classes.buttonLink}
-          >
-            <Notifications className={classes.icons} />
-            <span className={classes.notifications}>
-              {this.state.notificationList.length}
-            </span>
-            {/*todo: count notifications */}
-            <Hidden mdUp implementation="css">
-              <p
-                onClick={this.handleCloseNotification}
-                className={classes.linkText}
-              >
-                Notification
-              </p>
-            </Hidden>
-          </Button>
-          <Poppers
-            open={Boolean(this.state.openNotification)}
-            anchorEl={this.state.openNotification}
-            transition
-            disablePortal
-            className={
-              classNames({
-                [classes.popperClose]: !this.state.openNotification,
-              }) +
-              " " +
-              classes.popperNav
-            }
-          >
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                id="notification-menu-list-grow"
-                style={{
-                  transformOrigin:
-                    placement === "bottom" ? "center top" : "center bottom",
-                }}
-              >
-                <Paper>
-                  <ClickAwayListener onClickAway={this.handleCloseNotification}>
-                    <Link
-                      style={{ textDecoration: "none" }}
-                      to="/admin/notifications"
+          <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
+            <Button
+              color={window.innerWidth > 959 ? "transparent" : "white"}
+              justIcon={window.innerWidth > 959}
+              simple={!(window.innerWidth > 959)}
+              aria-label="Dashboard"
+            >
+              <Dashboard style={{ color: grey[700] }} />
+              <Hidden mdUp implementation="css">
+                <p className={classes.linkText}>Dashboard</p>
+              </Hidden>
+            </Button>
+          </Link>
+          <div className={classes.manager}>
+            <Button
+              color={window.innerWidth > 959 ? "transparent" : "white"}
+              justIcon={window.innerWidth > 959}
+              simple={!(window.innerWidth > 959)}
+              aria-owns={
+                this.state.openNotification
+                  ? "notification-menu-list-grow"
+                  : null
+              }
+              aria-haspopup="true"
+              onClick={this.handleClickNotification}
+              className={classes.buttonLink}
+            >
+              <Notifications className={classes.icons} />
+              <span className={classes.notifications}>
+                {this.state.notificationList.length}
+              </span>
+              {/*todo: count notifications */}
+              <Hidden mdUp implementation="css">
+                <p
+                  onClick={this.handleCloseNotification}
+                  className={classes.linkText}
+                >
+                  Notification
+                </p>
+              </Hidden>
+            </Button>
+            <Poppers
+              open={Boolean(this.state.openNotification)}
+              anchorEl={this.state.openNotification}
+              transition
+              disablePortal
+              className={
+                classNames({
+                  [classes.popperClose]: !this.state.openNotification,
+                }) +
+                " " +
+                classes.popperNav
+              }
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  id="notification-menu-list-grow"
+                  style={{
+                    transformOrigin:
+                      placement === "bottom" ? "center top" : "center bottom",
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener
+                      onClickAway={this.handleCloseNotification}
                     >
+                      <Link
+                        style={{ textDecoration: "none" }}
+                        to="/admin/notifications"
+                      >
+                        <MenuList role="menu">
+                          {this.state.notificationList.map(
+                            (notificationItem) => (
+                              <Link
+                                style={{ textDecoration: "none" }}
+                                to="/admin/notifications"
+                              >
+                                <MenuItem
+                                  //todo add link
+                                  className={classes.dropdownItem}
+                                >
+                                  {notificationItem}
+                                </MenuItem>
+                              </Link>
+                            )
+                          )}
+                        </MenuList>
+                      </Link>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Poppers>
+          </div>
+          <div className={classes.manager}>
+            <Button
+              color={window.innerWidth > 959 ? "transparent" : "white"}
+              justIcon={window.innerWidth > 959}
+              simple={!(window.innerWidth > 959)}
+              aria-owns={
+                this.state.openProfile ? "profile-menu-list-grow" : null
+              }
+              aria-haspopup="true"
+              onClick={this.handleClickProfile}
+              className={classes.buttonLink}
+            >
+              <Person className={classes.icons} />
+              <Hidden mdUp implementation="css">
+                <p className={classes.linkText}>Profile</p>
+              </Hidden>
+            </Button>
+            <Poppers
+              open={Boolean(this.state.openProfile)}
+              anchorEl={this.state.openProfile}
+              transition
+              disablePortal
+              className={
+                classNames({ [classes.popperClose]: !this.state.openProfile }) +
+                " " +
+                classes.popperNav
+              }
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  id="profile-menu-list-grow"
+                  style={{
+                    transformOrigin:
+                      placement === "bottom" ? "center top" : "center bottom",
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={this.handleCloseProfile}>
                       <MenuList role="menu">
-                        {this.state.notificationList.map((notificationItem) => (
-                          <Link
-                            style={{ textDecoration: "none" }}
-                            to="/admin/notifications"
-                          >
-                            <MenuItem
-                              //todo add link
-                              className={classes.dropdownItem}
+                        {this.state.profileActive ? (
+                          <div>
+                            <Link
+                              style={{ textDecoration: "none" }}
+                              to="/admin/user"
                             >
-                              {notificationItem}
-                            </MenuItem>
-                          </Link>
-                        ))}
-                      </MenuList>
-                    </Link>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Poppers>
-        </div>
-        <div className={classes.manager}>
-          <Button
-            color={window.innerWidth > 959 ? "transparent" : "white"}
-            justIcon={window.innerWidth > 959}
-            simple={!(window.innerWidth > 959)}
-            aria-owns={this.state.openProfile ? "profile-menu-list-grow" : null}
-            aria-haspopup="true"
-            onClick={this.handleClickProfile}
-            className={classes.buttonLink}
-          >
-            <Person className={classes.icons} />
-            <Hidden mdUp implementation="css">
-              <p className={classes.linkText}>Profile</p>
-            </Hidden>
-          </Button>
-          <Poppers
-            open={Boolean(this.state.openProfile)}
-            anchorEl={this.state.openProfile}
-            transition
-            disablePortal
-            className={
-              classNames({ [classes.popperClose]: !this.state.openProfile }) +
-              " " +
-              classes.popperNav
-            }
-          >
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                id="profile-menu-list-grow"
-                style={{
-                  transformOrigin:
-                    placement === "bottom" ? "center top" : "center bottom",
-                }}
-              >
-                <Paper>
-                  <ClickAwayListener onClickAway={this.handleCloseProfile}>
-                    <MenuList role="menu">
-                      {this.state.profileActive ? (
-                        <div>
-                          <Link
-                            style={{ textDecoration: "none" }}
-                            to="/admin/user"
-                          >
+                              <MenuItem
+                                onClick={this.handleCloseProfile}
+                                className={classes.dropdownItem}
+                              >
+                                Profile
+                              </MenuItem>
+                            </Link>
+
                             <MenuItem
                               onClick={this.handleCloseProfile}
                               className={classes.dropdownItem}
                             >
-                              Profile
+                              Settings
                             </MenuItem>
-                          </Link>
-
-                          <MenuItem
-                            onClick={this.handleCloseProfile}
-                            className={classes.dropdownItem}
-                          >
-                            Settings
-                          </MenuItem>
-                          <Divider light />
-                          <MenuItem
-                            onClick={
-                              (this.handleCloseProfile,
-                              this.handleLogoutProfile)
-                            }
-                            className={classes.dropdownItem}
-                          >
-                            Logout
-                          </MenuItem>
-                        </div>
-                      ) : (
-                        <div>
-                          <MenuItem
-                            onClick={
-                              (this.handleCloseProfile, this.handleLoginProfile)
-                            }
-                            className={classes.dropdownItem}
-                          >
-                            Login
-                          </MenuItem>
-                        </div>
-                      )}
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Poppers>
+                            <Divider light />
+                            <MenuItem
+                              onClick={
+                                (this.handleCloseProfile,
+                                this.handleLogoutProfile)
+                              }
+                              className={classes.dropdownItem}
+                            >
+                              Logout
+                            </MenuItem>
+                          </div>
+                        ) : (
+                          <div>
+                            <MenuItem
+                              onClick={
+                                (this.handleCloseProfile,
+                                this.handleLoginProfile)
+                              }
+                              className={classes.dropdownItem}
+                            >
+                              Login
+                            </MenuItem>
+                          </div>
+                        )}
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Poppers>
+          </div>
         </div>
-      </div>
+      </Hidden>
     );
   }
 }

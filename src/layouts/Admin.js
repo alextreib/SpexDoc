@@ -7,6 +7,8 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { makeStyles } from "@material-ui/core/styles";
 // core components
 import Navbar from "components/Navbars/Navbar.js";
+import NavbarMobile from "components/Navbars/NavbarMobile.js";
+
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
@@ -15,7 +17,9 @@ import routes from "routes.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
-import bgImage from "assets/img/sidebar-2.jpg";
+import bgImage from "assets/img/doctor_stock_1.jpg";
+import Hidden from "@material-ui/core/Hidden";
+
 import logo from "assets/img/SpexDoc_logo_png.png";
 
 let ps;
@@ -49,6 +53,7 @@ export default function Admin({ ...rest }) {
   const [image, setImage] = React.useState(bgImage);
   const [color, setColor] = React.useState("blue");
   const [fixedClasses, setFixedClasses] = React.useState("dropdown show");
+  // If mobile open the sidebar
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const handleImageClick = (image) => {
     setImage(image);
@@ -110,13 +115,26 @@ export default function Admin({ ...rest }) {
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         {/* Navbar contains only Search, Dropdown, etc. */}
-        <Navbar
-          routes={routes}
-          handleDrawerToggle={handleDrawerToggle}
-          //  Not used yet
-          closeSidebar={closeSidebar}
-          {...rest}
-        />
+        <Hidden mdUp implementation="css">
+          {/* Mobile Version */}
+          <NavbarMobile
+            routes={routes}
+            handleDrawerToggle={handleDrawerToggle}
+            //  Not used yet
+            closeSidebar={closeSidebar}
+            {...rest}
+          />
+        </Hidden>
+        <Hidden smDown implementation="css">
+          <Navbar
+            routes={routes}
+            handleDrawerToggle={handleDrawerToggle}
+            //  Not used yet
+            closeSidebar={closeSidebar}
+            {...rest}
+          />
+        </Hidden>
+
         {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
         {getRoute() ? (
           <div className={classes.content}>

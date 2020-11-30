@@ -16,6 +16,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Switch from "@material-ui/core/Switch";
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
+import Box from '@material-ui/core/Box';
 
 import firebase from "firebase/app";
 import "firebase/auth";
