@@ -32,7 +32,7 @@ import Badge from "@material-ui/core/Badge";
 import red from "@material-ui/core/colors/red";
 import Menu from "@material-ui/core/Menu";
 
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from "react-redux";
 
 import { withStyles } from "@material-ui/core/styles";
 
@@ -104,13 +104,12 @@ function ProfileButton(props) {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-  
+
   // Redux
-  const loginStateRedux= useSelector(state => state.loginStateRedux);
+  const loginStateRedux = useSelector((state) => state.loginStateRedux);
   const dispatch = useDispatch();
 
   const menuId = "primary-search-account-menu";
-
 
   const handleLoginProfile = () => {
     console.log("login process");
@@ -200,7 +199,7 @@ function ProfileButton(props) {
         >
           <Paper>
             <ClickAwayListener onClickAway={handleMenuClose}>
-             {renderMenuList}
+              {renderMenuList}
             </ClickAwayListener>
           </Paper>
         </Grow>
@@ -211,44 +210,48 @@ function ProfileButton(props) {
   // MenuList
   const renderMenuList = (
     <MenuList role="menu">
-    <Link style={{ textDecoration: "none" }} to="/user">
-      <MenuItem
-        onClick={handleMenuClose}
-        className={classes.dropdownItem}
-      >
-        Profile
+      <Link style={{ textDecoration: "none" }} to="/user">
+        <MenuItem onClick={handleMenuClose} className={classes.dropdownItem}>
+          Profile
+        </MenuItem>
+      </Link>
+      <Divider light />
+      <MenuItem onClick={handleLogoutProfile} className={classes.dropdownItem}>
+        Logout
       </MenuItem>
-    </Link>
-    <Divider light />
-    <MenuItem
-      onClick={handleLogoutProfile}
-      className={classes.dropdownItem}
-    >
-      Logout
-    </MenuItem>
-  </MenuList>
+    </MenuList>
   );
-
 
   return (
     <div>
-      <IconButton
-        edge="end"
-        aria-label="account of current user"
-        aria-controls={menuId}
-        aria-haspopup="true"
-        onClick={handleProfileMenuOpen}
-        color="inherit"
-      >
-        <Hidden mdUp implementation="css">
-          {/* Mobile Version */}
+      <Hidden mdUp implementation="css">
+        {/* Mobile Version */}
+        <IconButton
+          edge="end"
+          aria-label="account of current user"
+          aria-controls={menuId}
+          aria-haspopup="true"
+          onClick={handleProfileMenuOpen}
+          color="inherit"
+        >
           <AccountCircle />
-        </Hidden>
-        <Hidden smDown implementation="css">
-          {/* Desktop Version */}
+        </IconButton>
+      </Hidden>
+
+      <Hidden smDown implementation="css">
+      {/* Desktop Version */}
+        <Button
+          color={window.innerWidth > 959 ? "transparent" : "white"}
+          justIcon={window.innerWidth > 959}
+          simple={!(window.innerWidth > 959)}
+          aria-owns="profile-menu-list-grow"
+          aria-haspopup="true"
+          onClick={handleProfileMenuOpen}
+          className={classes.buttonLink}
+        >
           <Person className={classes.icons} />
-        </Hidden>
-      </IconButton>
+        </Button>
+      </Hidden>
 
       {renderPopper}
     </div>
@@ -258,7 +261,6 @@ function ProfileButton(props) {
 ProfileButton.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
 
 const mapStateToProps = (state) => ({
   loginState: state.loginState,
