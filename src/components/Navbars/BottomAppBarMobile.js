@@ -28,10 +28,28 @@ import Hidden from "@material-ui/core/Hidden";
 import Badge from "@material-ui/core/Badge";
 import red from "@material-ui/core/colors/red";
 
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
+
+
 import NotificationData from "components/NotificationData/NotificationData.js";
 
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+
+import {
+  container,
+  defaultFont,
+  primaryColor,
+  defaultBoxShadow,
+  infoColor,
+  successColor,
+  warningColor,
+  dangerColor,
+  whiteColor,
+  grayColor
+} from "assets/jss/material-dashboard-react.js";
 
 const useStyles = makeStyles((theme) => ({
   text: {
@@ -49,9 +67,18 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     top: "auto",
     bottom: 0,
+    backgroundColor: "white",
+    boxShadow: "none",
+    borderBottom: "0",
+    marginBottom: "0",
+    position: "fixed",
+    width: "100%",
+    color: grayColor[7],
+    minHeight: "50px",
+    display: "block",
   },
   grow: {
-    flexGrow: 1,
+    flex: 1,
   },
   fabButton: {
     position: "absolute",
@@ -90,11 +117,40 @@ export default function BottomAppBarMobile() {
     setOpenNotification(null);
   };
 
+ const handleLoginProfile = () =>{
+  console.log("login process");
+  var provider = new firebase.auth.GoogleAuthProvider();
+
+  firebase
+    .auth()
+    .signInWithPopup(provider)
+    .then((result) => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      var token = result.credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+      // this.setProfile(user);
+      console.log("User successfully logged in ");
+      // this.props.loginRedux({ user_id: user.uid });
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      console.log("error: " + errorCode + ":" + errorMessage);
+      // ...
+    });
+ }
+
   return (
     <React.Fragment>
       <CssBaseline />
       <NotificationData onNotificationDataChange={notificationDataChange} />
-      <AppBar position="fixed" color="white" className={classes.appBar}>
+      <AppBar className={classes.appBar}>
         <Toolbar>
           <NavLink
             to="/admin/dashboard"
@@ -106,8 +162,8 @@ export default function BottomAppBarMobile() {
               <HomeIcon />
             </IconButton>
           </NavLink>
-
           <div className={classes.grow} />
+
           {/* todo: adding paper/dropdown list with itemsm, also wrong color */}
           <Link color="inherit" to="/admin/notifications">
             <Badge badgeContent={notificationList.length} color="primary">
@@ -118,9 +174,11 @@ export default function BottomAppBarMobile() {
               ></NotificationIcon>
             </Badge>
           </Link>
-          <IconButton edge="end" color="inherit">
+          <Link color="inherit" to="/admin/user">
+          <IconButton    onClick={handleLoginProfile} edge="end" color="inherit">
             <AccountCircle />
           </IconButton>
+          </Link>
         </Toolbar>
       </AppBar>
     </React.Fragment>

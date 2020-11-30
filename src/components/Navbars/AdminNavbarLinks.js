@@ -8,7 +8,7 @@ import Grow from "@material-ui/core/Grow";
 import Paper from "@material-ui/core/Paper";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import Hidden from "@material-ui/core/Hidden";
-import Poppers from "@material-ui/core/Popper";
+import Popper from "@material-ui/core/Popper";
 import Divider from "@material-ui/core/Divider";
 // @material-ui/icons
 import Person from "@material-ui/icons/Person";
@@ -233,7 +233,7 @@ class AdminNavbarLinks extends React.Component {
                 </p>
               </Hidden>
             </Button>
-            <Poppers
+            <Popper
               open={Boolean(this.state.openNotification)}
               anchorEl={this.state.openNotification}
               transition
@@ -285,7 +285,7 @@ class AdminNavbarLinks extends React.Component {
                   </Paper>
                 </Grow>
               )}
-            </Poppers>
+            </Popper>
           </div>
           <div className={classes.manager}>
             <Button
@@ -304,7 +304,7 @@ class AdminNavbarLinks extends React.Component {
                 <p className={classes.linkText}>Profile</p>
               </Hidden>
             </Button>
-            <Poppers
+            <Popper
               open={Boolean(this.state.openProfile)}
               anchorEl={this.state.openProfile}
               transition
@@ -376,7 +376,7 @@ class AdminNavbarLinks extends React.Component {
                   </Paper>
                 </Grow>
               )}
-            </Poppers>
+            </Popper>
           </div>
         </div>
       </Hidden>
