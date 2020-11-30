@@ -12,7 +12,7 @@ import Poppers from "@material-ui/core/Popper";
 import Divider from "@material-ui/core/Divider";
 // @material-ui/icons
 import Person from "@material-ui/icons/Person";
-import Notifications from "@material-ui/icons/Notifications";
+import NotificationIcon from "@material-ui/icons/Notifications";
 import Dashboard from "@material-ui/icons/Dashboard";
 import Search from "@material-ui/icons/Search";
 // core components
@@ -49,7 +49,6 @@ class AdminNavbarLinks extends React.Component {
       notificationList: [
         "Neuer Befund von Hausarzt Kölmer",
         "Dermatologie möchte Termin vereinbaren",
-        "Hausarzt beantragt eine Freigabe",
       ],
     };
 
@@ -220,7 +219,7 @@ class AdminNavbarLinks extends React.Component {
               onClick={this.handleClickNotification}
               className={classes.buttonLink}
             >
-              <Notifications className={classes.icons} />
+              <NotificationIcon className={classes.icons} />
               <span className={classes.notifications}>
                 {this.state.notificationList.length}
               </span>
@@ -388,7 +387,6 @@ class AdminNavbarLinks extends React.Component {
 AdminNavbarLinks.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
 
 const mapStateToProps = (state) => ({
   loginState: state.loginState,

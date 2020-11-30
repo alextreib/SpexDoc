@@ -78,12 +78,14 @@ class Navbar extends React.Component {
     const { classes } = this.props;
 
     return (
-      <AppBar >
-        <Toolbar >
+      <AppBar color="white" >
+        <Toolbar color="transparent"  >
           <div className={classes.flex}>
             {/* Here we create navbar brand, based on route name */}
-            <Button color="transparent" href="#" className={classes.title}>
+            <Button color="transparent" href="/admin" className={classes.title}>
+            <Typography color="primary">
               SpexDoc
+              </Typography>
             </Button>
           </div>
           <Hidden smDown implementation="css">
