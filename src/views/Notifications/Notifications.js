@@ -15,12 +15,21 @@ import Snackbar from "components/Snackbar/Snackbar.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import Grid from "@material-ui/core/Grid";
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import CardActions from "@material-ui/core/CardActions";
 
 import { withStyles } from "@material-ui/core/styles";
 
 import NotificationData from "components/NotificationData/NotificationData.js";
 
-const styles = {
+const styles = (theme) => ({
+  card: {
+    maxWidth: 345,
+    marginBottom: 100,
+    paddingBottom: theme.spacing(1),
+  },
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
       color: "rgba(255,255,255,.62)",
@@ -48,7 +57,7 @@ const styles = {
       lineHeight: "1",
     },
   },
-};
+});
 
 class Notifications extends React.Component {
   constructor(props) {
@@ -72,8 +81,8 @@ class Notifications extends React.Component {
     this.setState({
       notificationList: newList,
     });
-  }
-  
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -89,11 +98,45 @@ class Notifications extends React.Component {
           </p>
         </CardHeader>
         <CardBody>
-          {this.state.notificationList}
-          </CardBody>
+          <Grid container>
+            {this.state.notificationList.map((noficiation) => (
+              <Grid key={noficiation} item md={6}>
+                <Card className={classes.card}>
+                  <CardContent>
+                    <Typography
+                      className={classes.title}
+                      color="textSecondary"
+                      gutterBottom
+                    >
+                      Neue Benachrichtigung
+                    </Typography>
+                    <Typography variant="h5" component="h2">
+                      {noficiation}
+                    </Typography>
+                    <Typography className={classes.pos} color="textSecondary">
+                      21.20.2020
+                    </Typography>
+                    <Typography variant="body2" component="p">
+                      Stuttgart
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      size="small"
+                      onClick={this.magicFunc}
+                      style={{ marginLeft: "auto" }}
+                    >
+                      Gelesen
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </CardBody>
       </Card>
     );
-  };
+  }
 }
 
 Notifications.propTypes = {
