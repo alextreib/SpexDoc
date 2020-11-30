@@ -32,7 +32,7 @@ import Language from "@material-ui/icons/Language";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
-import ReportOverview from "views/ReportOverview/ReportOverview.js";
+import MedRecords from "views/ReportOverview/MedRecords.js";
 import Emergency from "views/Emergency/Emergency.js";
 import Appointments from "views/Appointments/Appointments.js";
 import Icons from "views/Icons/Icons.js";
@@ -67,7 +67,7 @@ const dashboardRoutes = [
     name: "Befunde",
     rtlName: "قائمة الجدول",
     icon: "content_paste",
-    component: ReportOverview,
+    component: MedRecords,
     layout: "/admin"
   }, 
   {

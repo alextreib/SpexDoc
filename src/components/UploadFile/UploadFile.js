@@ -38,12 +38,23 @@ class FileDialogue extends React.Component {
     super(props);
 
     this.state = {
+      medRecords: ["test"],
       openLoginRequired: false,
       popUpProps: this.PopUpProps,
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.saveDocToUser = this.saveDocToUser.bind(this);
+  }
+  
+  componentDidUpdate() {
+    console.log("UploadFiles update")
+  }
+
+  componentDidMount() {
+    this.setState({
+      medRecords: this.props.medRecords,
+    });
   }
 
   // Structs
@@ -82,62 +93,7 @@ class FileDialogue extends React.Component {
     });
   };
 
-  handleSubmit = (event) => {
-    console.log("HandleSubmit");
-
-    event.preventDefault();
-    if (this.checkUser() == false) {
-      console.log("User not logged in - Abort.");
-      return;
-    }
-
-    var fileToUpload = event.target.files[0];
-    if (fileToUpload == null) {
-      console.log("No file selected - Abort.");
-      return;
-    }
-    var fileName = fileToUpload.name;
-
-    // Create a root reference
-    var storageRef = firebase.storage().ref();
-
-    storageRef
-      .child(fileName)
-      .put(fileToUpload)
-      .then((snapshot) => {
-        console.log("File uploaded");
-        console.log(snapshot);
-        snapshot.ref.getDownloadURL().then((downloadURL) => {
-          // Push to server with profileID
-
-          console.log("File available at", downloadURL);
-          this.saveDocToUser(downloadURL);
-          this.setState({
-            popUpProps: {
-              openPopUp: true,
-              message: "File successfully uploaded",
-            },
-          });
-        });
-      });
-  };
-
-  saveDocToUser = (docLink) => {
-    // this.checkUser();
-    var defaultDatabase = firebase.firestore();
-    var user = firebase.auth().currentUser;
-    if (user == null) {
-      return;
-    }
-
-    const docRef = defaultDatabase.collection("userStorage").doc("docLinks");
-    var id = user.uid;
-
-    docRef.update({
-      [id]: firebase.firestore.FieldValue.arrayUnion(docLink),
-    });
-  };
-
+ 
   render() {
     const { classes } = this.props;
 

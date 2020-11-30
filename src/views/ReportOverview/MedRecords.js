@@ -15,7 +15,8 @@ import Icon from "@material-ui/core/Icon";
 import Button from "components/CustomButtons/Button.js";
 
 import UploadFile from "components/UploadFile/UploadFile.js";
-import ShowFile from "components/ShowFile/ShowFile.js";
+import ShowFileList from "components/VisuComps/ShowFileList.js";
+
 import MaterialTable from "material-table";
 
 import AddAlert from "@material-ui/icons/AddAlert";
@@ -84,37 +85,18 @@ const styles = {
   ref: "https://google.de",
 };
 
-class ReportOverview extends React.Component {
+class MedRecords extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      displayLogin: false,
-      showFiles: [],
-    };
 
     //Bindings
     this.loadDoc = this.loadDoc.bind(this);
 
-    this.loadDoc();
   }
 
-  handleFilePicker = async (e) => {
-    console.log("go");
-    let file = e.target.files[0];
-    // read data from the blob objects(file)
-    let reader = new FileReader();
-    // reads the binary data and encodes it as base64 data url
-    reader.readAsDataURL(file);
-    // reads it finish with either success or failure
-    reader.onloadend = () => {
-      // reader.result is the result of the reading in base64 string
-    };
-    this.sendImageData();
-  };
-
   componentDidUpdate(prevProps) {
-    console.log("update reportoverview")
+    console.log("update MedRecords")
   }
 
   loadDoc() {
@@ -160,15 +142,7 @@ class ReportOverview extends React.Component {
               </p>
             </CardHeader>
             <CardBody>
-              <Grid container>
-                {this.state.showFiles.map((docLink) => (
-                  <Grid key={docLink} item md={6}>
-                    <ShowFile showFileParams={{ docLink: docLink }} />
-                  </Grid>
-                ))}
-              </Grid>
-
-              <UploadFile />
+                <ShowFileList/>
             </CardBody>
           </Card>
         </GridItem>
@@ -177,8 +151,8 @@ class ReportOverview extends React.Component {
   }
 }
 
-ReportOverview.propTypes = {
+MedRecords.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ReportOverview);
+export default withStyles(styles)(MedRecords);

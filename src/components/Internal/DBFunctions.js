@@ -64,3 +64,66 @@ export const readDBData = (docName, allowPublicKey) => {
       });
   });
 };
+
+export const uploadFile = (docName, fileToUpload) => {
+  // todo: enhance with fileinformation
+  if (fileToUpload == null) {
+    console.log("No file selected - Abort.");
+    return false;
+  }
+  var fileName = fileToUpload.name;
+
+  var storageRef = firebase.storage().ref();
+
+  return storageRef
+    .child(fileName)
+    .put(fileToUpload)
+    .then((snapshot) => {
+      console.log("File uploaded");
+      console.log(snapshot);
+      snapshot.ref.getDownloadURL().then((downloadURL) => {
+        return appendDBArray(docName, downloadURL);
+      });
+    });
+};
+
+
+
+// Array operations
+export const appendDBArray = (docName, arrayElement) => {
+  var user_id = getUserID();
+  if (user_id == null) return false;
+
+  const docRef = firebase
+    .firestore()
+    .collection("userStorage")
+    .doc("users")
+    .collection(user_id)
+    .doc(docName);
+
+  docRef.update({
+    data: firebase.firestore.FieldValue.arrayUnion(arrayElement),
+  });
+
+  return true;
+};
+
+export const removeDBArray = (docName, arrayElement) => {
+  var user_id = getUserID();
+  if (user_id == null) return false;
+
+  const docRef = firebase
+    .firestore()
+    .collection("userStorage")
+    .doc("users")
+    .collection(user_id)
+    .doc(docName);
+
+  docRef.update({
+    data: firebase.firestore.FieldValue.arrayRemove(arrayElement),
+  });
+
+  return true;
+};
+
+

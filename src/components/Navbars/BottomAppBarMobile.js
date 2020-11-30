@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     top: "auto",
     bottom: 0,
-    backgroundColor: "white",
+    backgroundColor: grayColor[10],//todo: maybe black?
     boxShadow: "none",
     borderBottom: "0",
     marginBottom: "0",

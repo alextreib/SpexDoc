@@ -31,6 +31,12 @@ import AddIcon from "@material-ui/icons/Add";
 
 import Fab from "@material-ui/core/Fab";
 
+import {
+  removeDBArray,
+  writeDBData,
+  uploadFile,
+} from "components/Internal/DBFunctions.js";
+
 import PropTypes from "prop-types";
 
 const styles = (theme) => ({
@@ -102,8 +108,7 @@ class ShowFile extends React.Component {
       // todo: split to parent/ interal/child
       showFileParams: props.showFileParams,
     };
-
-    this.openModal = this.openModal.bind(this);
+    console.log(props.showFileParams);
   }
 
   componentDidUpdate(prevProps) {
@@ -113,51 +118,27 @@ class ShowFile extends React.Component {
     this.setState({ showFileParams: this.props.showFileParams });
   }
 
-  loginFirst = () => {
-    this.setState({
-      openLoginRequired: true,
-    });
-  };
-
-  checkUser = () => {
-    var user = firebase.auth().currentUser;
-
-    if (user) {
-      // User is signed in.
-      return true;
-    } else {
-      // No user is signed in.
-      this.loginFirst();
-      return false;
-    }
-  };
-
   openModal = () => {
-    if (this.checkUser() == true) {
-      console.log("set state to true");
-      this.setState({ internal: { open: true } });
-    }
+    this.setState({ internal: { open: true } });
   };
 
   removeFile = () => {
-    console.log("File removed")
-    var user = firebase.auth().currentUser;
-    if (user == null) {
-      return;
-    }
-    var id = user.uid;
+    console.log("File removed");
+    removeDBArray("medRecords", this.state.showFileParams.medRecord);
+    //   return;
+    // }
+    // var id = user.uid;
 
-    // Get
-    var defaultDatabase = firebase.firestore();
+    // // Get
+    // var defaultDatabase = firebase.firestore();
 
-    // Search in 
-    var docLink=this.state.showFileParams.docLink;
-    const docRef = defaultDatabase.collection("userStorage").doc("docLinks");
+    // // Search in
+    // var docLink=this.state.medRecord.docLink;
+    // const docRef = defaultDatabase.collection("userStorage").doc("docLinks");
 
-    docRef.update({
-      [id]: firebase.firestore.FieldValue.arrayRemove(docLink),
-    });
-
+    // docRef.update({
+    //   [id]: firebase.firestore.FieldValue.arrayRemove(docLink),
+    // });
 
     //todo: remove in Cloud Firestore
   };
@@ -182,7 +163,7 @@ class ShowFile extends React.Component {
             className={classes.media}
             component="img"
             alt="Contemplative Reptile"
-            image={this.state.showFileParams.docLink}
+            image={this.state.showFileParams.medRecord}
             title="Contemplative Reptile"
           />
           <CardContent>
@@ -222,7 +203,7 @@ class ShowFile extends React.Component {
             <CardMedia
               component="img"
               alt="Contemplative Reptile"
-              image={this.state.showFileParams.docLink}
+              image={this.state.showFileParams.medRecord}
               title="Contemplative Reptile"
             />
             {/* <Typography variant="h3" gutterBottom>
