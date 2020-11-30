@@ -133,11 +133,11 @@ export default function BottomAppBarMobile() {
       <AppBar className={classes.appBar}>
         <Toolbar>
           <NavLink
-            to="/admin/dashboard"
+            to="/dashboard"
             activeClassName="active"
             style={{ textDecoration: "none" }}
           >
-            {/* <Link style={{ textDecoration: "none" }} to="/admin/dashboard"> */}
+            {/* <Link style={{ textDecoration: "none" }} to="/dashboard"> */}
             <IconButton edge="start" color="inherit" aria-label="open drawer">
               <HomeIcon />
             </IconButton>
@@ -145,7 +145,7 @@ export default function BottomAppBarMobile() {
           <div className={classes.grow} />
 
           {/* todo: adding paper/dropdown list with itemsm, also wrong color */}
-          <Link color="inherit" to="/admin/notifications">
+          <Link color="inherit" to="/notifications">
             <Badge badgeContent={notificationList.length} color="primary">
               <NotificationIcon
                 color="black"

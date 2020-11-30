@@ -27,7 +27,7 @@ export const getUserID = () => {
 
 export const getShortLink = async (property) => {
   var longLink =
-    "https://app.spexdoc.net/admin/" + property + "/publicKey=" + getUserID();
+    "https://app.spexdoc.net/" + property + "/publicKey=" + getUserID();
   const response = await bitly.shorten(longLink);
   return response.link;
 };

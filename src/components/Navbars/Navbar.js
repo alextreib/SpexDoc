@@ -28,7 +28,7 @@ class Navbar extends React.Component {
   makeBrand = () => {
     var name;
     this.props.routes.map((prop) => {
-      if (window.location.href.indexOf(prop.layout + prop.path) !== -1) {
+      if (window.location.href.indexOf(prop.path) !== -1) {
         name = this.props.rtlActive ? prop.rtlName : prop.name;
       }
       return null;

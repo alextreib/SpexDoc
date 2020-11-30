@@ -194,7 +194,7 @@ class AdminNavbarLinks extends React.Component {
             </Button>
           </div>
 
-          <Link to="/admin/dashboard" style={{ textDecoration: "none" }}>
+          <Link to="/dashboard" style={{ textDecoration: "none" }}>
             <Button
               color={window.innerWidth > 959 ? "transparent" : "white"}
               justIcon={window.innerWidth > 959}
@@ -263,14 +263,14 @@ class AdminNavbarLinks extends React.Component {
                     >
                       <Link
                         style={{ textDecoration: "none" }}
-                        to="/admin/notifications"
+                        to="/notifications"
                       >
                         <MenuList role="menu">
                           {this.state.notificationList.map(
                             (notificationItem) => (
                               <Link
                                 style={{ textDecoration: "none" }}
-                                to="/admin/notifications"
+                                to="/notifications"
                               >
                                 <MenuItem
                                   //todo add link

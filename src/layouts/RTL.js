@@ -26,7 +26,7 @@ const switchRoutes = (
       if (prop.layout === "/rtl") {
         return (
           <Route
-            path={prop.layout + prop.path}
+            path={prop.path}
             component={prop.component}
             key={key}
           />
@@ -67,7 +67,7 @@ export default function RTL({ ...rest }) {
     setMobileOpen(!mobileOpen);
   };
   const getRoute = () => {
-    return window.location.pathname !== "/admin/maps";
+    return window.location.pathname !== "/maps";
   };
   const resizeFunction = () => {
     if (window.innerWidth >= 960) {

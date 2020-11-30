@@ -205,7 +205,7 @@ function ProfileButton() {
   // MenuList
   const renderMenuList = (
     <MenuList role="menu">
-    <Link style={{ textDecoration: "none" }} to="/admin/user">
+    <Link style={{ textDecoration: "none" }} to="/user">
       <MenuItem
         onClick={handleMenuClose}
         className={classes.dropdownItem}

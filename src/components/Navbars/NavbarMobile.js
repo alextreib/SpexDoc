@@ -53,7 +53,7 @@ class Navbar extends React.Component {
   makeBrand = () => {
     var name;
     this.props.routes.map((prop) => {
-      if (window.location.href.indexOf(prop.layout + prop.path) !== -1) {
+      if (window.location.href.indexOf(prop.path) !== -1) {
         name = this.props.rtlActive ? prop.rtlName : prop.name;
       }
       return null;
@@ -82,7 +82,7 @@ class Navbar extends React.Component {
         <Toolbar color="transparent"  >
           <div className={classes.flex}>
             {/* Here we create navbar brand, based on route name */}
-            <Button color="transparent" href="/admin" className={classes.title}>
+            <Button color="transparent" href="/" className={classes.title}>
             <Typography color="primary">
               SpexDoc
               </Typography>
