@@ -45,9 +45,7 @@ class AdminNavbarLinks extends React.Component {
     super(props);
 
     this.state = {
-      profileActive: null,
       openNotification: null,
-      openProfile: null,
       notificationList: [
         "Neuer Befund von Hausarzt Kölmer",
         "Dermatologie möchte Termin vereinbaren",
@@ -55,8 +53,6 @@ class AdminNavbarLinks extends React.Component {
     };
 
     this.handleClickNotification = this.handleClickNotification.bind(this);
-    this.handleClickProfile = this.handleClickProfile.bind(this);
-    this.handleLoginProfile = this.handleLoginProfile.bind(this);
   }
 
   handleClickNotification = (event) => {
@@ -70,95 +66,14 @@ class AdminNavbarLinks extends React.Component {
     }
   };
 
-  setProfile = (value) => {
-    this.setState({
-      profileActive: value,
-    });
-  };
-
   setOpenNotification = (value) => {
     this.setState({
       openNotification: value,
     });
   };
 
-  setOpenProfile = (value) => {
-    this.setState({
-      openProfile: value,
-    });
-  };
-
   handleCloseNotification = () => {
     this.setOpenNotification(null);
-  };
-  handleClickProfile = (event) => {
-    if (
-      this.state.openProfile &&
-      this.state.openProfile.contains(event.target)
-    ) {
-      this.setOpenProfile(null);
-    } else {
-      this.setOpenProfile(event.currentTarget);
-    }
-  };
-
-  handleLoginProfile = () => {
-    console.log("login process");
-    var provider = new firebase.auth.GoogleAuthProvider();
-
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        var token = result.credential.accessToken;
-        // The signed-in user info.
-        var user = result.user;
-        this.setProfile(user);
-        console.log("User successfully logged in ");
-        this.props.loginRedux({ user_id: user.uid });
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // The email of the user's account used.
-        var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        var credential = error.credential;
-        console.log("error: " + errorCode + ":" + errorMessage);
-        // ...
-      });
-
-    this.handleCloseProfile();
-  };
-
-  handleLogoutProfile = () => {
-    var provider = new firebase.auth.GoogleAuthProvider();
-
-    var auth = firebase.auth();
-    var currentUser = auth.currentUser;
-
-    firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        window.user = null;
-        console.log("User successfully logged out");
-        // todo: PopUp
-        // Sign-out successful.
-        this.setProfile(null);
-        this.props.logoutRedux();
-      })
-      .catch((error) => {
-        console.log("error while logging out");
-        // An error happened.
-      });
-    this.handleCloseProfile();
-  };
-
-  handleCloseProfile = () => {
-    this.setOpenProfile(null);
   };
 
   // When child (NotificationData) triggers change -> this function is called
@@ -290,8 +205,7 @@ class AdminNavbarLinks extends React.Component {
             </Popper>
           </div>
           <div className={classes.manager}>
-          <ProfileButton/>
-
+            <ProfileButton />
           </div>
         </div>
       </Hidden>

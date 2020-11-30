@@ -123,28 +123,7 @@ class ShowFile extends React.Component {
   };
 
   removeFile = () => {
-    console.log("File removed");
     removeDBArray("medRecords", this.state.showFileParams.medRecord);
-    //   return;
-    // }
-    // var id = user.uid;
-
-    // // Get
-    // var defaultDatabase = firebase.firestore();
-
-    // // Search in
-    // var docLink=this.state.medRecord.docLink;
-    // const docRef = defaultDatabase.collection("userStorage").doc("docLinks");
-
-    // docRef.update({
-    //   [id]: firebase.firestore.FieldValue.arrayRemove(docLink),
-    // });
-
-    //todo: remove in Cloud Firestore
-  };
-
-  magicFunc = () => {
-    console.log("magic func");
   };
 
   handleClose = () => {

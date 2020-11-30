@@ -32,9 +32,13 @@ import Badge from "@material-ui/core/Badge";
 import red from "@material-ui/core/colors/red";
 import Menu from "@material-ui/core/Menu";
 
+import { useSelector, useDispatch } from 'react-redux'
+
 import { withStyles } from "@material-ui/core/styles";
 
 import Grow from "@material-ui/core/Grow";
+import { connect } from "react-redux";
+import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
 import Popper from "@material-ui/core/Popper";
 import Divider from "@material-ui/core/Divider";
 import Person from "@material-ui/icons/Person";
@@ -91,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ProfileButton() {
+function ProfileButton(props) {
   const classes = useStyles();
 
   const [loginState, setUserLogin] = React.useState(false);
@@ -100,6 +104,10 @@ function ProfileButton() {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  
+  // Redux
+  const loginStateRedux= useSelector(state => state.loginStateRedux);
+  const dispatch = useDispatch();
 
   const menuId = "primary-search-account-menu";
 
@@ -116,11 +124,9 @@ function ProfileButton() {
         var token = result.credential.accessToken;
         // The signed-in user info.
         var user = result.user;
-        // this.setProfile(user);
         setUserLogin(true);
-
         console.log("User successfully logged in ");
-        // this.props.loginRedux({ user_id: user.uid });
+        dispatch(loginRedux({ user_id: user.uid }));
       })
       .catch((error) => {
         // Handle Errors here.
@@ -151,7 +157,7 @@ function ProfileButton() {
         // todo: PopUp
         // Sign-out successful.
         setUserLogin(false);
-        // this.props.logoutRedux();
+        dispatch(logoutRedux());
       })
       .catch((error) => {
         console.log("error while logging out");
@@ -253,4 +259,19 @@ ProfileButton.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ProfileButton);
+
+const mapStateToProps = (state) => ({
+  loginState: state.loginState,
+});
+
+const mapDispatchToProps = {
+  loginRedux,
+  logoutRedux,
+};
+
+const ProfileButtonWithRedux = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProfileButton);
+
+export default withStyles(styles)(ProfileButtonWithRedux);
