@@ -16,7 +16,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Switch from "@material-ui/core/Switch";
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
-import Box from '@material-ui/core/Box';
+import Box from "@material-ui/core/Box";
 
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -70,7 +70,7 @@ class Share extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      commonProps:defaultCommonParams,
+      commonProps: defaultCommonParams,
       data: {
         emergency: {
           QRCodeactive: false,
@@ -121,7 +121,7 @@ class Share extends React.Component {
   };
 
   handleSwitchChange = async (property, event) => {
-    console.log("handleSwitch")
+    console.log("handleSwitch");
     var checked = event.target.checked;
 
     var user_id = getUserID();
@@ -133,12 +133,14 @@ class Share extends React.Component {
     var shortLink = await getShortLink(property);
 
     this.setState({
-      data:{...this.state.data,[property]: {
-        shortLink: shortLink,
-        Switchactive: checked,
-        QRCodeactive: checked,
+      data: {
+        ...this.state.data,
+        [property]: {
+          shortLink: shortLink,
+          Switchactive: checked,
+          QRCodeactive: checked,
+        },
       },
-    }
     });
 
     // Upload
@@ -169,88 +171,130 @@ class Share extends React.Component {
           </p>
         </CardHeader>
         <CardBody>
-          <div id="Emergency">
-            Jeder kann in eine Notsituation kommen. Zeigen Sie ihm einfach den
-            folgenden QR Code und der Notfallsanitärer bekommt Zugriff auf Ihre
-            Notfalldaten. Drucken Sie am besten den Code aus.
-            <br />
-            <br />
-            Notfalldaten
-            <Switch
-              checked={this.state.data.emergency.Switchactive}
-              onChange={(ev) => this.handleSwitchChange("emergency", ev)}
-              color="secondary"
-              name="Emergency_switch"
-              inputProps={{ "aria-label": "secondary checkbox" }}
-            />
-            {/* todo: Layout without br and maybe one component */}
-            <br />
-            <br />
-            {this.state.data.emergency.QRCodeactive ? (
-              <div>
-                <QRCode
-                  value={this.state.data.emergency.shortLink}
-                  size={250}
-                  bgColor={"#ffffff"}
-                  fgColor={"#000000"}
-                  level={"L"}
-                  includeMargin={true}
-                  renderAs={"svg"}
-                  imageSettings={{
-                    src:
-                      "https://spexdoc.net/wp-content/uploads/2020/07/SpexDoc_logo_png.png",
-                    x: null,
-                    y: null,
-                    height: 25,
-                    width: 25,
-                    excavate: true,
-                  }}
-                />
-                <br />
-                <a href={this.state.data.emergency.shortLink}>
-                  {this.state.data.emergency.shortLink}
-                </a>
-              </div>
-            ) : null}
-          </div>
-          <div id="medRecords">
-            Befunde
-            <Switch
-              checked={this.state.data.medRecords.Switchactive}
-              onChange={(ev) => this.handleSwitchChange("medRecords", ev)}
-              color="primary"
-              name="medRecords_switch"
-              inputProps={{ "aria-label": "secondary checkbox" }}
-            />
-            <br />
-            <br />
-            {this.state.data.medRecords.QRCodeactive ? (
-              <div>
-                <QRCode
-                  value={this.state.data.medRecords.shortLink}
-                  size={250}
-                  bgColor={"#ffffff"}
-                  fgColor={"#000000"}
-                  level={"L"}
-                  includeMargin={true}
-                  renderAs={"svg"}
-                  imageSettings={{
-                    src:
-                      "https://spexdoc.net/wp-content/uploads/2020/07/SpexDoc_logo_png.png",
-                    x: null,
-                    y: null,
-                    height: 25,
-                    width: 25,
-                    excavate: true,
-                  }}
-                />
-                <br />
-                <a href={this.state.data.medRecords.shortLink}>
-                  {this.state.data.medRecords.shortLink}
-                </a>
-              </div>
-            ) : null}
-          </div>
+          Jeder kann in eine Notsituation kommen. Zeigen Sie ihm einfach den
+          folgenden QR Code und der Notfallsanitärer bekommt Zugriff auf Ihre
+          Notfalldaten. Drucken Sie am besten den Code aus.
+          <GridContainer>
+            <GridItem xs={12} sm={6} md={4}>
+              <Card>
+                <CardHeader color="primary">
+                  <h4 className={classes.cardTitleWhite}>Notfalldaten</h4>
+                </CardHeader>
+                <CardBody>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Switch
+                      checked={this.state.data.emergency.Switchactive}
+                      onChange={(ev) =>
+                        this.handleSwitchChange("emergency", ev)
+                      }
+                      color="secondary"
+                      name="Emergency_switch"
+                      inputProps={{ "aria-label": "secondary checkbox" }}
+                    />
+                  </div>
+                  {/* todo: Layout without br and maybe one component */}
+                  {this.state.data.emergency.QRCodeactive ? (
+                    <div>
+                      <QRCode
+                        value={this.state.data.emergency.shortLink}
+                        size={200}
+                        bgColor={"#ffffff"}
+                        fgColor={"#000000"}
+                        level={"L"}
+                        includeMargin={true}
+                        renderAs={"svg"}
+                        imageSettings={{
+                          src:
+                            "https://spexdoc.net/wp-content/uploads/2020/07/SpexDoc_logo_png.png",
+                          x: null,
+                          y: null,
+                          height: 20,
+                          width: 20,
+                          excavate: true,
+                        }}
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <a href={this.state.data.emergency.shortLink}>
+                          {this.state.data.emergency.shortLink}
+                        </a>
+                      </div>
+                    </div>
+                  ) : null}
+                </CardBody>
+              </Card>
+            </GridItem>
+            <GridItem xs={12} sm={6} md={4}>
+              <Card>
+                <CardHeader color="primary">
+                  <h4 className={classes.cardTitleWhite}>Befunde</h4>
+                </CardHeader>
+                <CardBody>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Switch
+                      checked={this.state.data.medRecords.Switchactive}
+                      onChange={(ev) =>
+                        this.handleSwitchChange("medRecords", ev)
+                      }
+                      color="primary"
+                      name="medRecords_switch"
+                      inputProps={{ "aria-label": "secondary checkbox" }}
+                    />
+                  </div>
+                  {this.state.data.medRecords.QRCodeactive ? (
+                    <div>
+                      <QRCode
+                        value={this.state.data.medRecords.shortLink}
+                        size={200}
+                        bgColor={"#ffffff"}
+                        fgColor={"#000000"}
+                        level={"L"}
+                        includeMargin={true}
+                        renderAs={"svg"}
+                        imageSettings={{
+                          src:
+                            "https://spexdoc.net/wp-content/uploads/2020/07/SpexDoc_logo_png.png",
+                          x: null,
+                          y: null,
+                          height: 20,
+                          width: 20,
+                          excavate: true,
+                        }}
+                      />
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <a href={this.state.data.medRecords.shortLink}>
+                          {this.state.data.medRecords.shortLink}
+                        </a>
+                      </div>
+                    </div>
+                  ) : null}
+                </CardBody>
+              </Card>
+            </GridItem>
+          </GridContainer>
         </CardBody>
       </Card>
     );

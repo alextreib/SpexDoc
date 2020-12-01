@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Button from "components/CustomButtons/Button.js";
+// import Button from "components/CustomButtons/Button.js";
+import Button from '@material-ui/core/Button';
+import CustomButton from "components/CustomButtons/Button.js";
 
 import firebase from "firebase/app";
 import "firebase/storage";
@@ -13,6 +15,9 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
+import ShareIcon from '@material-ui/icons/Share';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 import Typography from "@material-ui/core/Typography";
 
 import Dialog from "@material-ui/core/Dialog";
@@ -246,26 +251,23 @@ class ShowFile extends React.Component {
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
-              Befund Nr.
-            </Typography>
-            {/* <Typography variant="body2" color="textSecondary" component="p">
-              20.11.2020
+            {this.state.userProfile.lastName}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-              Stuttgart
-            </Typography> */}
+              {this.state.userProfile.email}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+            {this.state.userProfile.lastName}
+            </Typography>
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button
-            onClick={this.removeFile}
-            style={{ marginLeft: "auto", backgroundColor: "darkred" }}
-          >
-            Remove
-          </Button>
-          <Button onClick={this.magicFunc} style={{ marginLeft: "auto" }}>
-            Details
-          </Button>
+        <IconButton aria-label="share">
+          <DeleteIcon />
+        </IconButton>
+        <IconButton style={{ marginLeft: "auto" }}   onClick={this.removeFile} aria-label="share">
+          <ShareIcon />
+        </IconButton>
         </CardActions>
         <Dialog
           fullWidth={true}
@@ -358,16 +360,17 @@ class ShowFile extends React.Component {
                 </GridContainer>
               </CardBody>
               <CardFooter>
-                <Button color="primary" onClick={this.uploadProfile} round>
+                <CustomButton color="primary" onClick={this.uploadProfile} round>
                   Speichern
-                </Button>
+                </CustomButton>
               </CardFooter>
             </Card>
+            {/* todo: Add QR Code to share */}
           </DialogContent>
           <DialogActions>
-            <Button autoFocus onClick={this.handleClose} color="primary">
+            <CustomButton autoFocus onClick={this.handleClose} color="primary">
               Close
-            </Button>
+            </CustomButton>
           </DialogActions>
         </Dialog>
       </Card>

@@ -10,6 +10,9 @@ import Fab from "@material-ui/core/Fab";
 
 import PropTypes from "prop-types";
 
+import GridItem from "components/Grid/GridItem.js";
+import GridContainer from "components/Grid/GridContainer.js";
+
 import ShowFile from "components/VisuComps/ShowFile.js";
 import { readDBData, uploadFile } from "components/Internal/DBFunctions.js";
 
@@ -98,18 +101,18 @@ class ShowFileList extends React.Component {
 
     return (
       <div>
-        <Grid container>
+        <GridContainer>
           {this.state.medRecords.map((medRecord) => (
-            <Grid key={medRecord} item md={6}>
+            <GridItem xs={12} sm={6} md={4}>
               <ShowFile
                 showFileParams={{
                   medRecord: medRecord,
                   updateFunc: this.loadFiles,
                 }}
               />
-            </Grid>
+            </GridItem>
           ))}
-        </Grid>
+        </GridContainer>
 
         <div className={classes.rightToolbar}>
           <input
