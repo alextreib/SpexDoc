@@ -1,100 +1,31 @@
-import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import PropTypes from "prop-types";
-import AppBar from "@material-ui/core/AppBar";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import IconButton from "@material-ui/core/IconButton";
-import Paper from "@material-ui/core/Paper";
-import Fab from "@material-ui/core/Fab";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListSubheader from "@material-ui/core/ListSubheader";
-import Avatar from "@material-ui/core/Avatar";
+import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
+import {loginUser, logoutUser} from "components/Internal/LoginFunctions.js";
+import { useDispatch, useSelector } from "react-redux";
+
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import Button from "components/CustomButtons/Button.js";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import MenuIcon from "@material-ui/icons/Menu";
-import AddIcon from "@material-ui/icons/Add";
-import SearchIcon from "@material-ui/icons/Search";
-import MoreIcon from "@material-ui/icons/MoreVert";
-import HomeIcon from "@material-ui/icons/Home";
-import { NavLink } from "react-router-dom";
+import Divider from "@material-ui/core/Divider";
+import Grow from "@material-ui/core/Grow";
+import Hidden from "@material-ui/core/Hidden";
+import IconButton from "@material-ui/core/IconButton";
 import { Link } from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
-import NotificationIcon from "@material-ui/icons/Notifications";
-import Button from "components/CustomButtons/Button.js";
-import Hidden from "@material-ui/core/Hidden";
-import Badge from "@material-ui/core/Badge";
-import red from "@material-ui/core/colors/red";
-import Menu from "@material-ui/core/Menu";
-
-import { useSelector, useDispatch } from "react-redux";
-
+import Paper from "@material-ui/core/Paper";
+import Person from "@material-ui/icons/Person";
+import Popper from "@material-ui/core/Popper";
+import PropTypes from "prop-types";
+import React from "react";
+import classNames from "classnames";
+import { connect } from "react-redux";
+import { makeStyles } from "@material-ui/core/styles";
+import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import { withStyles } from "@material-ui/core/styles";
 
-import Grow from "@material-ui/core/Grow";
-import { connect } from "react-redux";
-import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
-import Popper from "@material-ui/core/Popper";
-import Divider from "@material-ui/core/Divider";
-import Person from "@material-ui/icons/Person";
+const useStyles = makeStyles(styles);
 
-
-
-import NotificationData from "components/NotificationData/NotificationData.js";
-import {loginUser,logoutUser} from "components/Internal/LoginFunctions.js";
-
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-
-import {
-  container,
-  defaultFont,
-  primaryColor,
-  defaultBoxShadow,
-  infoColor,
-  successColor,
-  warningColor,
-  dangerColor,
-  whiteColor,
-  grayColor,
-} from "assets/jss/material-dashboard-react.js";
-
-const useStyles = makeStyles((theme) => ({
-  text: {
-    padding: theme.spacing(2, 2, 0),
-  },
-  paper: {
-    paddingBottom: 50,
-  },
-  list: {
-    marginBottom: theme.spacing(2),
-  },
-  subheader: {
-    backgroundColor: theme.palette.background.paper,
-  },
-  appBar: {
-    top: "auto",
-    bottom: 0,
-    backgroundColor: "white",
-    borderBottom: "0",
-    marginBottom: "0",
-    position: "fixed",
-    width: "100%",
-    color: grayColor[7],
-    minHeight: "50px",
-    display: "block",
-  },
-  grow: {
-    flex: 1,
-  },
-}));
-
-function ProfileButton(props) {
+function ProfileButton() {
   const classes = useStyles();
 
   const [loginState, setUserLogin] = React.useState(false);
@@ -176,7 +107,16 @@ function ProfileButton(props) {
   };
 
   const renderPopper = (
-    <Popper open={isMenuOpen} anchorEl={anchorEl} transition disablePortal>
+    <Popper open={isMenuOpen} anchorEl={anchorEl} transition disablePortal
+    className={
+      classNames({
+        [classes.popperClose]: !isMenuOpen,
+      }) +
+      " " +
+      classes.popperNav
+    }
+    >
+   
       {({ TransitionProps, placement }) => (
         <Grow
           {...TransitionProps}

@@ -1,40 +1,30 @@
-import React from "react";
-import classNames from "classnames";
+import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
 
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
+import Button from "components/CustomButtons/Button.js";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
+import CustomInput from "components/CustomInput/CustomInput.js";
+import Dashboard from "@material-ui/icons/Dashboard";
+import Divider from "@material-ui/core/Divider";
+import Grow from "@material-ui/core/Grow";
+import Hidden from "@material-ui/core/Hidden";
+import { Link } from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
-import Grow from "@material-ui/core/Grow";
-import Paper from "@material-ui/core/Paper";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-import Hidden from "@material-ui/core/Hidden";
-import Popper from "@material-ui/core/Popper";
-import Divider from "@material-ui/core/Divider";
-// @material-ui/icons
-import Person from "@material-ui/icons/Person";
-import NotificationIcon from "@material-ui/icons/Notifications";
-import Dashboard from "@material-ui/icons/Dashboard";
-import Search from "@material-ui/icons/Search";
-// core components
-import CustomInput from "components/CustomInput/CustomInput.js";
-import Button from "components/CustomButtons/Button.js";
-import ProfileButton from "components/Navbars/ProfileButton.js";
 import NotificationData from "components/NotificationData/NotificationData.js";
-
-import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
-
-
-
-import grey from "@material-ui/core/colors/grey";
-
+import NotificationIcon from "@material-ui/icons/Notifications";
+import Paper from "@material-ui/core/Paper";
+import Person from "@material-ui/icons/Person";
+import Popper from "@material-ui/core/Popper";
+import ProfileButton from "components/Navbars/ProfileButton.js";
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-
-import { Link } from "react-router-dom";
-
+import React from "react";
+import Search from "@material-ui/icons/Search";
+import classNames from "classnames";
 import { connect } from "react-redux";
-import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
+import grey from "@material-ui/core/colors/grey";
+import { makeStyles } from "@material-ui/core/styles";
+import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
+import { withStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles(styles);
 
@@ -107,7 +97,7 @@ class AdminNavbarLinks extends React.Component {
             </Button>
           </div>
 
-          <Link to="/dashboard" style={{ textDecoration: "none" }}>
+          <Link to="/dashboard" style={{ color:"inherit" }}>
             <Button
               color={window.innerWidth > 959 ? "transparent" : "white"}
               justIcon={window.innerWidth > 959}
