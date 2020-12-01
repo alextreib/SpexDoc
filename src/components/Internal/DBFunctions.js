@@ -1,13 +1,10 @@
-import React from "react";
-import MaterialTable from "material-table";
-
-import firebase from "components/Internal/Firebase.js";
-
 import Button from "components/CustomButtons/Button.js";
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
-
-import { getUserID } from "components/Internal/Checks.js";
+import MaterialTable from "material-table";
+import React from "react";
+import firebase from "components/Internal/Firebase.js";
 import { getPublicKey } from "components/Internal/Extraction.js";
+import { getUserID } from "components/Internal/Checks.js";
 
 export const writeDBData = (docName, data) => {
   var user_id = getUserID();
@@ -62,7 +59,8 @@ export const readDBData = (docName, allowPublicKey) => {
   });
 };
 
-export const uploadFile = (docName, fileToUpload) => {
+// todo: maybe include user?
+export const uploadFile = ( fileToUpload) => {
   return new Promise((resolve, reject) => {
     // todo: enhance with fileinformation
     if (fileToUpload == null) {

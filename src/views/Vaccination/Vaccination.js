@@ -1,19 +1,18 @@
-import React from "react";
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-// core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import EditableTableReport from "components/EditableTableReport/EditableTableReport.js";
-import CardBody from "components/Card/CardBody.js";
-
 import "firebase/auth";
 import "firebase/firestore";
 
+import Card from "components/Card/Card.js";
+import CardBody from "components/Card/CardBody.js";
+import CardHeader from "components/Card/CardHeader.js";
+import EditableTableReport from "components/EditableTableReport/EditableTableReport.js";
+import GridContainer from "components/Grid/GridContainer.js";
+// core components
+import GridItem from "components/Grid/GridItem.js";
 import PropTypes from "prop-types";
+import React from "react";
+import Table from "components/Table/Table.js";
+// @material-ui/core components
+import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = {
