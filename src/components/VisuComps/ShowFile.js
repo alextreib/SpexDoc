@@ -23,8 +23,21 @@ import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import CloseIcon from "@material-ui/icons/Close";
 
+import GridItem from "components/Grid/GridItem.js";
+import GridContainer from "components/Grid/GridContainer.js";
+import CustomInput from "components/CustomInput/CustomInput.js";
+import CardHeader from "components/Card/CardHeader.js";
+import CardAvatar from "components/Card/CardAvatar.js";
+import CardBody from "components/Card/CardBody.js";
+import CardFooter from "components/Card/CardFooter.js";
+
+
+import { getUserID } from "components/Internal/Checks.js";
+
 import IconButton from "@material-ui/core/IconButton";
 // import Button from "@material-ui/core/Button";
+import EditableTableReport from "components/EditableTableReport/EditableTableReport.js";
+
 
 import Icon from "@material-ui/core/Icon";
 import AddIcon from "@material-ui/icons/Add";
@@ -35,6 +48,7 @@ import {
   removeDBArray,
   writeDBData,
   uploadFile,
+  readDBData
 } from "components/Internal/DBFunctions.js";
 
 import PropTypes from "prop-types";
@@ -101,12 +115,48 @@ class ShowFile extends React.Component {
 
     // Integrate script
     this.state = {
+      commonProps: {
+        LoginAlertProps: {
+          openLoginRequired: false,
+          FuncParams: "test",
+        },
+      },
+      userProfile: {
+        email: "20.20.2020",
+        firstName: "Dr. Wilder",
+        lastName: "Krampfadern",
+        plz: "123456",
+        city: "Musterstadt",
+        street: "Maximilianstraße",
+        aboutMe: "Behandlung durch Ausdehnung der Gefäße",
+      },
       internal: {
         open: false,
       },
       openLoginRequired: false,
       // todo: split to parent/ interal/child
       showFileParams: props.showFileParams,
+      external: {
+        tableOptions: {
+          name: "Emergency",
+          columns: [
+            { title: "Datum", field: "date" },
+            { title: "Arzt", field: "doctor" },
+            { title: "Anmerkung", field: "annotation" },
+          ],
+          data: [
+            {
+              date: "20.20.2020",
+              doctor: "Dr. Schumacher",
+              annotation: "Test",
+            },
+            {
+              predisposition: "Beispielerkrankung",
+              diagnosis_year: "1997",
+            },
+          ],
+        },
+      },
     };
     console.log(props.showFileParams);
   }
@@ -123,12 +173,60 @@ class ShowFile extends React.Component {
   };
 
   removeFile = () => {
-    removeDBArray("medRecords", this.state.showFileParams.medRecord);
+    removeDBArray("medRecordsFileLinks", this.state.showFileParams.medRecord);
     this.props.showFileParams.updateFunc();
   };
 
   handleClose = () => {
     this.setState({ internal: { open: false } });
+  };
+
+
+  // Form functions
+  
+  // For redux and others
+  componentDidUpdate(prevProps) {
+    if (prevProps == this.props) {
+      // No change from above (currently nothing else is needed)
+      return;
+    } else {
+      this.fetchTable();
+    }
+  }
+
+  componentDidMount() {
+    this.fetchTable();
+  }
+
+  // Fetch the table from Firebase (Original data)
+  // Is called when table is changed
+  fetchTable = () => {
+    // todo: default parameter
+    return readDBData("ShowFile", false).then((doc_data) => {
+      if (doc_data != null) this.setState({ userProfile: doc_data });
+      // Cannot get data -> set default data from parent class
+      // this.setState({ userProfile: this.state.user });
+      // else ;
+    });
+  };
+
+  // Is called when table is changed
+  uploadProfile = () => {
+    var user_id = getUserID();
+    if (user_id == null) {
+      this.displayLogin();
+      return false;
+    }
+    var success = writeDBData("ShowFile", this.state.userProfile);
+    if (success == false) this.displayLogin();
+  };
+
+  // Nice function: Sets states automatically
+  profileChange = (property, event) => {
+    var changedValue = event.target.value;
+    this.setState({
+      userProfile: { ...this.state.userProfile, [property]: changedValue },
+    });
   };
 
   render() {
@@ -180,28 +278,91 @@ class ShowFile extends React.Component {
             Befund
           </DialogTitle>
           <DialogContent dividers>
+          <Card>
+          <CardBody>
             <CardMedia
               component="img"
               alt="Contemplative Reptile"
               image={this.state.showFileParams.medRecord}
               title="Contemplative Reptile"
             />
-            {/* <Typography variant="h3" gutterBottom>
-              Diagnose
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Allergie festgestellt.
-            </Typography>
-            <Typography variant="h3" gutterBottom>
-              Therapie
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Es wurde eine Hyposensibilisierung durchgeführt. Keine weiteren
-              Komplikationen bekannt.,
-            </Typography>
-            <Typography variant="h4" component="h2" align="center" gutterBottom>
-              18.11.2020, Dr. Wilder
-            </Typography> */}
+               </CardBody>
+               </Card>
+              <br/>
+              <br/>
+        
+            <Card>
+              <CardHeader color="primary">
+                <h4 className={classes.cardTitleWhite}>Details</h4>
+              </CardHeader>
+              <CardBody>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={4}>
+                    <CustomInput
+                      labelText="Datum"
+                      id="date"
+                      inputProps={{
+                        value: this.state.userProfile.email,
+                        onChange: (e) => this.profileChange("email", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                        color: "secondary",
+                      }}
+                    />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={4}>
+                    <CustomInput
+                      labelText="Arzt"
+                      id="doctor"
+                      inputProps={{
+                        value: this.state.userProfile.firstName,
+                        onChange: (e) => this.profileChange("firstName", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                    />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={4}>
+                    <CustomInput
+                      labelText="Nachname"
+                      id="lastName"
+                      inputProps={{
+                        value: this.state.userProfile.lastName,
+                        onChange: (e) => this.profileChange("lastName", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                        color: "secondary",
+                      }}
+                    />
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <CustomInput
+                      labelText="Weiteres"
+                      id="aboutMe"
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                      inputProps={{
+                        value: this.state.userProfile.aboutMe,
+                        onChange: (e) => this.profileChange("aboutMe", e),
+                        multiline: true,
+                        rows: 5,
+                      }}
+                    />
+                  </GridItem>
+                </GridContainer>
+              </CardBody>
+              <CardFooter>
+                <Button color="primary" onClick={this.uploadProfile} round>
+                  Speichern
+                </Button>
+              </CardFooter>
+            </Card>
           </DialogContent>
           <DialogActions>
             <Button autoFocus onClick={this.handleClose} color="primary">

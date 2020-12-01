@@ -72,7 +72,7 @@ class ShowFileList extends React.Component {
   }
 
   loadFiles = () => {
-    return readDBData("medRecords", false).then((doc_data) => {
+    return readDBData("medRecordsFileLinks", false).then((doc_data) => {
       console.log(doc_data);
 
       if (doc_data != null) this.setState({ medRecords: doc_data });
@@ -83,7 +83,7 @@ class ShowFileList extends React.Component {
     event.preventDefault();
 
     var fileToUpload = event.target.files[0];
-    return uploadFile("medRecords", fileToUpload).then((result) => {
+    return uploadFile("medRecordsFileLinks", fileToUpload).then((result) => {
       if (result == false) {
         // displayLogin
       }
