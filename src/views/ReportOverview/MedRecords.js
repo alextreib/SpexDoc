@@ -9,27 +9,14 @@ import CardBody from "components/Card/CardBody.js";
 
 import ShowFileList from "components/VisuComps/ShowFileList.js";
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+
 
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 
 // import FileBrowser from "react-keyed-file-browser";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCpS3fCBYZcehmfwhs6ma_6uyhw6FKmYfM",
-  authDomain: "spexdoc.firebaseapp.com",
-  databaseURL: "https://spexdoc.firebaseio.com",
-  projectId: "spexdoc",
-  storageBucket: "spexdoc.appspot.com",
-  messagingSenderId: "890835351206",
-  appId: "1:890835351206:web:78e087ece687649ae8e667",
-  measurementId: "G-20H8X0HLQ9",
-};
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+
 
 const styles = {
   cardCategoryWhite: {
@@ -73,43 +60,10 @@ const styles = {
 class MedRecords extends React.Component {
   constructor(props) {
     super(props);
-
-    //Bindings
-    this.loadDoc = this.loadDoc.bind(this);
   }
 
   componentDidUpdate(prevProps) {
     console.log("update MedRecords")
-  }
-
-  loadDoc() {
-    console.log("loadDoc");
-    var defaultDatabase = firebase.firestore();
-
-    var docRef = defaultDatabase.collection("userStorage").doc("docLinks");
-
-    var user = firebase.auth().currentUser;
-    if (user == null) {
-      return;
-    }
-    var user_id = user.uid;
-
-    var docLinks = [];
-
-    docRef
-      .get()
-      .then(function (doc) {
-        if (doc.exists) {
-          for (const docLink of doc.data()[user_id]) {
-            docLinks.push(docLink);
-          }
-          return docLinks;
-        }
-      })
-      .then((docLinks) => {
-        console.log(docLinks);
-        this.setState({ showFiles: docLinks });
-      });
   }
 
   render() {

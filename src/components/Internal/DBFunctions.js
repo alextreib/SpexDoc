@@ -1,10 +1,7 @@
 import React from "react";
 import MaterialTable from "material-table";
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
-import "firebase/database";
+import firebase from "components/Internal/Firebase.js";
 
 import Button from "components/CustomButtons/Button.js";
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
@@ -218,3 +215,38 @@ export const substituteDBArrayElement = (docName, arrayElement,key) => {
     //   });
   });
 };
+
+
+
+
+
+// Array access (previously)
+  // loadDoc() {
+  //   console.log("loadDoc");
+  //   var defaultDatabase = firebase.firestore();
+
+  //   var docRef = defaultDatabase.collection("userStorage").doc("docLinks");
+
+  //   var user = firebase.auth().currentUser;
+  //   if (user == null) {
+  //     return;
+  //   }
+  //   var user_id = user.uid;
+
+  //   var docLinks = [];
+
+  //   docRef
+  //     .get()
+  //     .then(function (doc) {
+  //       if (doc.exists) {
+  //         for (const docLink of doc.data()[user_id]) {
+  //           docLinks.push(docLink);
+  //         }
+  //         return docLinks;
+  //       }
+  //     })
+  //     .then((docLinks) => {
+  //       console.log(docLinks);
+  //       this.setState({ showFiles: docLinks });
+  //     });
+  // }

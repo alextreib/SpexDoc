@@ -1,9 +1,7 @@
 import React from "react";
 import MaterialTable from "material-table";
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+
 import "firebase/database";
 
 import Button from "components/CustomButtons/Button.js";

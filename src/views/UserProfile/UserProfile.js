@@ -13,9 +13,7 @@ import CardFooter from "components/Card/CardFooter.js";
 
 import avatar from "assets/img/faces/profile_white.png";
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+
 
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
@@ -150,7 +148,6 @@ class UserProfile extends React.Component {
                       }}
                       formControlProps={{
                         fullWidth: true,
-                        color: "secondary",
                       }}
                     />
                   </GridItem>
@@ -177,7 +174,6 @@ class UserProfile extends React.Component {
                       }}
                       formControlProps={{
                         fullWidth: true,
-                        color: "secondary",
                       }}
                     />
                   </GridItem>
@@ -193,7 +189,6 @@ class UserProfile extends React.Component {
                       }}
                       formControlProps={{
                         fullWidth: true,
-                        color: "secondary",
                       }}
                     />
                   </GridItem>
@@ -207,7 +202,6 @@ class UserProfile extends React.Component {
                       }}
                       formControlProps={{
                         fullWidth: true,
-                        color: "secondary",
                       }}
                     />
                   </GridItem>
@@ -221,7 +215,6 @@ class UserProfile extends React.Component {
                       }}
                       formControlProps={{
                         fullWidth: true,
-                        color: "secondary",
                       }}
                     />
                   </GridItem>

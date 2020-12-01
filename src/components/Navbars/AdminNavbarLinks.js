@@ -24,9 +24,7 @@ import NotificationData from "components/NotificationData/NotificationData.js";
 
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+
 
 import grey from "@material-ui/core/colors/grey";
 

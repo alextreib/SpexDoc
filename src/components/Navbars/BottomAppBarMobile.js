@@ -34,9 +34,7 @@ import Popper from "@material-ui/core/Popper";
 import Divider from "@material-ui/core/Divider";
 import Person from "@material-ui/icons/Person";
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+
 
 import NotificationData from "components/NotificationData/NotificationData.js";
 import ProfileButton from "components/Navbars/ProfileButton.js";

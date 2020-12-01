@@ -22,9 +22,7 @@ import Switch from "@material-ui/core/Switch";
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
 import Box from "@material-ui/core/Box";
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+
 
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";

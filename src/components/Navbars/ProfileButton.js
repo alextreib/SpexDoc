@@ -43,11 +43,10 @@ import Popper from "@material-ui/core/Popper";
 import Divider from "@material-ui/core/Divider";
 import Person from "@material-ui/icons/Person";
 
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
+
 
 import NotificationData from "components/NotificationData/NotificationData.js";
+import {loginUser,logoutUser} from "components/Internal/LoginFunctions.js";
 
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import NotificationsIcon from "@material-ui/icons/Notifications";
@@ -113,11 +112,7 @@ function ProfileButton(props) {
 
   const handleLoginProfile = () => {
     console.log("login process");
-    var provider = new firebase.auth.GoogleAuthProvider();
-
-    firebase
-      .auth()
-      .signInWithPopup(provider)
+    loginUser()
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         var token = result.credential.accessToken;
@@ -142,14 +137,8 @@ function ProfileButton(props) {
   };
 
   const handleLogoutProfile = () => {
-    var provider = new firebase.auth.GoogleAuthProvider();
 
-    var auth = firebase.auth();
-    var currentUser = auth.currentUser;
-
-    firebase
-      .auth()
-      .signOut()
+    logoutUser()
       .then(() => {
         window.user = null;
         console.log("User successfully logged out");
