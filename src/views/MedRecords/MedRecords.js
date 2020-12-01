@@ -1,22 +1,12 @@
-import React from "react";
-// @material-ui/core components
-// core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-
-import ShowFileList from "components/VisuComps/ShowFileList.js";
-
-
-
+import CardHeader from "components/Card/CardHeader.js";
+import GridContainer from "components/Grid/GridContainer.js";
+import GridItem from "components/Grid/GridItem.js";
+import MedRecordsContent from "views/MedRecords/MedRecordsContent.js";
 import PropTypes from "prop-types";
+import React from "react";
 import { withStyles } from "@material-ui/core/styles";
-
-// import FileBrowser from "react-keyed-file-browser";
-
-
 
 const styles = {
   cardCategoryWhite: {
@@ -79,7 +69,7 @@ class MedRecords extends React.Component {
               </p>
             </CardHeader>
             <CardBody>
-                <ShowFileList/>
+                <MedRecordsContent/>
             </CardBody>
           </Card>
         </GridItem>

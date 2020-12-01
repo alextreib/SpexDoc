@@ -1,7 +1,7 @@
+import {DialogActions, DialogContent, DialogTitle} from "components/VisuComps/Dialog.js";
 import {
   readDBData,
   uploadFile,
-  writeDBData,
 } from "components/Internal/DBFunctions.js";
 
 import AddIcon from "@material-ui/icons/Add";
@@ -12,7 +12,6 @@ import CardBody from "components/Card/CardBody.js";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "components/Card/CardHeader.js";
 import CardMedia from "@material-ui/core/CardMedia";
-import CloseIcon from "@material-ui/icons/Close";
 import CustomButton from "components/CustomButtons/Button.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -21,9 +20,6 @@ import Fab from "@material-ui/core/Fab";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import IconButton from "@material-ui/core/IconButton";
-import MuiDialogActions from "@material-ui/core/DialogActions";
-import MuiDialogContent from "@material-ui/core/DialogContent";
-import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import PropTypes from "prop-types";
 import React from "react";
 import ShareIcon from "@material-ui/icons/Share";
@@ -44,12 +40,6 @@ const styles = (theme) => ({
     margin: 0,
     padding: theme.spacing(2),
   },
-  closeButton: {
-    position: "absolute",
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
   rightToolbar: {
     position: "relative",
     minHeight: 100,
@@ -65,42 +55,7 @@ const styles = (theme) => ({
   },
 });
 
-const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
-  return (
-    <MuiDialogTitle
-      disableTypography
-      className={classes.dialogtitle}
-      {...other}
-    >
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          className={classes.closeButton}
-          onClick={onClose}
-        >
-          <CloseIcon />
-        </IconButton>
-      ) : null}
-    </MuiDialogTitle>
-  );
-});
-
-const DialogContent = withStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-}))(MuiDialogContent);
-
-const DialogActions = withStyles((theme) => ({
-  root: {
-    margin: 0,
-    padding: theme.spacing(1),
-  },
-}))(MuiDialogActions);
-
-class ShowFileList extends React.Component {
+class MedRecordsContent extends React.Component {
   constructor(props) {
     super(props);
 
@@ -398,7 +353,7 @@ class ShowFileList extends React.Component {
   }
 }
 
-ShowFileList.propTypes = {
+MedRecordsContent.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
@@ -407,6 +362,6 @@ const mapStateToProps = (state) => ({
   loginState: state.loginState,
 });
 
-const ShowFileListWithRedux = connect(mapStateToProps)(ShowFileList);
+const MedRecordsContentWithRedux = connect(mapStateToProps)(MedRecordsContent);
 
-export default withStyles(styles)(ShowFileListWithRedux);
+export default withStyles(styles)(MedRecordsContentWithRedux);
