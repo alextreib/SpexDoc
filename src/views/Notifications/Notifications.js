@@ -1,3 +1,4 @@
+import IconButton from "@material-ui/core/IconButton";
 /*eslint-disable*/
 import React from "react";
 // nodejs library to set properties for components
@@ -19,7 +20,20 @@ import Grid from "@material-ui/core/Grid";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
+import Avatar from "@material-ui/core/Avatar";
+import { red } from "@material-ui/core/colors";
 
+import NotificationCard from "views/Notifications/NotificationCard.js";
+
+import clsx from "clsx";
+import CardMedia from "@material-ui/core/CardMedia";
+import Collapse from "@material-ui/core/Collapse";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import ShareIcon from "@material-ui/icons/Share";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
+
+import CloseIcon from "@material-ui/icons/Close";
 import { withStyles } from "@material-ui/core/styles";
 
 import NotificationData from "components/NotificationData/NotificationData.js";
@@ -57,6 +71,29 @@ const styles = (theme) => ({
       lineHeight: "1",
     },
   },
+  avatar: {
+    backgroundColor: red[500],
+  },
+  root: {
+    maxWidth: 345,
+  },
+  media: {
+    height: 0,
+    paddingTop: "56.25%", // 16:9
+  },
+  expand: {
+    transform: "rotate(0deg)",
+    marginLeft: "auto",
+    transition: theme.transitions.create("transform", {
+      duration: theme.transitions.duration.shortest,
+    }),
+  },
+  expandOpen: {
+    transform: "rotate(180deg)",
+  },
+  avatar: {
+    backgroundColor: red[500],
+  },
 });
 
 class Notifications extends React.Component {
@@ -67,6 +104,7 @@ class Notifications extends React.Component {
       profileActive: null,
       openNotification: null,
       openProfile: null,
+      expanded: false,
       notificationList: [
         "Dermatologie möchte Termin vereinbaren",
         "Hausarzt beantragt eine Freigabe",
@@ -87,54 +125,29 @@ class Notifications extends React.Component {
     const { classes } = this.props;
 
     return (
-      <Card>
+      <div>
+        {/* Grid */}
         <NotificationData
           onNotificationDataChange={this.notificationDataChange}
         />
-        <CardHeader color="primary">
-          <h4 className={classes.cardTitleWhite}>Benachrichtigungen</h4>
-          <p className={classes.cardCategoryWhite}>
-            Sehen Sie hier was Dich neues erwartet
-          </p>
-        </CardHeader>
-        <CardBody>
-          <Grid container>
-            {this.state.notificationList.map((noficiation) => (
-              <Grid key={noficiation} item md={6}>
-                <Card className={classes.card}>
-                  <CardContent>
-                    <Typography
-                      className={classes.title}
-                      color="textSecondary"
-                      gutterBottom
-                    >
-                      Neue Benachrichtigung
-                    </Typography>
-                    <Typography variant="h5" component="h2">
-                      {noficiation}
-                    </Typography>
-                    <Typography className={classes.pos} color="textSecondary">
-                      21.20.2020
-                    </Typography>
-                    <Typography variant="body2" component="p">
-                      Stuttgart
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button
-                      size="small"
-                      onClick={this.magicFunc}
-                      style={{ marginLeft: "auto" }}
-                    >
-                      Gelesen
-                    </Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        </CardBody>
-      </Card>
+        <Card>
+          <CardHeader color="primary">
+            <h4 className={classes.cardTitleWhite}>Benachrichtigungen</h4>
+            <p className={classes.cardCategoryWhite}>
+              Sehen Sie hier was Dich neues erwartet
+            </p>
+          </CardHeader>
+          <CardBody>
+            <GridContainer>
+              {this.state.notificationList.map((noficiation) => (
+                <GridItem xs={12} sm={6} md={4}>
+                  <NotificationCard />
+                </GridItem>
+              ))}
+            </GridContainer>
+          </CardBody>
+        </Card>
+      </div>
     );
   }
 }

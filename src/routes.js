@@ -44,6 +44,8 @@ import Share from "views/Share/Share.js";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.js";
 // core components/views for RTL layout
 import RTLPage from "views/RTLPage/RTLPage.js";
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import TodayIcon from '@material-ui/icons/Today';
 
 const dashboardRoutes = [
   {
@@ -58,7 +60,7 @@ const dashboardRoutes = [
     path: "/user",
     name: "Dein Profil",
     rtlName: "ملف تعريفي للمستخدم",
-    icon: Person,
+    icon: AssignmentIndIcon,
     component: UserProfile,
     layout: "/admin"
   },
@@ -74,7 +76,7 @@ const dashboardRoutes = [
     path: "/appointments",
     name: "Termine",
     rtlName: "طباعة",
-    icon: CalendarTodayIcon,
+    icon: TodayIcon,
     component: Appointments,
     layout: "/admin"
   },

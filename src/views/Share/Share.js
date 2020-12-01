@@ -14,6 +14,10 @@ import Snackbar from "components/Snackbar/Snackbar.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import ShareIcon from "@material-ui/icons/Share";
+import IconButton from "@material-ui/core/IconButton";
+import TestComp from "components/VisuComps/TestComp.js";
+
 import Switch from "@material-ui/core/Switch";
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
 import Box from "@material-ui/core/Box";
@@ -28,6 +32,7 @@ import { getUserID } from "components/Internal/Checks";
 import { getShortLink } from "components/Internal/Checks";
 
 import CommonComps from "components/Internal/CommonComps.js";
+import QRCodeCard from "components/VisuComps/QRCodeCard.js";
 
 import QRCode from "qrcode.react";
 
@@ -177,7 +182,7 @@ class Share extends React.Component {
           <GridContainer>
             <GridItem xs={12} sm={6} md={4}>
               <Card>
-                <CardHeader color="primary">
+                <CardHeader color="info">
                   <h4 className={classes.cardTitleWhite}>Notfalldaten</h4>
                 </CardHeader>
                 <CardBody>
@@ -193,51 +198,21 @@ class Share extends React.Component {
                       onChange={(ev) =>
                         this.handleSwitchChange("emergency", ev)
                       }
-                      color="secondary"
+                      color="primary"
                       name="Emergency_switch"
                       inputProps={{ "aria-label": "secondary checkbox" }}
                     />
                   </div>
                   {/* todo: Layout without br and maybe one component */}
                   {this.state.data.emergency.QRCodeactive ? (
-                    <div>
-                      <QRCode
-                        value={this.state.data.emergency.shortLink}
-                        size={200}
-                        bgColor={"#ffffff"}
-                        fgColor={"#000000"}
-                        level={"L"}
-                        includeMargin={true}
-                        renderAs={"svg"}
-                        imageSettings={{
-                          src:
-                            "https://spexdoc.net/wp-content/uploads/2020/07/SpexDoc_logo_png.png",
-                          x: null,
-                          y: null,
-                          height: 20,
-                          width: 20,
-                          excavate: true,
-                        }}
-                      />
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <a href={this.state.data.emergency.shortLink}>
-                          {this.state.data.emergency.shortLink}
-                        </a>
-                      </div>
-                    </div>
+                    <QRCodeCard link={this.state.data.emergency.shortLink} />
                   ) : null}
                 </CardBody>
               </Card>
             </GridItem>
             <GridItem xs={12} sm={6} md={4}>
               <Card>
-                <CardHeader color="primary">
+                <CardHeader color="info">
                   <h4 className={classes.cardTitleWhite}>Befunde</h4>
                 </CardHeader>
                 <CardBody>
@@ -259,37 +234,7 @@ class Share extends React.Component {
                     />
                   </div>
                   {this.state.data.medRecords.QRCodeactive ? (
-                    <div>
-                      <QRCode
-                        value={this.state.data.medRecords.shortLink}
-                        size={200}
-                        bgColor={"#ffffff"}
-                        fgColor={"#000000"}
-                        level={"L"}
-                        includeMargin={true}
-                        renderAs={"svg"}
-                        imageSettings={{
-                          src:
-                            "https://spexdoc.net/wp-content/uploads/2020/07/SpexDoc_logo_png.png",
-                          x: null,
-                          y: null,
-                          height: 20,
-                          width: 20,
-                          excavate: true,
-                        }}
-                      />
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <a href={this.state.data.medRecords.shortLink}>
-                          {this.state.data.medRecords.shortLink}
-                        </a>
-                      </div>
-                    </div>
+                    <QRCodeCard link={this.state.data.medRecords.shortLink} />
                   ) : null}
                 </CardBody>
               </Card>
