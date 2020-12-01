@@ -174,6 +174,7 @@ class ShowFile extends React.Component {
 
   handleClose = () => {
     this.setState({ internal: { open: false } });
+    this.uploadMedRecord();
   };
 
   // Fetch the table from Firebase (Original data)
@@ -226,7 +227,7 @@ class ShowFile extends React.Component {
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
-              {this.state.medRecord.disease}
+              {this.state.medRecord.doctor}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
               {this.state.medRecord.date}
@@ -287,7 +288,6 @@ class ShowFile extends React.Component {
                       }}
                       formControlProps={{
                         fullWidth: true,
-                        color: "secondary",
                       }}
                     />
                   </GridItem>
@@ -314,7 +314,6 @@ class ShowFile extends React.Component {
                       }}
                       formControlProps={{
                         fullWidth: true,
-                        color: "secondary",
                       }}
                     />
                   </GridItem>
@@ -337,15 +336,6 @@ class ShowFile extends React.Component {
                   </GridItem>
                 </GridContainer>
               </CardBody>
-              <CardFooter>
-                <CustomButton
-                  color="primary"
-                  onClick={this.uploadMedRecord}
-                  round
-                >
-                  Speichern
-                </CustomButton>
-              </CardFooter>
             </Card>
             {/* todo: Add QR Code to share */}
           </DialogContent>
