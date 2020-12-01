@@ -1,28 +1,13 @@
 import React from "react";
-import ReactDOM from "react-dom";
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-import EditableTableReport from "components/EditableTableReport/EditableTableReport.js";
 import CardBody from "components/Card/CardBody.js";
-import IconButton from "@material-ui/core/IconButton";
-import Icon from "@material-ui/core/Icon";
-import Button from "components/CustomButtons/Button.js";
 
-import UploadFile from "components/UploadFile/UploadFile.js";
 import ShowFileList from "components/VisuComps/ShowFileList.js";
-
-import MaterialTable from "material-table";
-
-import AddAlert from "@material-ui/icons/AddAlert";
-import SnackbarContent from "components/Snackbar/SnackbarContent.js";
-import Snackbar from "components/Snackbar/Snackbar.js";
-import Grid from "@material-ui/core/Grid";
 
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -89,10 +74,8 @@ class MedRecords extends React.Component {
   constructor(props) {
     super(props);
 
-
     //Bindings
     this.loadDoc = this.loadDoc.bind(this);
-
   }
 
   componentDidUpdate(prevProps) {

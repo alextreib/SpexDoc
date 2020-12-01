@@ -83,7 +83,7 @@ export const uploadFile = (docName, fileToUpload) => {
         console.log("File uploaded");
         console.log(snapshot);
         snapshot.ref.getDownloadURL().then((downloadURL) => {
-          if (downloadURL != null) resolve(appendDBArray(docName, downloadURL));
+          if (downloadURL != null) resolve(downloadURL);
           else resolve(false);
         });
       });
@@ -103,6 +103,7 @@ export const appendDBArray = (docName, arrayElement) => {
       .collection(user_id)
       .doc(docName);
 
+      // todo: if non-existing -create
     docRef
       .update({
         data: firebase.firestore.FieldValue.arrayUnion(arrayElement),
@@ -134,5 +135,86 @@ export const removeDBArray = (docName, arrayElement) => {
         if (result != null) resolve(true);
         else resolve(false);
       });
+  });
+};
+
+
+export const deleteDoc = (docName) => {
+  return new Promise((resolve, reject) => {
+    var user_id = getUserID();
+    if (user_id == null) return false;
+
+    const docRef = firebase
+      .firestore()
+      .collection("userStorage")
+      .doc("users")
+      .collection(user_id)
+      .doc(docName);
+
+    docRef
+      .delete()
+      .then((result) => {
+        if (result != null) resolve(true);
+        else resolve(false);
+      });
+  });
+
+}
+
+
+
+// Not working
+
+
+// Array operations
+// key as {link: "https://"}
+// Array is nested array, not 
+// Array=[{element:1, link=https}, {element:2,link=https}]
+export const substituteDBArrayElement = (docName, arrayElement,key) => {
+  return new Promise(async (resolve, reject) => {
+    var user_id = getUserID();
+    if (user_id == null) return false;
+
+    // Loading the whole document
+    var old_doc=await readDBData(docName);
+
+    // Search for key 
+    console.log(old_doc)
+    if(old_doc!=null) // Nothing to update
+    {
+      
+
+    var new_doc=old_doc.map((medRecord) => {
+      if(medRecord.link==key)
+      {
+        console.log("found element")
+        medRecord=arrayElement;
+      }
+    });
+  }
+    console.log(old_doc)
+
+    writeDBData(docName,old_doc);
+
+
+    // // Updating element
+
+    // // Override the complete array
+
+    // const docRef = firebase
+    //   .firestore()
+    //   .collection("userStorage")
+    //   .doc("users")
+    //   .collection(user_id)
+    //   .doc(docName);
+
+    // docRef
+    //   .update({
+    //     data: firebase.firestore.FieldValue.arrayUnion(arrayElement),
+    //   })
+    //   .then((result) => {
+    //     if (result != null) resolve(true);
+    //     else resolve(false);
+    //   });
   });
 };

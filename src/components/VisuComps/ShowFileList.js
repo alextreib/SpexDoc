@@ -12,9 +12,15 @@ import PropTypes from "prop-types";
 
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import Button from "components/CustomButtons/Button.js";
 
 import ShowFile from "components/VisuComps/ShowFile.js";
-import { readDBData, uploadFile } from "components/Internal/DBFunctions.js";
+import {
+  readDBData,
+  uploadFile,
+  writeDBData,
+  appendDBArray,
+} from "components/Internal/DBFunctions.js";
 
 import { connect } from "react-redux";
 
@@ -52,12 +58,20 @@ const styles = (theme) => ({
   },
 });
 
+// Explanation data structure:
+// 1) medRecordsFileLinks has the keys ["FileLink1","FileLink2"]
+// 2) medRecords has the keys [{doctor: "Dr. Wilder", date: "2020"},{doctor: "Doktor2"}]
+// The keys are given to the MedRecord with medRecordParams (link)
+// With this key, the MedRecord can find the structure in medRecords (matching)
+// Same goes for removing -> Removing in both structure
+// Reason why so ugly: Props etc. not working parent
+// Never seen such bad architecture
 class ShowFileList extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      medRecords: ["Beispiel"],
+      medRecordsFileLinks: [],
     };
     this.loadFiles = this.loadFiles.bind(this);
   }
@@ -75,26 +89,37 @@ class ShowFileList extends React.Component {
   }
 
   loadFiles = () => {
-    return readDBData("medRecordsFileLinks", false).then((doc_data) => {
-      console.log(doc_data);
+    setTimeout(() => {
+      return readDBData("medRecordsFileLinks", false).then((doc_data) => {
+        console.log(doc_data);
 
-      if (doc_data != null) this.setState({ medRecords: doc_data });
-    });
+        if (doc_data != null) this.setState({ medRecordsFileLinks: doc_data });
+      });
+    // See if there's an intervall required. It seems 100ms are appropriate
+    }, 0);
   };
 
   uploadFile = (event) => {
     event.preventDefault();
 
     var fileToUpload = event.target.files[0];
-    return uploadFile("medRecordsFileLinks", fileToUpload).then((result) => {
-      if (result == false) {
+    //todo: cleaner error catching
+    return uploadFile("medRecordsFileLinks", fileToUpload).then((fileLink) => {
+      if (fileLink == null) {
         // displayLogin
       }
 
+      appendDBArray("medRecordsFileLinks", fileLink);
+
+      this.setState((prevState) => ({
+        medRecordsFileLinks: [...prevState.medRecordsFileLinks, fileLink],
+      }));
       // Success
       this.loadFiles();
     });
   };
+
+  magicFunc = () => {};
 
   render() {
     const { classes } = this.props;
@@ -102,11 +127,12 @@ class ShowFileList extends React.Component {
     return (
       <div>
         <GridContainer>
-          {this.state.medRecords.map((medRecord) => (
+          {this.state.medRecordsFileLinks.map((link, index) => (
             <GridItem xs={12} sm={6} md={4}>
               <ShowFile
-                showFileParams={{
-                  medRecord: medRecord,
+                medRecordParams={{
+                  link: link,
+                  id: index,
                   updateFunc: this.loadFiles,
                 }}
               />

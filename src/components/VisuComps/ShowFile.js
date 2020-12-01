@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 // import Button from "components/CustomButtons/Button.js";
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
 import CustomButton from "components/CustomButtons/Button.js";
 
 import firebase from "firebase/app";
@@ -15,8 +15,8 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import ShareIcon from '@material-ui/icons/Share';
-import DeleteIcon from '@material-ui/icons/Delete';
+import ShareIcon from "@material-ui/icons/Share";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 import Typography from "@material-ui/core/Typography";
 
@@ -36,13 +36,11 @@ import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
-
 import { getUserID } from "components/Internal/Checks.js";
 
 import IconButton from "@material-ui/core/IconButton";
 // import Button from "@material-ui/core/Button";
 import EditableTableReport from "components/EditableTableReport/EditableTableReport.js";
-
 
 import Icon from "@material-ui/core/Icon";
 import AddIcon from "@material-ui/icons/Add";
@@ -53,7 +51,8 @@ import {
   removeDBArray,
   writeDBData,
   uploadFile,
-  readDBData
+  readDBData,
+  appendDBArray,substituteDBArrayElement,deleteDoc
 } from "components/Internal/DBFunctions.js";
 
 import PropTypes from "prop-types";
@@ -126,51 +125,36 @@ class ShowFile extends React.Component {
           FuncParams: "test",
         },
       },
-      userProfile: {
-        email: "20.20.2020",
-        firstName: "Dr. Wilder",
-        lastName: "Krampfadern",
-        plz: "123456",
-        city: "Musterstadt",
-        street: "Maximilianstraße",
-        aboutMe: "Behandlung durch Ausdehnung der Gefäße",
+      medRecord: {
+        link: props.medRecordParams.link,
+        date: "20.20.2020",
+        doctor: "Dr. Wilder",
+        disease: "Krampfadern",
+        moreInfo: "Behandlung durch Ausdehnung der Gefäße",
       },
       internal: {
         open: false,
       },
-      openLoginRequired: false,
-      // todo: split to parent/ interal/child
-      showFileParams: props.showFileParams,
-      external: {
-        tableOptions: {
-          name: "Emergency",
-          columns: [
-            { title: "Datum", field: "date" },
-            { title: "Arzt", field: "doctor" },
-            { title: "Anmerkung", field: "annotation" },
-          ],
-          data: [
-            {
-              date: "20.20.2020",
-              doctor: "Dr. Schumacher",
-              annotation: "Test",
-            },
-            {
-              predisposition: "Beispielerkrankung",
-              diagnosis_year: "1997",
-            },
-          ],
-        },
-      },
+      medRecordParams: props.medRecordParams,
     };
-    console.log(props.showFileParams);
+    console.log(props.medRecordParams);
   }
 
   componentDidUpdate(prevProps) {
     if (this.props == prevProps) {
       return;
     }
-    this.setState({ showFileParams: this.props.showFileParams });
+    this.updateProps();
+  }
+
+  componentDidMount() {
+    this.fetchTable();
+  }
+
+  updateProps()
+  {
+    this.setState({ medRecord:{ ...this.state.medRecord, link: this.props.medRecordParams.link }});
+    this.setState({ medRecordParams:this.props.medRecordParams });
   }
 
   openModal = () => {
@@ -178,59 +162,51 @@ class ShowFile extends React.Component {
   };
 
   removeFile = () => {
-    removeDBArray("medRecordsFileLinks", this.state.showFileParams.medRecord);
-    this.props.showFileParams.updateFunc();
+   var rest= removeDBArray(
+      "medRecordsFileLinks",
+      this.state.medRecord.link
+    ).then((doc_data) => {
+      this.props.medRecordParams.updateFunc();
+    });
+
+    deleteDoc("medRecords"+this.state.medRecordParams.id);
   };
 
   handleClose = () => {
     this.setState({ internal: { open: false } });
   };
 
-
-  // Form functions
-  
-  // For redux and others
-  componentDidUpdate(prevProps) {
-    if (prevProps == this.props) {
-      // No change from above (currently nothing else is needed)
-      return;
-    } else {
-      this.fetchTable();
-    }
-  }
-
-  componentDidMount() {
-    this.fetchTable();
-  }
-
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
   fetchTable = () => {
     // todo: default parameter
-    return readDBData("ShowFile", false).then((doc_data) => {
-      if (doc_data != null) this.setState({ userProfile: doc_data });
-      // Cannot get data -> set default data from parent class
-      // this.setState({ userProfile: this.state.user });
-      // else ;
+    return readDBData("medRecords"+this.state.medRecordParams.id, false).then((medRecord) => {
+      if (medRecord == null)
+      {
+        return;
+      // Display Login
+      // Obtaining all medRecords
+      }
+      this.setState({ medRecord: medRecord })
     });
   };
 
   // Is called when table is changed
-  uploadProfile = () => {
+  uploadMedRecord = () => {
     var user_id = getUserID();
     if (user_id == null) {
       this.displayLogin();
       return false;
     }
-    var success = writeDBData("ShowFile", this.state.userProfile);
-    if (success == false) this.displayLogin();
+
+    writeDBData("medRecords"+this.state.medRecordParams.id,this.state.medRecord )
   };
 
   // Nice function: Sets states automatically
   profileChange = (property, event) => {
     var changedValue = event.target.value;
     this.setState({
-      userProfile: { ...this.state.userProfile, [property]: changedValue },
+      medRecord: { ...this.state.medRecord, [property]: changedValue },
     });
   };
 
@@ -239,33 +215,37 @@ class ShowFile extends React.Component {
 
     return (
       <Card className={classes.card}>
-        <LoginAlert loginState={this.state} />
 
         <CardActionArea onClick={this.openModal}>
           <CardMedia
             className={classes.media}
             component="img"
             alt="Contemplative Reptile"
-            image={this.state.showFileParams.medRecord}
+            image={this.state.medRecord.link}
             title="Contemplative Reptile"
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
-            {this.state.userProfile.lastName}
+              {this.state.medRecord.disease}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-              {this.state.userProfile.email}
+              {this.state.medRecord.date}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-            {this.state.userProfile.lastName}
+              {this.state.medRecord.disease}
             </Typography>
           </CardContent>
         </CardActionArea>
         <CardActions>
-        <IconButton aria-label="share">
+        <IconButton 
+           onClick={this.removeFile}
+           aria-label="test">
           <DeleteIcon />
         </IconButton>
-        <IconButton style={{ marginLeft: "auto" }}   onClick={this.removeFile} aria-label="share">
+          <IconButton
+            style={{ marginLeft: "auto" }}
+            aria-label="share"
+          >
           <ShareIcon />
         </IconButton>
         </CardActions>
@@ -285,13 +265,11 @@ class ShowFile extends React.Component {
             <CardMedia
               component="img"
               alt="Contemplative Reptile"
-              image={this.state.showFileParams.medRecord}
+                  image={this.state.medRecord.link}
               title="Contemplative Reptile"
             />
                </CardBody>
                </Card>
-              <br/>
-              <br/>
         
             <Card>
               <CardHeader color="primary">
@@ -304,8 +282,8 @@ class ShowFile extends React.Component {
                       labelText="Datum"
                       id="date"
                       inputProps={{
-                        value: this.state.userProfile.email,
-                        onChange: (e) => this.profileChange("email", e),
+                        value: this.state.medRecord.date,
+                        onChange: (e) => this.profileChange("date", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -318,8 +296,8 @@ class ShowFile extends React.Component {
                       labelText="Arzt"
                       id="doctor"
                       inputProps={{
-                        value: this.state.userProfile.firstName,
-                        onChange: (e) => this.profileChange("firstName", e),
+                        value: this.state.medRecord.doctor,
+                        onChange: (e) => this.profileChange("doctor", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -329,10 +307,10 @@ class ShowFile extends React.Component {
                   <GridItem xs={12} sm={12} md={4}>
                     <CustomInput
                       labelText="Nachname"
-                      id="lastName"
+                      id="disease"
                       inputProps={{
-                        value: this.state.userProfile.lastName,
-                        onChange: (e) => this.profileChange("lastName", e),
+                        value: this.state.medRecord.disease,
+                        onChange: (e) => this.profileChange("disease", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -345,13 +323,13 @@ class ShowFile extends React.Component {
                   <GridItem xs={12} sm={12} md={12}>
                     <CustomInput
                       labelText="Weiteres"
-                      id="aboutMe"
+                      id="moreInfo"
                       formControlProps={{
                         fullWidth: true,
                       }}
                       inputProps={{
-                        value: this.state.userProfile.aboutMe,
-                        onChange: (e) => this.profileChange("aboutMe", e),
+                        value: this.state.medRecord.moreInfo,
+                        onChange: (e) => this.profileChange("moreInfo", e),
                         multiline: true,
                         rows: 5,
                       }}
@@ -360,7 +338,11 @@ class ShowFile extends React.Component {
                 </GridContainer>
               </CardBody>
               <CardFooter>
-                <CustomButton color="primary" onClick={this.uploadProfile} round>
+                <CustomButton
+                  color="primary"
+                  onClick={this.uploadMedRecord}
+                  round
+                >
                   Speichern
                 </CustomButton>
               </CardFooter>
