@@ -52,7 +52,9 @@ import {
   writeDBData,
   uploadFile,
   readDBData,
-  appendDBArray,substituteDBArrayElement,deleteDoc
+  appendDBArray,
+  substituteDBArrayElement,
+  deleteDoc,
 } from "components/Internal/DBFunctions.js";
 
 import PropTypes from "prop-types";
@@ -151,10 +153,14 @@ class ShowFile extends React.Component {
     this.fetchTable();
   }
 
-  updateProps()
-  {
-    this.setState({ medRecord:{ ...this.state.medRecord, link: this.props.medRecordParams.link }});
-    this.setState({ medRecordParams:this.props.medRecordParams });
+  updateProps() {
+    this.setState({
+      medRecord: {
+        ...this.state.medRecord,
+        link: this.props.medRecordParams.link,
+      },
+    });
+    this.setState({ medRecordParams: this.props.medRecordParams });
   }
 
   openModal = () => {
@@ -162,14 +168,14 @@ class ShowFile extends React.Component {
   };
 
   removeFile = () => {
-   var rest= removeDBArray(
+    var rest = removeDBArray(
       "medRecordsFileLinks",
       this.state.medRecord.link
     ).then((doc_data) => {
       this.props.medRecordParams.updateFunc();
     });
 
-    deleteDoc("medRecords"+this.state.medRecordParams.id);
+    deleteDoc("medRecords" + this.state.medRecordParams.id);
   };
 
   handleClose = () => {
@@ -181,15 +187,16 @@ class ShowFile extends React.Component {
   // Is called when table is changed
   fetchTable = () => {
     // todo: default parameter
-    return readDBData("medRecords"+this.state.medRecordParams.id, false).then((medRecord) => {
-      if (medRecord == null)
-      {
-        return;
-      // Display Login
-      // Obtaining all medRecords
+    return readDBData("medRecords" + this.state.medRecordParams.id, false).then(
+      (medRecord) => {
+        if (medRecord == null) {
+          return;
+          // Display Login
+          // Obtaining all medRecords
+        }
+        this.setState({ medRecord: medRecord });
       }
-      this.setState({ medRecord: medRecord })
-    });
+    );
   };
 
   // Is called when table is changed
@@ -200,7 +207,10 @@ class ShowFile extends React.Component {
       return false;
     }
 
-    writeDBData("medRecords"+this.state.medRecordParams.id,this.state.medRecord )
+    writeDBData(
+      "medRecords" + this.state.medRecordParams.id,
+      this.state.medRecord
+    );
   };
 
   // Nice function: Sets states automatically
@@ -216,7 +226,6 @@ class ShowFile extends React.Component {
 
     return (
       <Card className={classes.card}>
-
         <CardActionArea onClick={this.openModal}>
           <CardMedia
             className={classes.media}
@@ -238,17 +247,12 @@ class ShowFile extends React.Component {
           </CardContent>
         </CardActionArea>
         <CardActions>
-        <IconButton 
-           onClick={this.removeFile}
-           aria-label="test">
-          <DeleteIcon />
-        </IconButton>
-          <IconButton
-            style={{ marginLeft: "auto" }}
-            aria-label="share"
-          >
-          <ShareIcon />
-        </IconButton>
+          <IconButton onClick={this.removeFile} aria-label="test">
+            <DeleteIcon />
+          </IconButton>
+          <IconButton style={{ marginLeft: "auto" }} aria-label="share">
+            <ShareIcon />
+          </IconButton>
         </CardActions>
         <Dialog
           fullWidth={true}
@@ -261,17 +265,17 @@ class ShowFile extends React.Component {
             Befund
           </DialogTitle>
           <DialogContent dividers>
-          <Card>
-          <CardBody>
-            <CardMedia
-              component="img"
-              alt="Contemplative Reptile"
+            <Card>
+              <CardBody>
+                <CardMedia
+                  component="img"
+                  alt="Contemplative Reptile"
                   image={this.state.medRecord.link}
-              title="Contemplative Reptile"
-            />
-               </CardBody>
-               </Card>
-        
+                  title="Contemplative Reptile"
+                />
+              </CardBody>
+            </Card>
+
             <Card>
               <CardHeader color="primary">
                 <h4 className={classes.cardTitleWhite}>Details</h4>
