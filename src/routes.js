@@ -15,6 +15,17 @@ import SmartDocIcon from "@material-ui/icons/TabletMac";
 import TodayIcon from '@material-ui/icons/Today';
 import UserProfile from "views/UserProfile/UserProfile.js";
 import Vaccination from "views/Vaccination/Vaccination.js";
+// npm install --save-dev @iconify/react @iconify-icons/fa-solid
+// import { Icon, InlineIcon } from '@iconify/react';
+// import syringeIcon from '@iconify-icons/fa-solid/syringe';
+// import React from "react";
+
+
+
+// function SyringeIcon() {
+//   return <Icon icon={syringeIcon} />;
+// };
+
 
 const dashboardRoutes = [
   {

@@ -364,14 +364,14 @@ class Demo extends React.PureComponent {
       // Cannot get data -> set default data from parent class
       // this.setState({ data: this.props.tableOptions.data });
       else {
-        this.setState({ data: doc_data }, () => {
-        });
+        this.setState({ data: doc_data }, () => {});
       }
     });
   };
 
   // Is called when table is changed
   tableChanged = () => {
+    console.log("tableChanged")
     var success = writeDBData("Appointments", this.state.data);
     // if (success == false) this.displayLogin();
   };
@@ -408,14 +408,19 @@ class Demo extends React.PureComponent {
   }
 
   commitDeletedAppointment() {
-    this.setState((state) => {
-      const { data, deletedAppointmentId } = state;
-      const nextData = data.filter(
-        (appointment) => appointment.id !== deletedAppointmentId
-      );
+    this.setState(
+      (state) => {
+        const { data, deletedAppointmentId } = state;
+        const nextData = data.filter(
+          (appointment) => appointment.id !== deletedAppointmentId
+        );
 
-      return { data: nextData, deletedAppointmentId: null };
-    });
+        return { data: nextData, deletedAppointmentId: null };
+      },
+      () => {
+        this.tableChanged();
+      }
+    );
     this.toggleConfirmationVisible();
   }
 
@@ -483,7 +488,8 @@ class Demo extends React.PureComponent {
             visible={editingFormVisible}
             onVisibilityChange={this.toggleEditingFormVisibility}
           />
-          <DragDropProvider />
+         {/* Currently not working with data update */}
+          {/* <DragDropProvider /> */}
         </Scheduler>
 
         <Dialog open={confirmationVisible} onClose={this.cancelDelete}>
@@ -518,8 +524,8 @@ class Demo extends React.PureComponent {
             this.setState({ editingFormVisible: true });
             this.onEditingAppointmentChange(undefined);
             this.onAddedAppointmentChange({
-              startDate: new Date(currentDate),
-              endDate: new Date(currentDate),
+              startDate: new Date(currentDate).getTime(),
+              endDate: new Date(currentDate).getTime(),
             });
           }}
         >
