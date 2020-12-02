@@ -1,27 +1,15 @@
-import React from "react";
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-// core components
-import Quote from "components/Typography/Quote.js";
-import Muted from "components/Typography/Muted.js";
-import Primary from "components/Typography/Primary.js";
-import Info from "components/Typography/Info.js";
-import Success from "components/Typography/Success.js";
-import Warning from "components/Typography/Warning.js";
-import Danger from "components/Typography/Danger.js";
-import TestComp from "components/VisuComps/TestComp.js";
+import Calendar from "views/Appointments/Calendar.js";
 import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
-
+import CardHeader from "components/Card/CardHeader.js";
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
 
 const styles = {
   typo: {
     paddingLeft: "25%",
     marginBottom: "40px",
-    position: "relative"
+    position: "relative",
   },
   note: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
@@ -34,14 +22,14 @@ const styles = {
     left: "0",
     marginLeft: "20px",
     position: "absolute",
-    width: "260px"
+    width: "260px",
   },
   cardCategoryWhite: {
     color: "rgba(255,255,255,.62)",
     margin: "0",
     fontSize: "14px",
     marginTop: "0",
-    marginBottom: "0"
+    marginBottom: "0",
   },
   cardTitleWhite: {
     color: "#FFFFFF",
@@ -50,7 +38,7 @@ const styles = {
     fontWeight: "300",
     fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
     marginBottom: "3px",
-    textDecoration: "none"
+    textDecoration: "none",
   },
   fab: {
     position: "fixed",
@@ -71,13 +59,10 @@ export default function Appointments() {
     <Card>
       <CardHeader color="primary">
         <h4 className={classes.cardTitleWhite}>Arzttermine</h4>
-        <p className={classes.cardCategoryWhite}>
-          Verwalte deine Termine
-        </p>
+        <p className={classes.cardCategoryWhite}>Verwalte deine Termine</p>
       </CardHeader>
       <CardBody>
-      <TestComp/>
-
+        <Calendar />
       </CardBody>
     </Card>
   );
