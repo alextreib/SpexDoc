@@ -1,42 +1,29 @@
-import IconButton from "@material-ui/core/IconButton";
-/*eslint-disable*/
-import React from "react";
-// nodejs library to set properties for components
-import PropTypes from "prop-types";
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
-import AddAlert from "@material-ui/icons/AddAlert";
+import Button from "components/CustomButtons/Button.js";
+import Card from "components/Card/Card.js";
+import CardActions from "@material-ui/core/CardActions";
+import CardBody from "components/Card/CardBody.js";
+import CardContent from "@material-ui/core/CardContent";
+import CardHeader from "components/Card/CardHeader.js";
+import CardMedia from "@material-ui/core/CardMedia";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import GridContainer from "components/Grid/GridContainer.js";
 // core components
 import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Button from "components/CustomButtons/Button.js";
-import SnackbarContent from "components/Snackbar/SnackbarContent.js";
-import Snackbar from "components/Snackbar/Snackbar.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
-import Grid from "@material-ui/core/Grid";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
-import CardActions from "@material-ui/core/CardActions";
-import Avatar from "@material-ui/core/Avatar";
-import { red } from "@material-ui/core/colors";
-
+import IconButton from "@material-ui/core/IconButton";
 import NotificationCard from "views/Notifications/NotificationCard.js";
-
-import clsx from "clsx";
-import CardMedia from "@material-ui/core/CardMedia";
-import Collapse from "@material-ui/core/Collapse";
-import FavoriteIcon from "@material-ui/icons/Favorite";
+import NotificationData from "components/NotificationData/NotificationData.js";
+// nodejs library to set properties for components
+import PropTypes from "prop-types";
+/*eslint-disable*/
+import React from "react";
 import ShareIcon from "@material-ui/icons/Share";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-
-import CloseIcon from "@material-ui/icons/Close";
+import Switch from "@material-ui/core/Switch";
+import Typography from "@material-ui/core/Typography";
+// @material-ui/core components
+import { red } from "@material-ui/core/colors";
 import { withStyles } from "@material-ui/core/styles";
 
-import NotificationData from "components/NotificationData/NotificationData.js";
 
 const styles = (theme) => ({
   card: {
@@ -121,6 +108,10 @@ class Notifications extends React.Component {
     });
   };
 
+  destroyCard = () => {
+    console.log("destory")
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -141,7 +132,7 @@ class Notifications extends React.Component {
             <GridContainer>
               {this.state.notificationList.map((noficiation) => (
                 <GridItem xs={12} sm={6} md={4}>
-                  <NotificationCard />
+                  <NotificationCard destroyCard={this.destroyCard} />
                 </GridItem>
               ))}
             </GridContainer>

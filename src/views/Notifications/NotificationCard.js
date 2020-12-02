@@ -1,23 +1,30 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
+import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardBody from "components/Card/CardBody.js";
+import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
-import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import Typography from "@material-ui/core/Typography";
-import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
+import Collapse from "@material-ui/core/Collapse";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import IconButton from "@material-ui/core/IconButton";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import React from "react";
+import ShareIcon from "@material-ui/icons/Share";
+import Switch from "@material-ui/core/Switch";
+import Typography from "@material-ui/core/Typography";
+import clsx from "clsx";
+import { makeStyles } from "@material-ui/core/styles";
+import { red ,grey} from "@material-ui/core/colors";
+import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((styles) => ({
+  root: {
+    // minWidth: 275,
+    marginBottom:25 ,
+  },
   expand: {
     transform: "rotate(0deg)",
     marginLeft: "auto",
@@ -38,23 +45,22 @@ const useStyles = makeStyles({
   avatar: {
     backgroundColor: red[500],
   },
-});
+}));
 
 export default function NotificationCard(props) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  const [favoriteActive, setFav] = React.useState(false);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
+  const handleCloseClick = () => {
+    props.destroyCard();
   };
 
   const handleFavoriteClick = () => {
-    console.log("favorite selected");
-    // setExpanded(!expanded);
+    setFav(!favoriteActive);
   };
 
   return (
-    <Card >
+  <Card className={classes.root} >
       <CardHeader
         avatar={
           <Avatar aria-label="recipe" className={classes.avatar}>
@@ -63,7 +69,7 @@ export default function NotificationCard(props) {
         }
         action={
           <IconButton aria-label="settings">
-            <CloseIcon />
+            <CloseIcon onClick={handleCloseClick} />
           </IconButton>
         }
         title="Neuer Befund"
@@ -76,19 +82,16 @@ export default function NotificationCard(props) {
           Dr. Wilder hat einen neuen Befund für sie abgelegt.
         </Typography>
       </CardContent>
-      <CardActions disableSpacing>
+      <CardActions  disableSpacing>
         <IconButton aria-label="share">
           <ShareIcon />
         </IconButton>
         <IconButton
-          className={clsx(classes.favorite, {
-            [classes.expandOpen]: expanded,
-          })}
+          className={classes.favorite     }
           onClick={handleFavoriteClick}
-          aria-expanded={expanded}
           aria-label="show more"
         >
-          <FavoriteIcon />
+          <FavoriteIcon style={{ color: favoriteActive ? (red[500]) : (grey[600])  }}/>
         </IconButton>
       </CardActions>
     </Card>

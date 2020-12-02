@@ -12,6 +12,8 @@ import CardHeader from "components/Card/CardHeader.js";
 import CommonComps from "components/Internal/CommonComps.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+
 // @material-ui/core components
 // core components
 import GridItem from "components/Grid/GridItem.js";
@@ -25,7 +27,7 @@ import { getUserID } from "components/Internal/Checks.js";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
-const styles = {
+const styles = (theme) => ({
   cardCategoryWhite: {
     color: "rgba(255,255,255,.62)",
     margin: "0",
@@ -42,7 +44,11 @@ const styles = {
     marginBottom: "3px",
     textDecoration: "none",
   },
-};
+  cardAvatar: {
+    width: theme.spacing(7),
+    height: theme.spacing(7),
+  },
+});
 
 class UserProfile extends React.Component {
   constructor(props) {
