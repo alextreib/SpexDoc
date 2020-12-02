@@ -38,8 +38,11 @@ import Notes from "@material-ui/icons/Notes";
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 
 import {
-  DateNavigator,
+  TodayButton,
 } from '@devexpress/dx-react-scheduler-material-ui';
+
+
+import { DateNavigator } from "@devexpress/dx-react-scheduler-material-ui";
 
 import Close from "@material-ui/icons/Close";
 import CalendarToday from "@material-ui/icons/CalendarToday";
@@ -106,8 +109,8 @@ class AppointmentFormContainerBasic extends React.PureComponent {
       return appointmentData;
     };
     this.getAppointmentChanges = () => {
-      console.log("changeappoiintment")
-      console.log(this.state)
+      console.log("changeappoiintment");
+      console.log(this.state);
       const { appointmentChanges } = this.state;
       return appointmentChanges;
     };
@@ -117,12 +120,6 @@ class AppointmentFormContainerBasic extends React.PureComponent {
   }
 
   changeAppointment({ field, changes }) {
-    console.log("changeappoiintment")
-    console.log(field)
-    console.log(changes)
-    console.log(typeof changes);
-    console.log(changes.getSeconds())
-
     const nextChanges = {
       ...this.getAppointmentChanges(),
       [field]: changes,
@@ -130,8 +127,7 @@ class AppointmentFormContainerBasic extends React.PureComponent {
     this.setState({
       appointmentChanges: nextChanges,
     });
-    console.log(nextChanges)
-
+    console.log(nextChanges);
   }
 
   commitAppointment(type) {
@@ -195,7 +191,7 @@ class AppointmentFormContainerBasic extends React.PureComponent {
         this.changeAppointment({
           field: [field],
           changes: date
-            ? date.toDate()
+            ? date.toDate().getTime()
             : new Date(displayAppointmentData[field]),
         }),
       inputVariant: "outlined",
@@ -301,7 +297,7 @@ class Demo extends React.PureComponent {
     super(props);
     this.state = {
       data: appointments,
-      currentDate: "2018-06-27",
+      currentDate: Date.now(),
       confirmationVisible: false,
       editingFormVisible: false,
       deletedAppointmentId: undefined,
@@ -360,7 +356,7 @@ class Demo extends React.PureComponent {
   }
 
   componentDidUpdate() {
-    console.log("componentDidUpdate")
+    console.log("componentDidUpdate");
     this.appointmentForm.update();
 
     console.log(this.state.data);
@@ -381,8 +377,7 @@ class Demo extends React.PureComponent {
         console.log("data");
 
         this.setState({ data: doc_data }, () => {
-        console.log(this.state.data);
-
+          console.log(this.state.data);
         });
       }
     });
@@ -390,8 +385,8 @@ class Demo extends React.PureComponent {
 
   // Is called when table is changed
   tableChanged = () => {
-    console.log("tableChanged")
-    console.log(this.state.data)
+    console.log("tableChanged");
+    console.log(this.state.data);
     var success = writeDBData("Appointments", this.state.data);
     // if (success == false) this.displayLogin();
   };
@@ -401,7 +396,7 @@ class Demo extends React.PureComponent {
   }
 
   onAddedAppointmentChange(addedAppointment) {
-    console.log(addedAppointment)
+    console.log(addedAppointment);
     this.setState({ addedAppointment });
     const { editingAppointment } = this.state;
     if (editingAppointment !== undefined) {
@@ -440,11 +435,8 @@ class Demo extends React.PureComponent {
     this.toggleConfirmationVisible();
   }
 
- 
   commitChanges({ added, changed, deleted }) {
-    console.log(added)
-    var startDate=new Date(added.startDate).getSeconds()
-console.log(startDate)
+    console.log("commit changes");
 
     this.setState((state) => {
       let { data } = state;
@@ -466,6 +458,7 @@ console.log(startDate)
       }
       return { data, addedAppointment: {} };
     });
+    this.tableChanged();
   }
 
   render() {
@@ -481,34 +474,23 @@ console.log(startDate)
 
     return (
       <Paper>
-         <Button
-              onClick={this.tableChanged}
-              color="primary"
-              variant="outlined"
-            >
-              write
-            </Button>
-            <Button
-              onClick={this.fetchTable}
-              color="primary"
-              variant="outlined"
-            >
-              fetch
-            </Button>
         <Scheduler data={data} height={660}>
-          <ViewState currentDate={currentDate} />
+          <ViewState defaultCurrentDate={currentDate} />
           <EditingState
             onCommitChanges={this.commitChanges}
             onEditingAppointmentChange={this.onEditingAppointmentChange}
             onAddedAppointmentChange={this.onAddedAppointmentChange}
           />
+         <MonthView />
+          <Toolbar />
+          <DateNavigator />
+          <TodayButton />
           <WeekView startDayHour={startDayHour} endDayHour={endDayHour} />
           <MonthView />
+          <Appointments />
           <AllDayPanel />
           <EditRecurrenceMenu />
-          <Appointments />
-          <AppointmentTooltip showOpenButton showCloseButton showDeleteButton />
-          <Toolbar />
+        
           <ViewSwitcher />
           <AppointmentForm
             overlayComponent={this.appointmentForm}
@@ -550,8 +532,8 @@ console.log(startDate)
             this.setState({ editingFormVisible: true });
             this.onEditingAppointmentChange(undefined);
             this.onAddedAppointmentChange({
-              startDate: new Date(currentDate).setHours(startDayHour),
-              endDate: new Date(currentDate).setHours(startDayHour + 1),
+              startDate: new Date(currentDate),
+              endDate: new Date(currentDate),
             });
           }}
         >
