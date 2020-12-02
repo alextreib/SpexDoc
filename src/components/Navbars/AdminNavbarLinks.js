@@ -55,7 +55,6 @@ class AdminNavbarLinks extends React.Component {
 
   fetchTable = () => {
     return readDBData("Notifications", false).then((doc_data) => {
-      console.log(doc_data);
       if (doc_data == null) return;
       // Cannot get data -> set default data from parent class
       // this.setState({ data: this.props.tableOptions.data });

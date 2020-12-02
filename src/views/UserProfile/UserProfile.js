@@ -66,13 +66,13 @@ class UserProfile extends React.Component {
         },
       },
       userProfile: {
-        email: "max.mustermann@gmail.com",
-        firstName: "Maximilian",
-        lastName: "Mustermann",
-        plz: "123456",
-        city: "Musterstadt",
-        street: "Maximilianstraße",
-        aboutMe: "Ich bin Max.",
+        email: "",
+        firstName: "",
+        lastName: "",
+        plz: "",
+        city: "",
+        street: "",
+        aboutMe: "",
       },
     };
   }
