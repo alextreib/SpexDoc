@@ -1,4 +1,5 @@
 import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
+import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 
 import Button from "components/CustomButtons/Button.js";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -34,14 +35,33 @@ class AdminNavbarLinks extends React.Component {
 
     this.state = {
       openNotification: null,
-      notificationList: [
-        "Neuer Befund von Hausarzt Kölmer",
-        "Dermatologie möchte Termin vereinbaren",
-      ],
+      notificationList: [],
     };
 
     this.handleClickNotification = this.handleClickNotification.bind(this);
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps == this.props) {
+      // No change from above (currently nothing else is needed)
+      return;
+    }
+    this.fetchTable();
+  }
+
+  componentDidMount() {
+    this.fetchTable();
+  }
+
+  fetchTable = () => {
+    return readDBData("Notifications", false).then((doc_data) => {
+      console.log(doc_data);
+      if (doc_data == null) return;
+      // Cannot get data -> set default data from parent class
+      // this.setState({ data: this.props.tableOptions.data });
+      else this.setState({ notificationList: doc_data });
+    });
+  };
 
   handleClickNotification = (event) => {
     if (
@@ -64,13 +84,6 @@ class AdminNavbarLinks extends React.Component {
     this.setOpenNotification(null);
   };
 
-  // When child (NotificationData) triggers change -> this function is called
-  notificationDataChange = (newList) => {
-    this.setState({
-      notificationList: newList,
-    });
-  };
-
   render() {
     const { classes } = this.props;
 
@@ -78,9 +91,6 @@ class AdminNavbarLinks extends React.Component {
       <Hidden smDown implementation="css">
         <div>
           <div className={classes.searchWrapper}>
-            <NotificationData
-              onNotificationDataChange={this.notificationDataChange}
-            />
             <CustomInput
               formControlProps={{
                 className: classes.margin + " " + classes.search,
@@ -97,7 +107,7 @@ class AdminNavbarLinks extends React.Component {
             </Button>
           </div>
 
-          <Link to="/dashboard" style={{ color:"inherit" }}>
+          <Link to="/dashboard" style={{ color: "inherit" }}>
             <Button
               color={window.innerWidth > 959 ? "transparent" : "white"}
               justIcon={window.innerWidth > 959}
