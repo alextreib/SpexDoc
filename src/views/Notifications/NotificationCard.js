@@ -1,26 +1,19 @@
+import { grey, red } from "@material-ui/core/colors";
+
 import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
-import CardBody from "components/Card/CardBody.js";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
 import CloseIcon from "@material-ui/icons/Close";
-import Collapse from "@material-ui/core/Collapse";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import IconButton from "@material-ui/core/IconButton";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React from "react";
 import ShareIcon from "@material-ui/icons/Share";
-import Switch from "@material-ui/core/Switch";
 import Typography from "@material-ui/core/Typography";
-import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import { red ,grey} from "@material-ui/core/colors";
-import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
-const useStyles = makeStyles((styles) => ({
+const useStyles = makeStyles(() => ({
   root: {
     // minWidth: 275,
     marginBottom:25 ,

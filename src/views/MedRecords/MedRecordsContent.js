@@ -2,6 +2,7 @@ import {DialogActions, DialogContent, DialogTitle} from "components/VisuComps/Di
 import {
   readDBData,
   uploadFile,
+  writeDBData
 } from "components/Internal/DBFunctions.js";
 
 import AddIcon from "@material-ui/icons/Add";
@@ -88,8 +89,10 @@ class MedRecordsContent extends React.Component {
     });
   };
 
+
   // Is called when table is changed
   uploadTable = () => {
+    var success = writeDBData(this.state.dbName, this.state.data);
   };
 
   uploadFile = (event) => {
