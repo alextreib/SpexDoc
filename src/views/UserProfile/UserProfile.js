@@ -1,28 +1,29 @@
-import React from "react";
-// @material-ui/core components
-// core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import CustomInput from "components/CustomInput/CustomInput.js";
+import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
+import { checkUser } from "components/Internal/Checks.js";
+import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
+import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
+
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-
-import avatar from "assets/img/faces/profile_white.png";
-
-
-
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import { getUserID } from "components/Internal/Checks.js";
-import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
-
+import CardHeader from "components/Card/CardHeader.js";
 import CommonComps from "components/Internal/CommonComps.js";
-
+import CustomInput from "components/CustomInput/CustomInput.js";
+import GridContainer from "components/Grid/GridContainer.js";
+// @material-ui/core components
+// core components
+import GridItem from "components/Grid/GridItem.js";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
+import React from "react";
+import Switch from "@material-ui/core/Switch";
+import avatar from "assets/img/faces/profile_white.png";
 import { connect } from "react-redux";
+import { getUserID } from "components/Internal/Checks.js";
+import { withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 
 const styles = {
   cardCategoryWhite: {
@@ -47,6 +48,11 @@ class UserProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      loginState: null,
+      Switches: {
+        AGB: false,
+        DSGVO: false,
+      },
       commonProps: {
         LoginAlertProps: {
           openLoginRequired: false,
@@ -72,11 +78,14 @@ class UserProfile extends React.Component {
       return;
     } else {
       this.fetchTable();
+      // Only required for visu, not loading
+      this.setState({ loginState: checkUser() });
     }
   }
 
   componentDidMount() {
     this.fetchTable();
+    this.setState({ loginState: checkUser() });
   }
 
   // Fetch the table from Firebase (Original data)
@@ -108,6 +117,7 @@ class UserProfile extends React.Component {
     this.setState({
       userProfile: { ...this.state.userProfile, [property]: changedValue },
     });
+    this.uploadProfile();
   };
 
   // todo: Find a way to cluster/extract it to a common place
@@ -117,6 +127,63 @@ class UserProfile extends React.Component {
     this.setState({
       commonProps: {
         LoginAlertProps: { openLoginRequired: true, FuncParams: "test" },
+      },
+    });
+  };
+
+  handleLoginProfile = () => {
+    console.log("login process");
+    loginUser()
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        var token = result.credential.accessToken;
+        // The signed-in user info.
+        var user = result.user;
+        // setUserLogin(true);
+        console.log("User successfully logged in ");
+        // dispatch(loginRedux({ user_id: user.uid }));
+        this.props.loginRedux({ user_id: user.uid });
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // The email of the user's account used.
+        var email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        var credential = error.credential;
+        console.log("error: " + errorCode + ":" + errorMessage);
+        // ...
+      });
+    // handleMenuClose();
+  };
+
+  handleLogoutProfile = () => {
+    logoutUser()
+      .then(() => {
+        window.user = null;
+        console.log("User successfully logged out");
+        // todo: PopUp
+        // Sign-out successful.
+        // setUserLogin(false);
+        // dispatch(logoutRedux());
+        this.props.logoutRedux();
+      })
+      .catch((error) => {
+        console.log("error while logging out");
+        // An error happened.
+      });
+    // handleMenuClose();
+  };
+
+  handleSwitchChange = async (property, event) => {
+    console.log("handleSwitch");
+    var checked = event.target.checked;
+
+    this.setState({
+      Switches: {
+        ...this.state.Switches,
+        [property]: checked,
       },
     });
   };
@@ -131,117 +198,154 @@ class UserProfile extends React.Component {
           <GridItem xs={12} sm={12} md={8}>
             <Card>
               <CardHeader color="primary">
-                <h4 className={classes.cardTitleWhite}>Edit Profil</h4>
-                <p className={classes.cardCategoryWhite}>
-                  Complete your profile
-                </p>
+                <h4 className={classes.cardTitleWhite}>Profil</h4>
+                <p className={classes.cardCategoryWhite}></p>
               </CardHeader>
-              <CardBody>
-                <GridContainer>
-                  <GridItem xs={12} sm={12} md={4}>
-                    <CustomInput
-                      labelText="Email"
-                      id="email"
-                      inputProps={{
-                        value: this.state.userProfile.email,
-                        onChange: (e) => this.profileChange("email", e),
-                      }}
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
+              {!this.state.loginState ? (
+                <CardBody>
+                  <Typography variant="h4" component="h2">
+                    <Switch
+                      checked={this.state.Switches.AGB}
+                      onChange={(ev) => this.handleSwitchChange("AGB", ev)}
+                      color="primary"
+                      name="Emergency_switch"
+                      inputProps={{ "aria-label": "secondary checkbox" }}
                     />
-                  </GridItem>
-                  <GridItem xs={12} sm={12} md={4}>
-                    <CustomInput
-                      labelText="Vorname"
-                      id="firstName"
-                      inputProps={{
-                        value: this.state.userProfile.firstName,
-                        onChange: (e) => this.profileChange("firstName", e),
-                      }}
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
+                    AGB
+                  </Typography>
+                  <Typography variant="h4" component="h2">
+                    <Switch
+                      checked={this.state.Switches.DSGVO}
+                      onChange={(ev) => this.handleSwitchChange("DSGVO", ev)}
+                      color="primary"
+                      name="Emergency_switch"
+                      inputProps={{ "aria-label": "secondary checkbox" }}
                     />
-                  </GridItem>
-                  <GridItem xs={12} sm={12} md={4}>
-                    <CustomInput
-                      labelText="Nachname"
-                      id="lastName"
-                      inputProps={{
-                        value: this.state.userProfile.lastName,
-                        onChange: (e) => this.profileChange("lastName", e),
-                      }}
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
-                    />
-                  </GridItem>
-                </GridContainer>
-                <GridContainer>
-                  <GridItem xs={12} sm={12} md={4}>
-                    <CustomInput
-                      labelText="Postleitzahl"
-                      id="plz"
-                      inputProps={{
-                        value: this.state.userProfile.plz,
-                        onChange: (e) => this.profileChange("plz", e),
-                      }}
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
-                    />
-                  </GridItem>
-                  <GridItem xs={12} sm={12} md={4}>
-                    <CustomInput
-                      labelText="Wohnort"
-                      id="city"
-                      inputProps={{
-                        value: this.state.userProfile.city,
-                        onChange: (e) => this.profileChange("city", e),
-                      }}
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
-                    />
-                  </GridItem>
-                  <GridItem xs={12} sm={12} md={4}>
-                    <CustomInput
-                      labelText="Straße"
-                      id="street"
-                      inputProps={{
-                        value: this.state.userProfile.street,
-                        onChange: (e) => this.profileChange("street", e),
-                      }}
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
-                    />
-                  </GridItem>
-                </GridContainer>
-                <GridContainer>
-                  <GridItem xs={12} sm={12} md={12}>
-                    <CustomInput
-                      labelText="Über mich"
-                      id="aboutMe"
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
-                      inputProps={{
-                        value: this.state.userProfile.aboutMe,
-                        onChange: (e) => this.profileChange("aboutMe", e),
-                        multiline: true,
-                        rows: 5,
-                      }}
-                    />
-                  </GridItem>
-                </GridContainer>
-              </CardBody>
-              <CardFooter>
-                <Button color="primary" onClick={this.uploadProfile} round>
-                  Speichern
-                </Button>
-              </CardFooter>
+                    DSGVO
+                  </Typography>
+                  <Button
+                    disabled={
+                      !(this.state.Switches.AGB && this.state.Switches.DSGVO)
+                    }
+                    onClick={this.handleLoginProfile}
+                    color="primary"
+                    round
+                  >
+                    Login
+                  </Button>
+                </CardBody>
+              ) : (
+                <div>
+                  <CardBody>
+                    <GridContainer>
+                      <GridItem xs={12} sm={12} md={4}>
+                        <CustomInput
+                          labelText="Email"
+                          id="email"
+                          inputProps={{
+                            value: this.state.userProfile.email,
+                            onChange: (e) => this.profileChange("email", e),
+                          }}
+                          formControlProps={{
+                            fullWidth: true,
+                          }}
+                        />
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={4}>
+                        <CustomInput
+                          labelText="Vorname"
+                          id="firstName"
+                          inputProps={{
+                            value: this.state.userProfile.firstName,
+                            onChange: (e) => this.profileChange("firstName", e),
+                          }}
+                          formControlProps={{
+                            fullWidth: true,
+                          }}
+                        />
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={4}>
+                        <CustomInput
+                          labelText="Nachname"
+                          id="lastName"
+                          inputProps={{
+                            value: this.state.userProfile.lastName,
+                            onChange: (e) => this.profileChange("lastName", e),
+                          }}
+                          formControlProps={{
+                            fullWidth: true,
+                          }}
+                        />
+                      </GridItem>
+                    </GridContainer>
+                    <GridContainer>
+                      <GridItem xs={12} sm={12} md={4}>
+                        <CustomInput
+                          labelText="Postleitzahl"
+                          id="plz"
+                          inputProps={{
+                            value: this.state.userProfile.plz,
+                            onChange: (e) => this.profileChange("plz", e),
+                          }}
+                          formControlProps={{
+                            fullWidth: true,
+                          }}
+                        />
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={4}>
+                        <CustomInput
+                          labelText="Wohnort"
+                          id="city"
+                          inputProps={{
+                            value: this.state.userProfile.city,
+                            onChange: (e) => this.profileChange("city", e),
+                          }}
+                          formControlProps={{
+                            fullWidth: true,
+                          }}
+                        />
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={4}>
+                        <CustomInput
+                          labelText="Straße"
+                          id="street"
+                          inputProps={{
+                            value: this.state.userProfile.street,
+                            onChange: (e) => this.profileChange("street", e),
+                          }}
+                          formControlProps={{
+                            fullWidth: true,
+                          }}
+                        />
+                      </GridItem>
+                    </GridContainer>
+                    <GridContainer>
+                      <GridItem xs={12} sm={12} md={12}>
+                        <CustomInput
+                          labelText="Über mich"
+                          id="aboutMe"
+                          formControlProps={{
+                            fullWidth: true,
+                          }}
+                          inputProps={{
+                            value: this.state.userProfile.aboutMe,
+                            onChange: (e) => this.profileChange("aboutMe", e),
+                            multiline: true,
+                            rows: 5,
+                          }}
+                        />
+                      </GridItem>
+                    </GridContainer>
+                  </CardBody>
+                  <CardFooter>
+                    <Link className={classes.Home} to="/dashboard">
+                      <Button color="primary" round>
+                        Ok
+                      </Button>
+                    </Link>
+                  </CardFooter>
+                </div>
+              )}
             </Card>
           </GridItem>
           <GridItem xs={12} sm={12} md={4}>
@@ -280,10 +384,19 @@ UserProfile.propTypes = {
 };
 
 // Required for each component that relies on the loginState
+
 const mapStateToProps = (state) => ({
   loginState: state.loginState,
 });
 
-const UserProfileWithRedux = connect(mapStateToProps)(UserProfile);
+const mapDispatchToProps = {
+  loginRedux,
+  logoutRedux,
+};
+
+const UserProfileWithRedux = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UserProfile);
 
 export default withStyles(styles)(UserProfileWithRedux);

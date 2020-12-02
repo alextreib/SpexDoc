@@ -153,6 +153,7 @@ function ProfileButton() {
 
   return (
     <div>
+    
       <Hidden mdUp implementation="css">
         {/* Mobile Version */}
         <IconButton

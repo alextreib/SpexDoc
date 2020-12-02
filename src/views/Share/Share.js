@@ -1,42 +1,37 @@
-/*eslint-disable*/
-import React from "react";
-// nodejs library to set properties for components
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
+import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
+
 // @material-ui/icons
 import AddAlert from "@material-ui/icons/AddAlert";
+import Box from "@material-ui/core/Box";
+import Button from "components/CustomButtons/Button.js";
+import Card from "components/Card/Card.js";
+import CardBody from "components/Card/CardBody.js";
+import CardHeader from "components/Card/CardHeader.js";
+import CommonComps from "components/Internal/CommonComps.js";
+import GridContainer from "components/Grid/GridContainer.js";
 // core components
 import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Button from "components/CustomButtons/Button.js";
-import SnackbarContent from "components/Snackbar/SnackbarContent.js";
-import Snackbar from "components/Snackbar/Snackbar.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
-import ShareIcon from "@material-ui/icons/Share";
 import IconButton from "@material-ui/core/IconButton";
-import TestComp from "components/VisuComps/TestComp.js";
-
-import Switch from "@material-ui/core/Switch";
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
-import Box from "@material-ui/core/Box";
-
-
-
 import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
-import { getUserID } from "components/Internal/Checks";
-import { getShortLink } from "components/Internal/Checks";
-
-import CommonComps from "components/Internal/CommonComps.js";
-import QRCodeCard from "components/VisuComps/QRCodeCard.js";
-
 import QRCode from "qrcode.react";
-
-import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
-import { defaultCommonParams } from "components/Internal/Utils.js";
+import QRCodeCard from "components/VisuComps/QRCodeCard.js";
+/*eslint-disable*/
+import React from "react";
+import ShareIcon from "@material-ui/icons/Share";
+import Snackbar from "components/Snackbar/Snackbar.js";
+import SnackbarContent from "components/Snackbar/SnackbarContent.js";
+import Switch from "@material-ui/core/Switch";
+import TestComp from "components/VisuComps/TestComp.js";
 import { connect } from "react-redux";
+import { defaultCommonParams } from "components/Internal/Utils.js";
+import { getShortLink } from "components/Internal/Checks";
+import { getUserID } from "components/Internal/Checks";
+// nodejs library to set properties for components
+// @material-ui/core components
+
+import { makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = {
   cardCategoryWhite: {
