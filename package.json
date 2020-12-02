@@ -39,7 +39,10 @@
     "workbox-range-requests": "^5.1.4",
     "workbox-routing": "^5.1.4",
     "workbox-strategies": "^5.1.4",
-    "workbox-streams": "^5.1.4"
+    "workbox-streams": "^5.1.4",
+    "@devexpress/dx-react-scheduler-material-ui": "2.7.3",
+    "@devexpress/dx-react-scheduler": "2.7.3",
+    "@devexpress/dx-react-core": "2.7.3"
   },
   "scripts": {
     "start": "react-scripts start",
