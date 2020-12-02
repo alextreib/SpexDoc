@@ -1,45 +1,14 @@
-// @material-ui/icons
-import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
-import CardActions from "@material-ui/core/CardActions";
 import CardBody from "components/Card/CardBody.js";
-import CardContent from "@material-ui/core/CardContent";
-import Avatar from "@material-ui/core/Avatar";
-// import CardHeader from "components/Card/CardHeader.js";
-import CardHeader from "@material-ui/core/CardHeader";
-
-import CardMedia from "@material-ui/core/CardMedia";
-import FavoriteIcon from "@material-ui/icons/Favorite";
+import CardHeader from "components/Card/CardHeader.js";
 import GridContainer from "components/Grid/GridContainer.js";
-// core components
 import GridItem from "components/Grid/GridItem.js";
-import IconButton from "@material-ui/core/IconButton";
-import NotificationCard from "views/Notifications/NotificationCard.js";
-import NotificationData from "components/NotificationData/NotificationData.js";
-// nodejs library to set properties for components
+import NotificationContent from "views/Notifications/NotificationContent.js";
 import PropTypes from "prop-types";
-/*eslint-disable*/
 import React from "react";
-import ShareIcon from "@material-ui/icons/Share";
-import Switch from "@material-ui/core/Switch";
-import Typography from "@material-ui/core/Typography";
-// @material-ui/core components
-import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 import { withStyles } from "@material-ui/core/styles";
 
-import CloseIcon from "@material-ui/icons/Close";
-import { makeStyles } from "@material-ui/core/styles";
-import { grey, red } from "@material-ui/core/colors";
-
-const styles = (theme) => ({
-  avatar: {
-    backgroundColor: red[500],
-  },
-  notificationCard: {
-    maxWidth: 345,
-    minHeight: 200,
-    marginBottom: 20,
-  },
+const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
       color: "rgba(255,255,255,.62)",
@@ -67,197 +36,35 @@ const styles = (theme) => ({
       lineHeight: "1",
     },
   },
-  avatar: {
-    backgroundColor: red[500],
-  },
-  root: {
-    maxWidth: 345,
-  },
-  media: {
-    height: 0,
-    paddingTop: "56.25%", // 16:9
-  },
-  expand: {
-    transform: "rotate(0deg)",
-    marginLeft: "auto",
-    // transition: theme.transitions.create("transform", {
-    //   duration: theme.transitions.duration.shortest,
-    // }),
-  },
-  expandOpen: {
-    transform: "rotate(180deg)",
-  },
-  avatar: {
-    backgroundColor: red[500],
-  },
-});
+};
 
 class Notifications extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      dbName: "Notifications",
-      data: [
-        {
-          favoriteActive: false,
-          message: "Dermatologie möchte Termin vereinbaren",
-          sender: "Dr. Wilder",
-          date: "20.20.2020",
-          title: "Neuer Befund"
-        },
-        {
-          favoriteActive: false,
-          message: "2 möchte einen Termin vereinbaren",
-          sender: "Dr. Wilder",
-          date: "20.20.2020",
-          title: "Terminvereinbarung"
-        },
-      ],
-    };
-
-    this.handleFavoriteClick = this.handleFavoriteClick.bind(this);
-  }
-
-  componentDidMount() {
-    // this.fetchTable();
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps == this.props) {
-      // No change from above (currently nothing else is needed)
-      return;
-    }
-    // this.fetchTable();
+    console.log("update MedRecords");
   }
-
-  // DB functions
-  fetchTable = () => {
-    return readDBData(this.state.dbName, false).then((doc_data) => {
-      if (doc_data == null) return;
-      // Cannot get data -> set default data from parent class
-      // this.setState({ data: this.props.tableOptions.data });
-      else this.setState({ data: doc_data });
-    });
-  };
-
-  // Is called when table is changed
-  uploadTable = () => {
-    var success = writeDBData(this.state.dbName, this.state.data);
-  };
-
-  // Data Table changes
-  changeNotification(notification, key, value) {
-    var newData = { ...notification, [key]: value };
-
-    this.setState(
-      (prevState) => {
-        const data = [...prevState.data];
-        data[data.indexOf(notification)] = newData;
-        return { ...prevState, data };
-      },
-      () => {
-        // this.uploadTable();
-      }
-    );
-  }
-
-  removeNotification = (NotificationToRemove) => {
-    this.setState(
-      (prevState) => {
-        const data = [...prevState.data];
-        data.splice(data.indexOf(NotificationToRemove), 1);
-        return { ...prevState, data };
-      },
-      () => {
-        this.uploadTable();
-      }
-    );
-  };
-
-  // UI functions
-  handleFavoriteClick = (notification) => {
-    this.changeNotification(
-      notification,
-      "favoriteActive",
-      !notification.favoriteActive
-    );
-  };
-
-  handleCloseClick = (notification) => {
-    this.removeNotification(notification);
-  };
 
   render() {
     const { classes } = this.props;
-
     return (
-      <div>
-        {/* Grid */}
-        <Card>
-          <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Benachrichtigungen</h4>
-            <p className={classes.cardCategoryWhite}>
-              Sehen Sie hier was Dich neues erwartet
-            </p>
-          </CardHeader>
-          <CardBody>
-            <GridContainer>
-              {this.state.data.map((notification) => (
-                <GridItem xs={12} sm={6} md={4}>
-                  <Card className={classes.notificationCard}>
-                    {/* NotificationCard */}
-                    <CardHeader
-                      avatar={
-                        <Avatar aria-label="recipe" className={classes.avatar}>
-                          {/* {notification.sender.charAt(0)} */}W
-                        </Avatar>
-                      }
-                      action={
-                        <IconButton
-                          onClick={(e) => this.handleCloseClick(notification)}
-                          aria-label="settings"
-                        >
-                          <CloseIcon />
-                        </IconButton>
-                      }
-                      title={notification.title}
-                      subheader={notification.date}
-                    ></CardHeader>
-                    <CardContent>
-                      <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        component="p"
-                      >
-                        {notification.message}
-                      </Typography>
-                    </CardContent>
-                    <CardActions disableSpacing>
-                      <IconButton aria-label="share">
-                        <ShareIcon />
-                      </IconButton>
-                      <IconButton
-                        className={classes.favorite}
-                        onClick={(e) => this.handleFavoriteClick(notification)}
-                        aria-label="show more"
-                      >
-                        <FavoriteIcon
-                          style={{
-                            color: notification.favoriteActive
-                              ? red[500]
-                              : grey[600],
-                          }}
-                        />
-                      </IconButton>
-                    </CardActions>
-                  </Card>
-                </GridItem>
-              ))}
-            </GridContainer>
-          </CardBody>
-        </Card>
-      </div>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Hochgeladene Befunde</h4>
+              <p className={classes.cardCategoryWhite}>
+                Verwalte und teile deine Befunde
+              </p>
+            </CardHeader>
+            <CardBody>
+              <NotificationContent />
+            </CardBody>
+          </Card>
+        </GridItem>
+      </GridContainer>
     );
   }
 }
