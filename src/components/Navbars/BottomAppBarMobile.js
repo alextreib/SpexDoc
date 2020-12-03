@@ -1,6 +1,4 @@
-import {
-  grayColor,
-} from "assets/jss/material-dashboard-react.js";
+import { grayColor } from "assets/jss/material-dashboard-react.js";
 
 import AppBar from "@material-ui/core/AppBar";
 import Badge from "@material-ui/core/Badge";
@@ -13,6 +11,9 @@ import ProfileButton from "components/Navbars/ProfileButton.js";
 import React from "react";
 import Toolbar from "@material-ui/core/Toolbar";
 import { makeStyles } from "@material-ui/core/styles";
+
+import { useState, useEffect } from "react";
+import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,12 +74,24 @@ const useStyles = makeStyles((theme) => ({
 export default function BottomAppBarMobile() {
   const classes = useStyles();
 
-  const [notificationList, setnotificationList] = React.useState([
-    "test",
-    "test2",
-  ]);
+  const [notificationList, setnotificationList] = React.useState([]);
 
   const [openNotification, setOpenNotification] = React.useState(null);
+
+  useEffect(() => {
+    fetchTable();
+  });
+
+  const fetchTable = () => {
+    readDBData("Notifications", false).then((doc_data) => {
+      if (doc_data == null) {
+        console.log(doc_data);
+        return;
+      } else {
+        setnotificationList(doc_data);
+      }
+    });
+  };
 
   // When child (NotificationData) triggers change -> this function is called
   const notificationDataChange = (newList) => {
@@ -99,7 +112,6 @@ export default function BottomAppBarMobile() {
     setOpenNotification(null);
   };
 
-
   return (
     <React.Fragment>
       <CssBaseline />
@@ -107,7 +119,7 @@ export default function BottomAppBarMobile() {
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Link className={classes.Home} to="/dashboard">
-              <HomeIcon />
+            <HomeIcon />
           </Link>
           <div className={classes.grow} />
           <Link className={classes.LinkNotification} to="/notifications">

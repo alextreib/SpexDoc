@@ -11,6 +11,7 @@ import IconButton from "@material-ui/core/IconButton";
 import PropTypes from "prop-types";
 
 import { getUserID } from "components/Internal/Checks";
+import { shareLink} from "components/Internal/Sharing";
 
 import QRCode from "qrcode.react";
 
@@ -51,7 +52,15 @@ class QRCodeCard extends React.Component {
     if (this.props == prevProps) {
       return;
     }
+  }
+  
+  componentDidMount()
+  {
     this.setState({ link: this.props.link });
+  }
+
+  shareLink(){
+    return shareLink("Hallo, schau dir das doch mal an: \n", this.state.link);
   }
 
   render() {
@@ -82,10 +91,10 @@ class QRCodeCard extends React.Component {
             alignItems: "center",
           }}
         >
-          <a href={this.props.link}>{this.props.link}</a>
+          <a href={this.state.link}>{this.state.link}</a>
           {/* Oder einfach nur auf den Link klicken */}
           <IconButton style={{ marginLeft: "auto" }} aria-label="share">
-            <ShareIcon />
+            <ShareIcon onClick={this.shareLink()} />
           </IconButton>
         </div>
       </div>

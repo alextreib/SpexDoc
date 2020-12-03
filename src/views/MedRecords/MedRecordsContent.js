@@ -1,10 +1,15 @@
-import {DialogActions, DialogContent, DialogTitle} from "components/VisuComps/Dialog.js";
+import {
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "components/VisuComps/Dialog.js";
 import {
   readDBData,
   uploadFile,
-  writeDBData
+  writeDBData,
 } from "components/Internal/DBFunctions.js";
 
+import GetAppIcon from "@material-ui/icons/GetApp";
 import AddIcon from "@material-ui/icons/Add";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -26,6 +31,7 @@ import React from "react";
 import ShareIcon from "@material-ui/icons/Share";
 import Typography from "@material-ui/core/Typography";
 import { connect } from "react-redux";
+import DescriptionIcon from "@material-ui/icons/Description";
 import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
@@ -53,6 +59,13 @@ const styles = (theme) => ({
     position: "absolute",
     bottom: 15,
     right: 15,
+  },
+  downloadButton: {
+    position: "relative",
+    left: "50%",
+    height: 150,
+    width: 150,
+    color: "grey",
   },
 });
 
@@ -89,7 +102,6 @@ class MedRecordsContent extends React.Component {
     });
   };
 
-
   // Is called when table is changed
   uploadTable = () => {
     var success = writeDBData(this.state.dbName, this.state.data);
@@ -99,6 +111,8 @@ class MedRecordsContent extends React.Component {
     event.preventDefault();
 
     var fileToUpload = event.target.files[0];
+
+    var isImage = fileToUpload.type.includes("image");
     //todo: cleaner error catching
     return uploadFile(fileToUpload).then((fileLink) => {
       if (fileLink == null) {
@@ -107,6 +121,7 @@ class MedRecordsContent extends React.Component {
 
       var newMedRecord = {
         link: fileLink,
+        isImage: isImage,
         date: "2011",
         doctor: "Dr. Müller",
         disease: "Hüftprobleme",
@@ -183,16 +198,24 @@ class MedRecordsContent extends React.Component {
               {/* Previously ShowFile */}
               <Card className={classes.card}>
                 <CardActionArea onClick={(e) => this.openModal(medRecord, e)}>
-                  <CardMedia
-                    className={classes.media}
-                    component="img"
-                    alt="Contemplative Reptile"
-                    image={medRecord.link}
-                    title="Contemplative Reptile"
-                  />
+                  {medRecord.isImage ? (
+                    <CardMedia
+                      className={classes.media}
+                      component="img"
+                      image={medRecord.link}
+                      title="Befund"
+                    />
+                  ) : (
+                    <CardMedia
+                      className={classes.media}
+                      component="img"
+                      image="https://img.pngio.com/file-png-image-royalty-free-stock-png-images-for-your-design-file-png-256_256.png"
+                      title="Befund"
+                    />
+                  )}
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                      {medRecord.doctor}
+                      {medRecord.disease}
                     </Typography>
                     <Typography
                       variant="body2"
@@ -206,7 +229,7 @@ class MedRecordsContent extends React.Component {
                       color="textSecondary"
                       component="p"
                     >
-                      {medRecord.disease}
+                      {medRecord.doctor}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -237,12 +260,22 @@ class MedRecordsContent extends React.Component {
                   <DialogContent dividers>
                     <Card>
                       <CardBody>
-                        <CardMedia
-                          component="img"
-                          alt="Contemplative Reptile"
-                          image={medRecord.link}
-                          title="Contemplative Reptile"
-                        />
+                        {medRecord.isImage ? (
+                          <div>
+                            <CardMedia
+                              component="img"
+                              image={medRecord.link}
+                              title="Befund"
+                            />
+                            <a href={medRecord.link} download>
+                              Expandieren
+                            </a>
+                          </div>
+                        ) : (
+                          <a href={medRecord.link} download>
+                            <GetAppIcon className={classes.downloadButton} />
+                          </a>
+                        )}
                       </CardBody>
                     </Card>
 

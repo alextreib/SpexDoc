@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import NotificationData from "components/NotificationData/NotificationData.js";
+import Badge from "@material-ui/core/Badge";
 import NotificationIcon from "@material-ui/icons/Notifications";
 import Paper from "@material-ui/core/Paper";
 import Person from "@material-ui/icons/Person";
@@ -27,7 +28,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import { withStyles } from "@material-ui/core/styles";
 
-const useStyles = makeStyles(styles);
 
 class AdminNavbarLinks extends React.Component {
   constructor(props) {
@@ -120,33 +120,12 @@ class AdminNavbarLinks extends React.Component {
             </Button>
           </Link>
           <div className={classes.manager}>
-            <Button
-              color={window.innerWidth > 959 ? "transparent" : "white"}
-              justIcon={window.innerWidth > 959}
-              simple={!(window.innerWidth > 959)}
-              aria-owns={
-                this.state.openNotification
-                  ? "notification-menu-list-grow"
-                  : null
-              }
-              aria-haspopup="true"
-              onClick={this.handleClickNotification}
-              className={classes.buttonLink}
-            >
-              <NotificationIcon className={classes.icons} />
-              <span className={classes.notifications}>
-                {this.state.notificationList.length}
-              </span>
-              {/*todo: count notifications */}
-              <Hidden mdUp implementation="css">
-                <p
-                  onClick={this.handleCloseNotification}
-                  className={classes.linkText}
-                >
-                  Notification
-                </p>
-              </Hidden>
-            </Button>
+          <Link className={classes.LinkNotification} to="/notifications">
+            <Badge badgeContent={this.state.notificationList.length} color="secondary">
+              <NotificationIcon />
+            </Badge>
+          </Link>
+          
             <Popper
               open={Boolean(this.state.openNotification)}
               anchorEl={this.state.openNotification}

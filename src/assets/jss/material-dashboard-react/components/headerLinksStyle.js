@@ -107,7 +107,11 @@ const headerLinksStyle = theme => ({
       margin: "10px 15px 0"
     },
     display: "inline-block"
-  }
+  },
+  LinkNotification: {
+    color: "inherit",
+    innerWidth:50,
+  },
 });
 
 export default headerLinksStyle;

@@ -2,7 +2,7 @@ import { bugs, server, website } from "variables/general.js";
 import {
   completedTasksChart,
   dailySalesChart,
-  emailsSubscriptionChart
+  emailsSubscriptionChart,
 } from "variables/charts.js";
 
 import AccessTime from "@material-ui/icons/AccessTime";
@@ -28,6 +28,7 @@ import LocalOffer from "@material-ui/icons/LocalOffer";
 import React from "react";
 import Store from "@material-ui/icons/Store";
 import Success from "components/Typography/Success.js";
+import TestComp from "components/VisuComps/TestComp.js";
 import Table from "components/Table/Table.js";
 import Tasks from "components/Tasks/Tasks.js";
 import Update from "@material-ui/icons/Update";
@@ -39,8 +40,6 @@ import Button from "@material-ui/core/Button";
 const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
- 
-  
   const fetchData = () => {
     // UserProfile
     console.log(navigator);
@@ -53,10 +52,10 @@ export default function Dashboard() {
           url: document.location.href,
         })
         .then(() => {
-          console.log('Successfully shared');
+          console.log("Successfully shared");
         })
-        .catch(error => {
-          console.error('Something went wrong sharing the blog', error);
+        .catch((error) => {
+          console.error("Something went wrong sharing the blog", error);
         });
     }
   };
@@ -65,18 +64,14 @@ export default function Dashboard() {
   return (
     <div>
       <GridContainer>
-    
         <GridItem xs={12} sm={6} md={3}>
-    
           <Card>
             <CardHeader color="warning" stats icon>
               <CardIcon color="warning">
                 <Icon>content_copy</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Befunde</p>
-              <h3 className={classes.cardTitle}>
-                50
-              </h3>
+              <h3 className={classes.cardTitle}>50</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -229,7 +224,7 @@ export default function Dashboard() {
                     tasksIndexes={[0, 1, 2, 3]}
                     tasks={bugs}
                   />
-                )
+                ),
               },
               {
                 tabName: "Website",
@@ -240,7 +235,7 @@ export default function Dashboard() {
                     tasksIndexes={[0, 1]}
                     tasks={website}
                   />
-                )
+                ),
               },
               {
                 tabName: "Server",
@@ -251,8 +246,8 @@ export default function Dashboard() {
                     tasksIndexes={[0, 1, 2]}
                     tasks={server}
                   />
-                )
-              }
+                ),
+              },
             ]}
           />
         </GridItem>
@@ -261,9 +256,7 @@ export default function Dashboard() {
             <CardHeader color="info">
               {/* 5 letzte Benachrichtigungen hinschreiben, auch wenn gelesen? */}
               <h4 className={classes.cardTitleWhite}>Neuste Aktivitäten</h4>
-              <p className={classes.cardCategoryWhite}>
-                
-              </p>
+              <p className={classes.cardCategoryWhite}></p>
             </CardHeader>
             <CardBody>
               <Table

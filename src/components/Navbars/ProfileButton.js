@@ -1,5 +1,8 @@
+import { useState, useEffect } from "react";
+import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
+import Avatar from "@material-ui/core/Avatar";
 import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
-import {loginUser, logoutUser} from "components/Internal/LoginFunctions.js";
+import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
 import { useDispatch, useSelector } from "react-redux";
 
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -22,8 +25,15 @@ import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import { withStyles } from "@material-ui/core/styles";
+import { grey, red } from "@material-ui/core/colors";
 
-const useStyles = makeStyles(styles);
+const useStyles = makeStyles((theme) => ({
+  avatar: {
+    backgroundColor: red[500],
+    height: 35,
+    width: 35,
+  },
+}));
 
 function ProfileButton() {
   const classes = useStyles();
@@ -31,6 +41,7 @@ function ProfileButton() {
   const [loginState, setUserLogin] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [userProfile, setUserProfile] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -40,6 +51,20 @@ function ProfileButton() {
   const dispatch = useDispatch();
 
   const menuId = "primary-search-account-menu";
+
+  useEffect(() => {
+    fetchTable();
+  });
+
+  const fetchTable = () => {
+    readDBData("UserProfile", false).then((doc_data) => {
+      if (doc_data == null) {
+        return;
+      } else {
+        setUserProfile(doc_data);
+      }
+    });
+  };
 
   const handleLoginProfile = () => {
     console.log("login process");
@@ -68,7 +93,6 @@ function ProfileButton() {
   };
 
   const handleLogoutProfile = () => {
-
     logoutUser()
       .then(() => {
         window.user = null;
@@ -107,16 +131,19 @@ function ProfileButton() {
   };
 
   const renderPopper = (
-    <Popper open={isMenuOpen} anchorEl={anchorEl} transition disablePortal
-    className={
-      classNames({
-        [classes.popperClose]: !isMenuOpen,
-      }) +
-      " " +
-      classes.popperNav
-    }
+    <Popper
+      open={isMenuOpen}
+      anchorEl={anchorEl}
+      transition
+      disablePortal
+      className={
+        classNames({
+          [classes.popperClose]: !isMenuOpen,
+        }) +
+        " " +
+        classes.popperNav
+      }
     >
-   
       {({ TransitionProps, placement }) => (
         <Grow
           {...TransitionProps}
@@ -153,7 +180,6 @@ function ProfileButton() {
 
   return (
     <div>
-    
       <Hidden mdUp implementation="css">
         {/* Mobile Version */}
         <IconButton
@@ -164,12 +190,18 @@ function ProfileButton() {
           onClick={handleProfileMenuOpen}
           color="inherit"
         >
-          <AccountCircle />
+          {userProfile != null ? (
+            <Avatar aria-label="recipe" className={classes.avatar}>
+              {userProfile.firstName.charAt(0)}
+            </Avatar>
+          ) : (
+            <AccountCircle />
+          )}
         </IconButton>
       </Hidden>
 
       <Hidden smDown implementation="css">
-      {/* Desktop Version */}
+        {/* Desktop Version */}
         <Button
           color={window.innerWidth > 959 ? "transparent" : "white"}
           justIcon={window.innerWidth > 959}
@@ -179,7 +211,13 @@ function ProfileButton() {
           onClick={handleProfileMenuOpen}
           className={classes.buttonLink}
         >
-          <Person className={classes.icons} />
+          {userProfile != null ? (
+            <Avatar aria-label="recipe" className={classes.avatar}>
+              {userProfile.firstName.charAt(0)}
+            </Avatar>
+          ) : (
+            <Person className={classes.icons} />
+          )}
         </Button>
       </Hidden>
 
