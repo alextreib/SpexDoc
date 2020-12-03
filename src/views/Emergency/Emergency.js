@@ -21,6 +21,7 @@ import Snackbar from "components/Snackbar/Snackbar.js";
 
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
+import EditableSwitch from "components/EditableTableReport/EditableSwitch";
 
 const styles = {
   cardCategoryWhite: {
@@ -58,24 +59,52 @@ class Emergency extends React.Component {
     super(props);
 
     this.state = {
-      external: {
-        tableOptions: {
-          name: "Emergency",
-          columns: [
-            { title: "Vorerkrankung", field: "predisposition" },
-            { title: "Diagnose seit", field: "diagnosis_year" },
-          ],
-          data: [
-            {
-              predisposition: "Kreislaufschwäche",
-              diagnosis_year: "2010",
-            },
-            {
-              predisposition: "Beispielerkrankung",
-              diagnosis_year: "1997",
-            },
-          ],
-        },
+      predispositionTable: {
+        name: "Predisposition",
+        columns: [
+          { title: "Vorerkrankung", field: "predisposition" },
+          { title: "Diagnose seit", field: "diagnosis_year" },
+        ],
+        data: [
+          {
+            predisposition: "Kreislaufschwäche",
+            diagnosis_year: "2010",
+          },
+        ],
+      },
+      medicationTable: {
+        name: "Medication",
+        columns: [
+          { title: "Medikament", field: "medication" },
+          { title: "Rhythmus", field: "rythme" },
+        ],
+        data: [
+          {
+            medication: "IbuHEXAL",
+            rythme: "2x Täglich",
+          },
+        ],
+      },
+      contactTable: {
+        name: "Contacts",
+        columns: [
+          { title: "Name", field: "name" },
+          { title: "Beziehung", field: "relation" },
+          { title: "Telefonnummer", field: "phone" },
+          { title: "Adresse", field: "address" },
+        ],
+        data: [
+          {
+            name: "Nora Tilmann",
+            relation: "Mutter",
+            rythme: "01522722892",
+            rythme: "Seestraße 24, München",
+          },
+        ],
+      },
+      organSwitch: {
+        name: "organ_donation",
+        data: false,
       },
     };
   }
@@ -93,7 +122,7 @@ class Emergency extends React.Component {
             </CardHeader>
             <CardBody>
               <EditableTableReport
-                tableOptions={this.state.external.tableOptions}
+                tableOptions={this.state.predispositionTable}
               />
             </CardBody>
           </Card>
@@ -106,14 +135,7 @@ class Emergency extends React.Component {
               <p className={classes.cardCategoryWhite}>Untertitel</p>
             </CardHeader>
             <CardBody>
-              <Table
-                tableHeaderColor="primary"
-                tableHead={["Medikament", "Wirkstoff", "Rhythmus"]}
-                tableData={[
-                  ["IbuHEXAL", "Ibuprofen", "Täglich"],
-                  ["L-Thyroxin Henning", "Levothyroxin", "2x Täglich"],
-                ]}
-              />
+              <EditableTableReport tableOptions={this.state.medicationTable} />
             </CardBody>
           </Card>
         </GridItem>
@@ -125,14 +147,7 @@ class Emergency extends React.Component {
               <p className={classes.cardCategoryWhite}>Kontaktdaten</p>
             </CardHeader>
             <CardBody>
-              <Table
-                tableHeaderColor="primary"
-                tableHead={["Name", "Beziehung", "Telefonnummer", "Adresse"]}
-                tableData={[
-                  ["Nora", "Mutter", "01522789126", "Seestraße 14, Berlin"],
-                  ["Luca", "Bruder", "01522712312", "Seestraße 14, Berlin"],
-                ]}
-              />
+              <EditableTableReport tableOptions={this.state.contactTable} />
             </CardBody>
           </Card>
         </GridItem>
@@ -142,7 +157,9 @@ class Emergency extends React.Component {
               <h4 className={classes.cardTitleWhite}>Organspende</h4>
               <p className={classes.cardCategoryWhite}>Untertitel</p>
             </CardHeader>
-            <CardBody>JA</CardBody>
+            <CardBody>
+              <EditableSwitch switchOptions={this.state.organSwitch} />
+            </CardBody>
           </Card>
         </GridItem>
       </GridContainer>

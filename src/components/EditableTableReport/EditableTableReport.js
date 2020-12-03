@@ -1,17 +1,13 @@
-import React from "react";
-import MaterialTable from "material-table";
 
-
-import "firebase/database";
+import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 
 import Button from "components/CustomButtons/Button.js";
-import { writeDBData, readDBData } from "components/Internal/DBFunctions.js";
-import { getPublicKey } from "components/Internal/Extraction.js";
 import CommonComps from "components/Internal/CommonComps.js";
-
+import MaterialTable from "material-table";
 import { Paper } from "@material-ui/core";
-
+import React from "react";
 import { connect } from "react-redux";
+import { getPublicKey } from "components/Internal/Extraction.js";
 
 class EditableTableReport extends React.Component {
   constructor(props) {
@@ -108,6 +104,53 @@ class EditableTableReport extends React.Component {
             }
           }}
           data={this.state.data}
+          localization={{
+            body: {
+              emptyDataSourceMessage: 'Keine Einträge',
+              addTooltip: 'Hinzufügen',
+              deleteTooltip: 'Löschen',
+              editTooltip: 'Bearbeiten',
+              filterRow: {
+                filterTooltip: 'Filter'
+              },
+              editRow: {
+                deleteText: 'Diese Zeile wirklich löschen?',
+                cancelTooltip: 'Abbrechen',
+                saveTooltip: 'Speichern'
+              }
+            },
+            grouping: {
+              placeholder: 'Spalten ziehen ...',
+              groupedBy: 'Gruppiert nach:'
+            },
+            header: {
+              actions: 'Aktionen'
+            },
+            pagination: {
+              labelDisplayedRows: '{from}-{to} von {count}',
+              labelRowsSelect: 'Zeilen',
+              labelRowsPerPage: 'Zeilen pro Seite:',
+              firstAriaLabel: 'Erste Seite',
+              firstTooltip: 'Erste Seite',
+              previousAriaLabel: 'Vorherige Seite',
+              previousTooltip: 'Vorherige Seite',
+              nextAriaLabel: 'Nächste Seite',
+              nextTooltip: 'Nächste Seite',
+              lastAriaLabel: 'Letzte Seite',
+              lastTooltip: 'Letzte Seite'
+            },
+            toolbar: {
+              addRemoveColumns: 'Spalten hinzufügen oder löschen',
+              nRowsSelected: '{0} Zeile(n) ausgewählt',
+              showColumnsTitle: 'Zeige Spalten',
+              showColumnsAriaLabel: 'Zeige Spalten',
+              exportTitle: 'Export',
+              exportAriaLabel: 'Export',
+              exportName: 'Export als CSV',
+              searchTooltip: 'Suche',
+              searchPlaceholder: 'Suche'
+            }
+          }}
           editable={{
             onRowAdd: (newData) =>
               new Promise((resolve) => {
