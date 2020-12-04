@@ -15,6 +15,14 @@ export const checkUser = () => {
   }
 };
 
+
+export const getUser = () => {
+  if (checkUser()) {
+    return auth.currentUser;
+  }
+  return null;
+};
+
 export const getUserID = () => {
   if (checkUser()) {
     return auth.currentUser.uid;
