@@ -1,5 +1,5 @@
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
-import { checkUser,getUserEmail } from "components/Internal/Checks.js";
+import { checkUser, getUserEmail } from "components/Internal/Checks.js";
 import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
 import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
 
@@ -12,7 +12,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CommonComps from "components/Internal/CommonComps.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 
 // @material-ui/core components
 // core components
@@ -94,7 +94,9 @@ class UserProfile extends React.Component {
   componentDidMount() {
     this.fetchTable();
     this.setState({ loginState: checkUser() });
-    this.setState({userProfile:{...this.state.userProfile, email: getUserEmail() }});
+    this.setState({
+      userProfile: { ...this.state.userProfile, email: getUserEmail() },
+    });
   }
 
   // Fetch the table from Firebase (Original data)
@@ -123,10 +125,14 @@ class UserProfile extends React.Component {
   // Nice function: Sets states automatically
   profileChange = (property, event) => {
     var changedValue = event.target.value;
-    this.setState({
-      userProfile: { ...this.state.userProfile, [property]: changedValue },
-    });
-    this.uploadProfile();
+    this.setState(
+      {
+        userProfile: { ...this.state.userProfile, [property]: changedValue },
+      },
+      () => {
+        this.uploadProfile();
+      }
+    );
   };
 
   // todo: Find a way to cluster/extract it to a common place
@@ -329,7 +335,7 @@ class UserProfile extends React.Component {
                       </GridItem>
                     </GridContainer>
                     <GridContainer>
-                    <GridItem xs={12} sm={12} md={6}>
+                      <GridItem xs={12} sm={12} md={6}>
                         <CustomInput
                           labelText="Geburtstag"
                           id="birthDate"
@@ -355,7 +361,7 @@ class UserProfile extends React.Component {
                           }}
                         />
                       </GridItem>
-                      </GridContainer>
+                    </GridContainer>
                     <GridContainer>
                       <GridItem xs={12} sm={12} md={12}>
                         <CustomInput

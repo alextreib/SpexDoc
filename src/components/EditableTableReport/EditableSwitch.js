@@ -67,12 +67,15 @@ class EditableSwitch extends React.Component {
 
   render() {
     return (
-      <Switch
-        checked={this.state.checked}
-        onChange={this.handleChange}
-        name="checkedA"
-        inputProps={{ "aria-label": "secondary checkbox" }}
-      />
+      <div>
+        {this.state.checked ? "JA" : "NEIN"}
+        <Switch
+          checked={this.state.checked}
+          onChange={this.handleChange}
+          name="checkedA"
+          inputProps={{ "aria-label": "secondary checkbox" }}
+        />
+      </div>
     );
   }
 }
