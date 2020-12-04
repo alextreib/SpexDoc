@@ -1,7 +1,4 @@
-import firebase from "firebase/app";
-import "firebase/storage";
-import "firebase/firestore";
-import "firebase/auth";
+import { firebase, firestore, auth } from "components/Internal/Firebase.js";
 
 const BitlyClient = require("bitly").BitlyClient;
 //todo: Hide key
@@ -9,7 +6,7 @@ const bitly = new BitlyClient("10f3147740e04fd0ea4c68788a84147cc6034dfa");
 
 // Get user_id -> checkUser -> LoginAlert
 export const checkUser = () => {
-  if (firebase.auth().currentUser == null) {
+  if (auth.currentUser == null) {
     console.log("user not logged in");
     // Display LoginAlert
     return false;
@@ -20,7 +17,14 @@ export const checkUser = () => {
 
 export const getUserID = () => {
   if (checkUser()) {
-    return firebase.auth().currentUser.uid;
+    return auth.currentUser.uid;
+  }
+  return null;
+};
+
+export const getUserEmail = () => {
+  if (checkUser()) {
+    return auth.currentUser.email;
   }
   return null;
 };

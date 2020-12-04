@@ -1,5 +1,5 @@
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
-import { checkUser } from "components/Internal/Checks.js";
+import { checkUser,getUserEmail } from "components/Internal/Checks.js";
 import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
 import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
 
@@ -72,6 +72,8 @@ class UserProfile extends React.Component {
         plz: "",
         city: "",
         street: "",
+        birthDate: "",
+        insurance: "",
         aboutMe: "",
       },
     };
@@ -92,6 +94,7 @@ class UserProfile extends React.Component {
   componentDidMount() {
     this.fetchTable();
     this.setState({ loginState: checkUser() });
+    this.setState({userProfile:{...this.state.userProfile, email: getUserEmail() }});
   }
 
   // Fetch the table from Firebase (Original data)
@@ -325,6 +328,34 @@ class UserProfile extends React.Component {
                         />
                       </GridItem>
                     </GridContainer>
+                    <GridContainer>
+                    <GridItem xs={12} sm={12} md={6}>
+                        <CustomInput
+                          labelText="Geburtstag"
+                          id="birthDate"
+                          inputProps={{
+                            value: this.state.userProfile.birthDate,
+                            onChange: (e) => this.profileChange("birthDate", e),
+                          }}
+                          formControlProps={{
+                            fullWidth: true,
+                          }}
+                        />
+                      </GridItem>
+                      <GridItem xs={12} sm={12} md={6}>
+                        <CustomInput
+                          labelText="Krankenkasse"
+                          id="insurance"
+                          inputProps={{
+                            value: this.state.userProfile.insurance,
+                            onChange: (e) => this.profileChange("insurance", e),
+                          }}
+                          formControlProps={{
+                            fullWidth: true,
+                          }}
+                        />
+                      </GridItem>
+                      </GridContainer>
                     <GridContainer>
                       <GridItem xs={12} sm={12} md={12}>
                         <CustomInput

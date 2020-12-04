@@ -1,21 +1,13 @@
-import React from "react";
-
-import "firebase/storage";
-import "firebase/firestore";
-import { withStyles } from "@material-ui/core/styles";
-
-import ShareIcon from "@material-ui/icons/Share";
+import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 
 import IconButton from "@material-ui/core/IconButton";
-
 import PropTypes from "prop-types";
-
-import { getUserID } from "components/Internal/Checks";
-import { shareLink} from "components/Internal/Sharing";
-
 import QRCode from "qrcode.react";
-
-import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
+import React from "react";
+import ShareIcon from "@material-ui/icons/Share";
+import { getUserID } from "components/Internal/Checks";
+import { shareLink } from "components/Internal/Sharing";
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
   card: {

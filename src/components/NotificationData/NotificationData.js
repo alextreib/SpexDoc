@@ -1,12 +1,6 @@
-import React from "react";
-
-import "firebase/storage";
-import "firebase/firestore";
-
 import Button from "components/CustomButtons/Button.js";
-
+import React from "react";
 import {writeDBData} from "components/Internal/DBFunctions.js";
-
 
 // Contains only data to visualize the
 class NotificationData extends React.Component {

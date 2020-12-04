@@ -1,8 +1,14 @@
+import {
+  auth,
+  firebase,
+  firestore,
+  storage,
+} from "components/Internal/Firebase.js";
+
 import Button from "components/CustomButtons/Button.js";
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
 import MaterialTable from "material-table";
 import React from "react";
-import firebase from "components/Internal/Firebase.js";
 import { getPublicKey } from "components/Internal/Extraction.js";
 import { getUserID } from "components/Internal/Checks.js";
 
@@ -10,8 +16,7 @@ export const writeDBData = (docName, data) => {
   var user_id = getUserID();
   if (user_id == null) return false;
 
-  firebase
-    .firestore()
+  firestore
     .collection("userStorage")
     .doc("users")
     .collection(user_id)
@@ -38,8 +43,7 @@ export const readDBData = (docName, allowPublicKey) => {
       }
     }
 
-    var docRef = firebase
-      .firestore()
+    var docRef = firestore
       .collection("userStorage")
       .doc("users")
       .collection(user_id)
@@ -60,7 +64,7 @@ export const readDBData = (docName, allowPublicKey) => {
 };
 
 // todo: maybe include user?
-export const uploadFile = ( fileToUpload) => {
+export const uploadFile = (fileToUpload) => {
   return new Promise((resolve, reject) => {
     // todo: enhance with fileinformation
     if (fileToUpload == null) {
@@ -69,7 +73,7 @@ export const uploadFile = ( fileToUpload) => {
     }
     var fileName = fileToUpload.name;
 
-    var storageRef = firebase.storage().ref();
+    var storageRef = storage.ref();
 
     return storageRef
       .child(fileName)
@@ -91,14 +95,13 @@ export const appendDBArray = (docName, arrayElement) => {
     var user_id = getUserID();
     if (user_id == null) return false;
 
-    const docRef = firebase
-      .firestore()
+    const docRef = firestore
       .collection("userStorage")
       .doc("users")
       .collection(user_id)
       .doc(docName);
 
-      // todo: if non-existing -create
+    // todo: if non-existing -create
     docRef
       .update({
         data: firebase.firestore.FieldValue.arrayUnion(arrayElement),
@@ -115,8 +118,7 @@ export const removeDBArray = (docName, arrayElement) => {
     var user_id = getUserID();
     if (user_id == null) return false;
 
-    const docRef = firebase
-      .firestore()
+    const docRef = firestore
       .collection("userStorage")
       .doc("users")
       .collection(user_id)
@@ -133,118 +135,48 @@ export const removeDBArray = (docName, arrayElement) => {
   });
 };
 
-
 export const deleteDoc = (docName) => {
   return new Promise((resolve, reject) => {
     var user_id = getUserID();
     if (user_id == null) return false;
 
-    const docRef = firebase
-      .firestore()
+    const docRef = firestore
       .collection("userStorage")
       .doc("users")
       .collection(user_id)
       .doc(docName);
 
-    docRef
-      .delete()
-      .then((result) => {
-        if (result != null) resolve(true);
-        else resolve(false);
-      });
+    docRef.delete().then((result) => {
+      if (result != null) resolve(true);
+      else resolve(false);
+    });
   });
-
-}
-
-
+};
 
 // Not working
 
-
 // Array operations
 // key as {link: "https://"}
-// Array is nested array, not 
+// Array is nested array, not
 // Array=[{element:1, link=https}, {element:2,link=https}]
-export const substituteDBArrayElement = (docName, arrayElement,key) => {
+export const substituteDBArrayElement = (docName, arrayElement, key) => {
   return new Promise(async (resolve, reject) => {
     var user_id = getUserID();
     if (user_id == null) return false;
 
     // Loading the whole document
-    var old_doc=await readDBData(docName);
+    var old_doc = await readDBData(docName);
 
-    // Search for key 
-    console.log(old_doc)
-    if(old_doc!=null) // Nothing to update
-    {
-      
-
-    var new_doc=old_doc.map((medRecord) => {
-      if(medRecord.link==key)
-      {
-        console.log("found element")
-        medRecord=arrayElement;
-      }
-    });
-  }
-    console.log(old_doc)
-
-    writeDBData(docName,old_doc);
-
-
-    // // Updating element
-
-    // // Override the complete array
-
-    // const docRef = firebase
-    //   .firestore()
-    //   .collection("userStorage")
-    //   .doc("users")
-    //   .collection(user_id)
-    //   .doc(docName);
-
-    // docRef
-    //   .update({
-    //     data: firebase.firestore.FieldValue.arrayUnion(arrayElement),
-    //   })
-    //   .then((result) => {
-    //     if (result != null) resolve(true);
-    //     else resolve(false);
-    //   });
+    // Search for key
+    console.log(old_doc);
+    if (old_doc != null) {
+      // Nothing to update
+      var new_doc = old_doc.map((medRecord) => {
+        if (medRecord.link == key) {
+          medRecord = arrayElement;
+        }
+      });
+    }
+    writeDBData(docName, old_doc);
   });
 };
-
-
-
-
-
-// Array access (previously)
-  // loadDoc() {
-  //   console.log("loadDoc");
-  //   var defaultDatabase = firebase.firestore();
-
-  //   var docRef = defaultDatabase.collection("userStorage").doc("docLinks");
-
-  //   var user = firebase.auth().currentUser;
-  //   if (user == null) {
-  //     return;
-  //   }
-  //   var user_id = user.uid;
-
-  //   var docLinks = [];
-
-  //   docRef
-  //     .get()
-  //     .then(function (doc) {
-  //       if (doc.exists) {
-  //         for (const docLink of doc.data()[user_id]) {
-  //           docLinks.push(docLink);
-  //         }
-  //         return docLinks;
-  //       }
-  //     })
-  //     .then((docLinks) => {
-  //       console.log(docLinks);
-  //       this.setState({ showFiles: docLinks });
-  //     });
-  // }

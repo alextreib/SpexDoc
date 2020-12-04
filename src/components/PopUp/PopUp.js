@@ -1,18 +1,16 @@
+import AddAlert from "@material-ui/icons/AddAlert";
+import Card from "@material-ui/core/Card";
+import GridContainer from "components/Grid/GridContainer.js";
+import GridItem from "components/Grid/GridItem.js";
+import PropTypes from "prop-types";
 import React from "react";
-
-import "firebase/storage";
-import "firebase/firestore";
+import Snackbar from "components/Snackbar/Snackbar.js";
 import { withStyles } from "@material-ui/core/styles";
 
-import Card from "@material-ui/core/Card";
 
-// core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Snackbar from "components/Snackbar/Snackbar.js";
-import AddAlert from "@material-ui/icons/AddAlert";
 
-import PropTypes from "prop-types";
+
+
 
 const styles = {
   cardCategoryWhite: {
