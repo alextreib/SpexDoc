@@ -1,8 +1,17 @@
 import { useState, useEffect } from "react";
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 import Avatar from "@material-ui/core/Avatar";
-import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
-import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
+import {
+  loginRedux,
+  logoutRedux,
+  setAccessToken,
+  removeAccessToken,
+} from "components/Internal/Redux.js";
+import {
+loginUser,
+  loginUserWithFit,
+  logoutUser,
+} from "components/Internal/LoginFunctions.js";
 import { useDispatch, useSelector } from "react-redux";
 
 import AccountCircle from "@material-ui/icons/AccountCircle";
@@ -70,13 +79,17 @@ function ProfileButton() {
     console.log("login process");
     loginUser()
       .then((result) => {
+        console.log(result);
         // This gives you a Google Access Token. You can use it to access the Google API.
-        var token = result.credential.accessToken;
-        // The signed-in user info.
+        var access_token = result.credential.accessToken;
+        // setUserToken(access_token);
+
         var user = result.user;
         setUserLogin(true);
         console.log("User successfully logged in ");
         dispatch(loginRedux({ user_id: user.uid }));
+        dispatch(loginRedux({ user_id: user.uid }));
+        dispatch(setAccessToken(access_token));
       })
       .catch((error) => {
         // Handle Errors here.
@@ -101,6 +114,7 @@ function ProfileButton() {
         // Sign-out successful.
         setUserLogin(false);
         dispatch(logoutRedux());
+        dispatch(removeAccessToken());
       })
       .catch((error) => {
         console.log("error while logging out");

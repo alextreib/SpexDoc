@@ -4,6 +4,9 @@ export const loginUser = () => {
   return new Promise((resolve, reject) => {
     var provider = new firebase.auth.GoogleAuthProvider();
 
+  provider.addScope('https://www.googleapis.com/auth/fitness.activity.read');
+
+
     resolve(auth.signInWithPopup(provider));
   });
 };
@@ -29,7 +32,7 @@ export const loginUserWithFit=()=>{
     .then(function (result) {
       // This gives you a Google Access Token. You can use it to access the Google API.
       var token = result.credential.accessToken;
-      setaccessToken(token);
+      // setaccessToken(token);
 
       console.log(token);
       // The signed-in user info.

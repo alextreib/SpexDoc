@@ -6,6 +6,7 @@ import DashboardPage from "views/Dashboard/Dashboard.js";
 import Emergency from "views/Emergency/Emergency.js";
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import MedRecords from "views/MedRecords/MedRecords.js";
+import GoogleFit from "views/GoogleFit/GoogleFit.js";
 import Notifications from "@material-ui/icons/Notifications";
 import NotificationsPage from "views/Notifications/Notifications.js";
 import Share from "views/Share/Share.js";
@@ -15,15 +16,23 @@ import SmartDocIcon from "@material-ui/icons/TabletMac";
 import TodayIcon from '@material-ui/icons/Today';
 import UserProfile from "views/UserProfile/UserProfile.js";
 import Vaccination from "views/Vaccination/Vaccination.js";
+import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
 // npm install --save-dev @iconify/react @iconify-icons/fa-solid
-// import { Icon, InlineIcon } from '@iconify/react';
+import { Icon, InlineIcon } from '@iconify/react';
 // import syringeIcon from '@iconify-icons/fa-solid/syringe';
 // import React from "react";
 
 
+// // npm install --save-dev @iconify/react @iconify-icons/mdi
+// // import { Icon, InlineIcon } from '@iconify/react';
+// // import googleFit from '@iconify-icons/mdi/google-fit';
+
+// // <Icon icon={googleFit} />
+
+
 
 // function SyringeIcon() {
-//   return <Icon icon={syringeIcon} />;
+//   return <Icon style={{height:18,width:18}} icon={syringeIcon} />;
 // };
 
 
@@ -91,6 +100,14 @@ const dashboardRoutes = [
     rtlName: "إخطارات",
     icon: Notifications,
     component: NotificationsPage,
+    layout: "/admin"
+  },
+  {
+    path: "/googleFit",
+    name: "GoogleFit",
+    rtlName: "لوحة القيادة",
+    icon: FitnessCenterIcon ,
+    component: GoogleFit,
     layout: "/admin"
   },
   {

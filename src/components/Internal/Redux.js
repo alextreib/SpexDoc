@@ -1,7 +1,7 @@
 import { combineReducers, createStore } from "redux";
 
-// Only understand parts of it. 
-// Logout working, 
+// Only understand parts of it.
+// Logout working,
 // Source: https://blog.tylerbuchea.com/super-simple-react-redux-application-example/
 export const loginRedux = (loginState) => ({
   type: "LOGIN",
@@ -25,8 +25,31 @@ export const loginState = (state = {}, action) => {
   }
 };
 
+// Maybe this can be unified
+export const setAccessToken = (access_token) => ({
+  type: "SET",
+  access_token,
+});
+
+export const removeAccessToken = () => ({
+  type: "REMOVE",
+});
+
+export const access_token = (state = {}, action) => {
+  console.log("access_token update");
+  switch (action.type) {
+    case "SET":
+      return action.access_token;
+    case "REMOVE":
+      return {};
+    default:
+      return state;
+  }
+};
+
 export const reducers = combineReducers({
   loginState,
+  access_token,
 });
 
 // store.js
