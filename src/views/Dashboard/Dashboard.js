@@ -59,11 +59,15 @@ export default function Dashboard() {
         });
     }
   };
+  const askUserPermission = async () => {
+    return await Notification.requestPermission();
+  };
 
   const classes = useStyles();
   return (
     <div>
       <GridContainer>
+        <Button onClick={askUserPermission}>TestButton</Button>
         <GridItem xs={12} sm={6} md={3}>
           <Card>
             <CardHeader color="warning" stats icon>

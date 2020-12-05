@@ -1,9 +1,5 @@
 import { bugs, server, website } from "variables/general.js";
-import {
-  completedTasksChart,
-  dailySalesChart,
-  emailsSubscriptionChart,
-} from "variables/charts.js";
+import { dailySalesChart, emailsSubscriptionChart } from "variables/charts.js";
 
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 import { checkUser, getUserEmail } from "components/Internal/Checks.js";
@@ -43,19 +39,137 @@ import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js"
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import axios from "axios";
-
 import { withStyles } from "@material-ui/core/styles";
+var Chartist = require("chartist");
+
+var delays = 80,
+  durations = 500;
+var delays2 = 80,
+  durations2 = 500;
 
 const useStyles = makeStyles(styles);
+
+// we need to return [{Today}, {Yesterday} .... {7 days back}]
+// Each object has : {"Calories" : value, "Heart": value ... , "Date": }
+const baseObj = {
+  Calories: 0,
+  Heart: 0,
+  Move: 0,
+  Steps: 0,
+  Sleep: 0,
+  Weight: 0,
+  Blood_Pressure: 0,
+};
+
+// Blood pressure
+const dataValues = [
+  {
+    title: "Calories",
+    type: "com.google.calories.expended",
+  },
+  {
+    title: "Heart",
+    type: "com.google.heart_minutes",
+  },
+  {
+    title: "Move",
+    type: "com.google.active_minutes",
+  },
+  {
+    title: "Steps",
+    type: "com.google.step_count.delta",
+  },
+  {
+    // Not working - why?
+    title: "Sleep",
+    type: "com.google.sleep.segment",
+  },
+  {
+    title: "Weight",
+    type: "com.google.weight",
+  },
+  {
+    title: "Blood_Pressure",
+    type: "com.google.blood_pressure",
+  },
+];
 
 class GoogleFit extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      healthData: [],
+      testArray: [],
       // Default data
     };
   }
+
+  getDataPerWeek = (type, healthData) => {
+    console.log(healthData);
+    console.log(type);
+    console.log(healthData[type]);
+    var HealthTypeArray = [];
+    // Returns array in the form [TypeDay1,TypeDay2,TypeDay3]
+    healthData.forEach((element) => {
+      HealthTypeArray.push(element[type]);
+    });
+    console.log(HealthTypeArray);
+    return HealthTypeArray;
+  };
+
+  getCompleteTask = () => {
+    const completedTasksChart = {
+      data: {
+        labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
+        series: [this.state.testArray],
+      },
+      options: {
+        lineSmooth: Chartist.Interpolation.cardinal({
+          tension: 0,
+        }),
+        low: 0,
+        high: 10000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+        chartPadding: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+        },
+      },
+      animation: {
+        draw: function (data) {
+          if (data.type === "line" || data.type === "area") {
+            data.element.animate({
+              d: {
+                begin: 600,
+                dur: 700,
+                from: data.path
+                  .clone()
+                  .scale(1, 0)
+                  .translate(0, data.chartRect.height())
+                  .stringify(),
+                to: data.path.clone().stringify(),
+                easing: Chartist.Svg.Easing.easeOutQuint,
+              },
+            });
+          } else if (data.type === "point") {
+            data.element.animate({
+              opacity: {
+                begin: (data.index + 1) * delays,
+                dur: durations,
+                from: 0,
+                to: 1,
+                easing: "ease",
+              },
+            });
+          }
+        },
+      },
+    };
+
+    return completedTasksChart;
+  };
 
   // Will trigger update from e.g. Emergency->linkAccess that will be triggered after componentdidmount
   componentDidUpdate(prevProps) {
@@ -101,18 +215,61 @@ class GoogleFit extends React.Component {
     return requestHeaderBody;
   };
 
-
-  
+  getAggregatedDataBody = (dataType, endTime) => {
+    console.log(endTime);
+    const requestBody = {
+      aggregateBy: [
+        {
+          dataTypeName: dataType,
+        },
+      ],
+      bucketByTime: {
+        durationMillis: 86400000,
+      },
+      endTimeMillis: endTime,
+      startTimeMillis: endTime - 7 * 86400000,
+    };
+    return requestBody;
+  };
 
   getDataFunc = async (access_token) => {
-    var date=new Date().getTime()  ;
-    var blank_url =
-      "https://www.googleapis.com/fitness/v1/users/me/dataSources";
+    var endTime = new Date().getTime();
 
-    axios.get(blank_url, this.getRequestHeaders(access_token)).then((response) => {
-      // handle success
-      console.log(response);
+    let state = [];
+    let promises = [];
+    for (var i = 6; i >= 0; i--) {
+      var currTime = new Date(endTime - i * 86400000);
+      state.push({
+        ...baseObj,
+        Date: currTime,
+      });
+    }
+    dataValues.forEach((element) => {
+      let body = this.getAggregatedDataBody(element.type, endTime);
+      promises.push(
+        axios
+          .post(
+            "https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate",
+            body,
+            this.getRequestHeaders(access_token)
+          )
+          .then((resp) => {
+            // now, each data bucket represents exactly one day
+            for (let idx = 0; idx < 7; idx++) {
+              resp.data.bucket[idx].dataset[0].point.forEach((point) => {
+                point.value.forEach((val) => {
+                  let extract = val["intVal"] || Math.ceil(val["fpVal"]) || 0;
+                  state[idx][element.title] += extract;
+                });
+              });
+            }
+          })
+      );
     });
+    // promises to call callback
+    console.log(state);
+    this.setState({ healthData: state });
+    return state;
   };
 
   getStepsCount = () => {
@@ -121,8 +278,6 @@ class GoogleFit extends React.Component {
 
     // read data through api
     this.getDataFunc(access_token);
-
-    // return list of [day-1,day-2,day-3]
   };
 
   handleChange = (event) => {
@@ -156,13 +311,20 @@ class GoogleFit extends React.Component {
     // return await Notification.requestPermission();
     this.getStepsCount();
   };
+
+  testFunc = () => {
+    var steps = this.getDataPerWeek("Steps", this.state.healthData);
+    console.log(steps);
+    this.setState({ testArray: steps });
+  };
   render() {
     const { classes } = this.props;
 
     return (
       <div>
         <GridContainer>
-          <Button onClick={this.askUserPermission}>TestButton</Button>
+          <Button onClick={this.askUserPermission}>Load Data</Button>
+          <Button onClick={this.testFunc}>TestFunc</Button>
           <GridItem xs={12} sm={6} md={3}>
             <Card>
               <CardHeader color="warning" stats icon>
@@ -290,10 +452,10 @@ class GoogleFit extends React.Component {
               <CardHeader color="danger">
                 <ChartistGraph
                   className="ct-chart"
-                  data={completedTasksChart.data}
+                  data={this.getCompleteTask().data}
                   type="Line"
-                  options={completedTasksChart.options}
-                  listener={completedTasksChart.animation}
+                  options={this.getCompleteTask().options}
+                  listener={this.getCompleteTask().animation}
                 />
               </CardHeader>
               <CardBody>

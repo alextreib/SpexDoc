@@ -23,7 +23,7 @@ import React from "react";
 import Switch from "@material-ui/core/Switch";
 import avatar from "assets/img/faces/profile_white.png";
 import { connect } from "react-redux";
-import { getUserID } from "components/Internal/Checks.js";
+import { getUserID, getUser } from "components/Internal/Checks.js";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
@@ -430,6 +430,7 @@ UserProfile.propTypes = {
 
 const mapStateToProps = (state) => ({
   loginState: state.loginState,
+  access_token:state.access_token
 });
 
 const mapDispatchToProps = {
