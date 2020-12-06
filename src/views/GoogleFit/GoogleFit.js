@@ -42,8 +42,11 @@ import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
 import {
   getDataPerWeek,
-  loadHealthData,getAllHealthDataPerWeek
+  loadHealthData,
+  getAllHealthDataPerWeek,
 } from "components/Internal/GoogleFitFunc.js";
+
+import { getChart } from "components/Internal/GoogleFitCharts.js";
 var Chartist = require("chartist");
 
 var delays = 80,
@@ -60,67 +63,15 @@ class GoogleFit extends React.Component {
     this.state = {
       healthData: [],
       testArray: [],
-      healthDataperWeek:{["Steps"]:[1,1000,2000],["Calories"]:[1,1000,2000],["Heart"]:[1,1000,2000]}
+      // Default data
+      healthDataperWeek: {
+        ["Steps"]: [1, 1000, 2000],
+        ["Calories"]: [1, 1000, 2000],
+        ["Heart"]: [1, 1000, 2000],
+      },
       // Default data
     };
   }
-
-  getMaxValueofArray= (array)=>{
-    return 1.2*Math.max.apply(null, array);
- }
-
-  getCompleteTask = () => {
-    const completedTasksChart = {
-      data: {
-        labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
-        series: [this.state.healthDataperWeek["Heart"]],
-      },
-      options: {
-        lineSmooth: Chartist.Interpolation.cardinal({
-          tension: 0,
-        }),
-        low: 0,
-        high: this.getMaxValueofArray(this.state.healthDataperWeek["Heart"]), // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-        chartPadding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-        },
-      },
-      animation: {
-        draw: function (data) {
-          if (data.type === "line" || data.type === "area") {
-            data.element.animate({
-              d: {
-                begin: 600,
-                dur: 700,
-                from: data.path
-                  .clone()
-                  .scale(1, 0)
-                  .translate(0, data.chartRect.height())
-                  .stringify(),
-                to: data.path.clone().stringify(),
-                easing: Chartist.Svg.Easing.easeOutQuint,
-              },
-            });
-          } else if (data.type === "point") {
-            data.element.animate({
-              opacity: {
-                begin: (data.index + 1) * delays,
-                dur: durations,
-                from: 0,
-                to: 1,
-                easing: "ease",
-              },
-            });
-          }
-        },
-      },
-    };
-
-    return completedTasksChart;
-  };
 
   // Will trigger update from e.g. Emergency->linkAccess that will be triggered after componentdidmount
   componentDidUpdate(prevProps) {
@@ -129,7 +80,7 @@ class GoogleFit extends React.Component {
       // No change from above (currently nothing else is needed)
       return;
     } else {
-      // this.fetchData();
+      this.fetchData();
     }
   }
 
@@ -160,38 +111,33 @@ class GoogleFit extends React.Component {
     // Load User Firebase data (maybe)
   };
 
+  timeout(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
   loadGoogleData = async () => {
     if (this.props.access_token) {
       // get access_token
       var access_token = this.props.access_token;
+      await this.timeout(1000); // todo: remove hotfix
 
       // read data through api
-      console.log(access_token);
-      loadHealthData(access_token).then((healthData) => {
-        this.setState({ healthData: healthData });
+      loadHealthData(access_token).then(async (healthData_array) => {
+        await this.setState({ healthDataArray: healthData_array }, async () => {
+          await this.timeout(1000); // todo: remove hotfix
+
+          var healthDataperWeek = await getAllHealthDataPerWeek(
+            this.state.healthDataArray
+          ).then(async (healthDataperWeek_value) => {
+            this.setState({ healthDataperWeek: healthDataperWeek_value });
+          });
+        });
       });
     }
   };
 
   testFunc = () => {
-    var healthDataperWeek=getAllHealthDataPerWeek(this.state.healthData);
-    console.log(healthDataperWeek);
-    console.log(healthDataperWeek["Steps"]);
-    var steps = getDataPerWeek("Steps", this.state.healthData);
-    console.log(steps);
-    this.setState({ healthDataperWeek: healthDataperWeek });
-  };
-
-  
-  testFunc2 = () => {
-    // var healthDataperWeek=getAllHealthDataPerWeek(this.state.healthData);
-    // console.log(healthDataperWeek);
-    // console.log(healthDataperWeek["Steps"]);
-    // var steps = getDataPerWeek("Steps", this.state.healthData);
-    console.log(this.state.healthDataperWeek["Steps"]);
-    var maxValue=this.getMaxValueofArray(this.state.healthDataperWeek["Steps"])
-    console.log(maxValue);
-    // this.setState({ healthDataperWeek: healthDataperWeek });
+    console.log(this.state.healthDataperWeek);
   };
   render() {
     const { classes } = this.props;
@@ -199,9 +145,7 @@ class GoogleFit extends React.Component {
     return (
       <div>
         <GridContainer>
-          <Button onClick={this.fetchData}>Load Data</Button>
-          <Button onClick={this.testFunc}>TestFunc</Button>
-          <Button onClick={this.testFunc2}>Is Loaded?</Button>
+          <Button onClick={this.testFunc}>Is Loaded?</Button>
           <GridItem xs={12} sm={6} md={3}>
             <Card>
               <CardHeader color="warning" stats icon>
@@ -329,19 +273,25 @@ class GoogleFit extends React.Component {
               <CardHeader color="danger">
                 <ChartistGraph
                   className="ct-chart"
-                  data={this.getCompleteTask().data}
+                  data={getChart(this.state.healthDataperWeek["Heart"]).data}
                   type="Line"
-                  options={this.getCompleteTask().options}
-                  listener={this.getCompleteTask().animation}
+                  options={
+                    getChart(this.state.healthDataperWeek["Heart"]).options
+                  }
+                  listener={
+                    getChart(this.state.healthDataperWeek["Heart"]).animation
+                  }
                 />
               </CardHeader>
               <CardBody>
-                <h4 className={classes.cardTitle}>Blutdruck</h4>
-                <p className={classes.cardCategory}>Hypotonie Gefahr</p>
+                <h4 className={classes.cardTitle}>Herz Aktivität</h4>
+                <p className={classes.cardCategory}>
+                  Abhängig von der Bewegung
+                </p>
               </CardBody>
               <CardFooter chart>
                 <div className={classes.stats}>
-                  <AccessTime /> Kampagne vor 2 Tagen gestartet
+                  <AccessTime /> Verlauf innerhalb 1 Woche
                 </div>
               </CardFooter>
             </Card>
