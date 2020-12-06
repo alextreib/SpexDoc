@@ -138,76 +138,35 @@ export default function Dashboard() {
             </CardFooter>
           </Card>
         </GridItem>
-      </GridContainer>
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="success">
-              <ChartistGraph
-                className="ct-chart"
-                data={dailySalesChart.data}
-                type="Line"
-                options={dailySalesChart.options}
-                listener={dailySalesChart.animation}
-              />
+        <GridItem xs={12} sm={6} md={3}>
+          <Card>
+            <CardHeader color="info" stats icon>
+              <CardIcon color="info">
+                <Accessibility />
+              </CardIcon>
+              <p className={classes.cardCategory}>Impfungen</p>
+              <h3 className={classes.cardTitle}>15 aktiv</h3>
             </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Tägliche Bewegung</h4>
-              <p className={classes.cardCategory}>
-                <span className={classes.successText}>
-                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
-                </span>{" "}
-                Steigerung in dieser Woche.
-              </p>
-            </CardBody>
-            <CardFooter chart>
+            <CardFooter stats>
               <div className={classes.stats}>
-                <AccessTime /> vor 4 Minuten aktualisiert
+                <Update />
+                Insgesamt
               </div>
             </CardFooter>
           </Card>
         </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="warning">
-              <ChartistGraph
-                className="ct-chart"
-                data={emailsSubscriptionChart.data}
-                type="Bar"
-                options={emailsSubscriptionChart.options}
-                responsiveOptions={emailsSubscriptionChart.responsiveOptions}
-                listener={emailsSubscriptionChart.animation}
-              />
+        <GridItem xs={12} sm={6} md={3}>
+          <Card>
+            <CardHeader color="info" stats icon>
+              <CardIcon color="info">
+                <Accessibility />
+              </CardIcon>
+              <p className={classes.cardCategory}>Nutzng Smart Doc</p>
+              <h3 className={classes.cardTitle}>3</h3>
             </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Cholesterin Werte</h4>
-              <p className={classes.cardCategory}>Erbliche Veranlagung</p>
-            </CardBody>
-            <CardFooter chart>
+            <CardFooter stats>
               <div className={classes.stats}>
-                <AccessTime /> Kampagne vor 1,5 Jahren gestartet
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="danger">
-              <ChartistGraph
-                className="ct-chart"
-                data={completedTasksChart.data}
-                type="Line"
-                options={completedTasksChart.options}
-                listener={completedTasksChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Blutdruck</h4>
-              <p className={classes.cardCategory}>Hypotonie Gefahr</p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> Kampagne vor 2 Tagen gestartet
+                <Update />
               </div>
             </CardFooter>
           </Card>
@@ -216,11 +175,11 @@ export default function Dashboard() {
       <GridContainer>
         <GridItem xs={12} sm={12} md={6}>
           <CustomTabs
-            title="Tasks:"
+            title="Notizen:"
             headerColor="primary"
             tabs={[
               {
-                tabName: "Bugs",
+                tabName: "Todos",
                 tabIcon: BugReport,
                 tabContent: (
                   <Tasks
@@ -231,24 +190,13 @@ export default function Dashboard() {
                 ),
               },
               {
-                tabName: "Website",
+                tabName: "Arzt",
                 tabIcon: Code,
                 tabContent: (
                   <Tasks
                     checkedIndexes={[0]}
                     tasksIndexes={[0, 1]}
                     tasks={website}
-                  />
-                ),
-              },
-              {
-                tabName: "Server",
-                tabIcon: Cloud,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[1]}
-                    tasksIndexes={[0, 1, 2]}
-                    tasks={server}
                   />
                 ),
               },

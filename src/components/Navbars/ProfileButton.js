@@ -39,8 +39,8 @@ import { grey, red } from "@material-ui/core/colors";
 const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundColor: red[500],
-    height: 35,
-    width: 35,
+    height: 30,
+    width: 30,
   },
 }));
 
