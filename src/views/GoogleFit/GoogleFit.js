@@ -40,6 +40,10 @@ import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
+import {
+  getDataPerWeek,
+  loadHealthData,getAllHealthDataPerWeek
+} from "components/Internal/GoogleFitFunc.js";
 var Chartist = require("chartist");
 
 var delays = 80,
@@ -49,51 +53,6 @@ var delays2 = 80,
 
 const useStyles = makeStyles(styles);
 
-// we need to return [{Today}, {Yesterday} .... {7 days back}]
-// Each object has : {"Calories" : value, "Heart": value ... , "Date": }
-const baseObj = {
-  Calories: 0,
-  Heart: 0,
-  Move: 0,
-  Steps: 0,
-  Sleep: 0,
-  Weight: 0,
-  Blood_Pressure: 0,
-};
-
-// Blood pressure
-const dataValues = [
-  {
-    title: "Calories",
-    type: "com.google.calories.expended",
-  },
-  {
-    title: "Heart",
-    type: "com.google.heart_minutes",
-  },
-  {
-    title: "Move",
-    type: "com.google.active_minutes",
-  },
-  {
-    title: "Steps",
-    type: "com.google.step_count.delta",
-  },
-  {
-    // Not working - why?
-    title: "Sleep",
-    type: "com.google.sleep.segment",
-  },
-  {
-    title: "Weight",
-    type: "com.google.weight",
-  },
-  {
-    title: "Blood_Pressure",
-    type: "com.google.blood_pressure",
-  },
-];
-
 class GoogleFit extends React.Component {
   constructor(props) {
     super(props);
@@ -101,35 +60,27 @@ class GoogleFit extends React.Component {
     this.state = {
       healthData: [],
       testArray: [],
+      healthDataperWeek:{["Steps"]:[1,1000,2000],["Calories"]:[1,1000,2000],["Heart"]:[1,1000,2000]}
       // Default data
     };
   }
 
-  getDataPerWeek = (type, healthData) => {
-    console.log(healthData);
-    console.log(type);
-    console.log(healthData[type]);
-    var HealthTypeArray = [];
-    // Returns array in the form [TypeDay1,TypeDay2,TypeDay3]
-    healthData.forEach((element) => {
-      HealthTypeArray.push(element[type]);
-    });
-    console.log(HealthTypeArray);
-    return HealthTypeArray;
-  };
+  getMaxValueofArray= (array)=>{
+    return 1.2*Math.max.apply(null, array);
+ }
 
   getCompleteTask = () => {
     const completedTasksChart = {
       data: {
         labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
-        series: [this.state.testArray],
+        series: [this.state.healthDataperWeek["Heart"]],
       },
       options: {
         lineSmooth: Chartist.Interpolation.cardinal({
           tension: 0,
         }),
         low: 0,
-        high: 10000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+        high: this.getMaxValueofArray(this.state.healthDataperWeek["Heart"]), // creative tim: we recommend you to set the high sa the biggest value + something for a better look
         chartPadding: {
           top: 0,
           right: 0,
@@ -173,15 +124,13 @@ class GoogleFit extends React.Component {
 
   // Will trigger update from e.g. Emergency->linkAccess that will be triggered after componentdidmount
   componentDidUpdate(prevProps) {
+    console.log("update");
     if (prevProps == this.props) {
       // No change from above (currently nothing else is needed)
       return;
     } else {
-      // this.fetchTable();
+      // this.fetchData();
     }
-
-    // Why do I need this?
-    // this.setState({ showFileParams: this.props.showFileParams });
   }
 
   componentDidMount() {
@@ -204,118 +153,45 @@ class GoogleFit extends React.Component {
     return await writeDBData(this.state.name, this.state.checked);
   };
 
-  // Provide request headers to be attached with each function call
-  getRequestHeaders = (accessToken) => {
-    const requestHeaderBody = {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        Accept: "application/json",
-      },
-    };
-    return requestHeaderBody;
+  fetchData = () => {
+    // Load Google Fit data
+    this.loadGoogleData();
+
+    // Load User Firebase data (maybe)
   };
 
-  getAggregatedDataBody = (dataType, endTime) => {
-    console.log(endTime);
-    const requestBody = {
-      aggregateBy: [
-        {
-          dataTypeName: dataType,
-        },
-      ],
-      bucketByTime: {
-        durationMillis: 86400000,
-      },
-      endTimeMillis: endTime,
-      startTimeMillis: endTime - 7 * 86400000,
-    };
-    return requestBody;
-  };
+  loadGoogleData = async () => {
+    if (this.props.access_token) {
+      // get access_token
+      var access_token = this.props.access_token;
 
-  getDataFunc = async (access_token) => {
-    var endTime = new Date().getTime();
-
-    let state = [];
-    let promises = [];
-    for (var i = 6; i >= 0; i--) {
-      var currTime = new Date(endTime - i * 86400000);
-      state.push({
-        ...baseObj,
-        Date: currTime,
+      // read data through api
+      console.log(access_token);
+      loadHealthData(access_token).then((healthData) => {
+        this.setState({ healthData: healthData });
       });
     }
-    dataValues.forEach((element) => {
-      let body = this.getAggregatedDataBody(element.type, endTime);
-      promises.push(
-        axios
-          .post(
-            "https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate",
-            body,
-            this.getRequestHeaders(access_token)
-          )
-          .then((resp) => {
-            // now, each data bucket represents exactly one day
-            for (let idx = 0; idx < 7; idx++) {
-              resp.data.bucket[idx].dataset[0].point.forEach((point) => {
-                point.value.forEach((val) => {
-                  let extract = val["intVal"] || Math.ceil(val["fpVal"]) || 0;
-                  state[idx][element.title] += extract;
-                });
-              });
-            }
-          })
-      );
-    });
-    // promises to call callback
-    console.log(state);
-    this.setState({ healthData: state });
-    return state;
-  };
-
-  getStepsCount = () => {
-    // get access_token
-    var access_token = this.props.access_token;
-
-    // read data through api
-    this.getDataFunc(access_token);
-  };
-
-  handleChange = (event) => {
-    console.log(this.state);
-    this.setState({ checked: event.target.checked }, () => {
-      this.uploadTable();
-    });
-  };
-
-  fetchData = () => {
-    // UserProfile
-    console.log(navigator);
-    console.log(navigator.share);
-    if (navigator.share) {
-      navigator
-        .share({
-          title: "Title ",
-          text: `Check out this`,
-          url: document.location.href,
-        })
-        .then(() => {
-          console.log("Successfully shared");
-        })
-        .catch((error) => {
-          console.error("Something went wrong sharing the blog", error);
-        });
-    }
-  };
-  askUserPermission = async () => {
-    // console.log(this.props);
-    // return await Notification.requestPermission();
-    this.getStepsCount();
   };
 
   testFunc = () => {
-    var steps = this.getDataPerWeek("Steps", this.state.healthData);
+    var healthDataperWeek=getAllHealthDataPerWeek(this.state.healthData);
+    console.log(healthDataperWeek);
+    console.log(healthDataperWeek["Steps"]);
+    var steps = getDataPerWeek("Steps", this.state.healthData);
     console.log(steps);
-    this.setState({ testArray: steps });
+    this.setState({ healthDataperWeek: healthDataperWeek });
+  };
+
+  
+  testFunc2 = () => {
+    // var healthDataperWeek=getAllHealthDataPerWeek(this.state.healthData);
+    // console.log(healthDataperWeek);
+    // console.log(healthDataperWeek["Steps"]);
+    // var steps = getDataPerWeek("Steps", this.state.healthData);
+    console.log(this.state.healthDataperWeek["Steps"]);
+    var maxValue=this.getMaxValueofArray(this.state.healthDataperWeek["Steps"])
+    console.log(maxValue);
+    // this.setState({ healthDataperWeek: healthDataperWeek });
   };
   render() {
     const { classes } = this.props;
@@ -323,8 +199,9 @@ class GoogleFit extends React.Component {
     return (
       <div>
         <GridContainer>
-          <Button onClick={this.askUserPermission}>Load Data</Button>
+          <Button onClick={this.fetchData}>Load Data</Button>
           <Button onClick={this.testFunc}>TestFunc</Button>
+          <Button onClick={this.testFunc2}>Is Loaded?</Button>
           <GridItem xs={12} sm={6} md={3}>
             <Card>
               <CardHeader color="warning" stats icon>
