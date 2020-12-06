@@ -86,6 +86,8 @@ export const getDataPerWeek = (type, healthData) => {
   });
 };
 
+//todo: some xhr errors/post error occurs, don't know why
+// access_token maybe not available yet -> but even with timeout of 3 seconds, still errors
 export const loadHealthData = async (access_token) => {
   return new Promise((resolve, reject) => {
 

@@ -49,11 +49,6 @@ import {
 import { getChart } from "components/Internal/GoogleFitCharts.js";
 var Chartist = require("chartist");
 
-var delays = 80,
-  durations = 500;
-var delays2 = 80,
-  durations2 = 500;
-
 const useStyles = makeStyles(styles);
 
 class GoogleFit extends React.Component {
@@ -65,9 +60,9 @@ class GoogleFit extends React.Component {
       testArray: [],
       // Default data
       healthDataperWeek: {
-        ["Steps"]: [1, 1000, 2000],
-        ["Calories"]: [1, 1000, 2000],
-        ["Heart"]: [1, 1000, 2000],
+        ["Steps"]: [10, 10, 10, 10, 10, 10, 10],
+        ["Calories"]: [10, 10, 10, 10, 10, 10, 10],
+        ["Heart"]: [10, 10, 10, 10, 10, 10, 10],
       },
       // Default data
     };
@@ -85,7 +80,9 @@ class GoogleFit extends React.Component {
   }
 
   componentDidMount() {
-    // this.fetchTable();
+    if (checkUser()) {
+      this.fetchData();
+    }
   }
 
   // Fetch the table from Firebase (Original data)
@@ -119,247 +116,118 @@ class GoogleFit extends React.Component {
     if (this.props.access_token) {
       // get access_token
       var access_token = this.props.access_token;
-      await this.timeout(1000); // todo: remove hotfix
+      // await this.timeout(3000); // todo: remove hotfix
 
       // read data through api
       loadHealthData(access_token).then(async (healthData_array) => {
-        await this.setState({ healthDataArray: healthData_array }, async () => {
-          await this.timeout(1000); // todo: remove hotfix
+        console.log(healthData_array);
+        // await this.setState({ healthDataArray: healthData_array });
+        await this.timeout(750); // todo: remove hotfix
 
-          var healthDataperWeek = await getAllHealthDataPerWeek(
-            this.state.healthDataArray
-          ).then(async (healthDataperWeek_value) => {
-            this.setState({ healthDataperWeek: healthDataperWeek_value });
-          });
-        });
+        var HealthDataPerWeek = await getAllHealthDataPerWeek(healthData_array);
+        await this.setState({ healthDataArray: healthData_array });
+        await this.setState({ healthDataperWeek: HealthDataPerWeek });
       });
     }
   };
 
   testFunc = () => {
-    console.log(this.state.healthDataperWeek);
+    this.loadGoogleData();
   };
   render() {
     const { classes } = this.props;
 
     return (
-      <div>
-        <GridContainer>
-          <Button onClick={this.testFunc}>Is Loaded?</Button>
-          <GridItem xs={12} sm={6} md={3}>
-            <Card>
-              <CardHeader color="warning" stats icon>
-                <CardIcon color="warning">
-                  <Icon>content_copy</Icon>
-                </CardIcon>
-                <p className={classes.cardCategory}>Befunde</p>
-                <h3 className={classes.cardTitle}>50</h3>
-              </CardHeader>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  <Assignment>
-                    <Warning />
-                  </Assignment>
-                  Archiviert
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={6} md={3}>
-            <Card>
-              <CardHeader color="success" stats icon>
-                <CardIcon color="success">
-                  <Store />
-                </CardIcon>
-                <p className={classes.cardCategory}>Krankenkassenkosten</p>
-                <h3 className={classes.cardTitle}>Undefiniert</h3>
-              </CardHeader>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  <DateRange />
-                  Letzte 12 Monate
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={6} md={3}>
-            <Card>
-              <CardHeader color="danger" stats icon>
-                <CardIcon color="danger">
-                  <Icon>info_outline</Icon>
-                </CardIcon>
-                <p className={classes.cardCategory}>Notfalldaten</p>
-                <h3 className={classes.cardTitle}>10</h3>
-              </CardHeader>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  <LocalOffer />
-                  Nur für Notärzte verfügbar
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={6} md={3}>
-            <Card>
-              <CardHeader color="info" stats icon>
-                <CardIcon color="info">
-                  <Accessibility />
-                </CardIcon>
-                <p className={classes.cardCategory}>Freigaben</p>
-                <h3 className={classes.cardTitle}>15 aktiv</h3>
-              </CardHeader>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  <Update />
-                  In the letzten 6 Monaten
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-        </GridContainer>
-        <GridContainer>
-          <GridItem xs={12} sm={12} md={4}>
-            <Card chart>
-              <CardHeader color="success">
-                <ChartistGraph
-                  className="ct-chart"
-                  data={dailySalesChart.data}
-                  type="Line"
-                  options={dailySalesChart.options}
-                  listener={dailySalesChart.animation}
-                />
-              </CardHeader>
-              <CardBody>
-                <h4 className={classes.cardTitle}>Tägliche Bewegung</h4>
-                <p className={classes.cardCategory}>
-                  <span className={classes.successText}>
-                    <ArrowUpward className={classes.upArrowCardCategory} /> 55%
-                  </span>{" "}
-                  Steigerung in dieser Woche.
-                </p>
-              </CardBody>
-              <CardFooter chart>
-                <div className={classes.stats}>
-                  <AccessTime /> vor 4 Minuten aktualisiert
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={12} md={4}>
-            <Card chart>
-              <CardHeader color="warning">
-                <ChartistGraph
-                  className="ct-chart"
-                  data={emailsSubscriptionChart.data}
-                  type="Bar"
-                  options={emailsSubscriptionChart.options}
-                  responsiveOptions={emailsSubscriptionChart.responsiveOptions}
-                  listener={emailsSubscriptionChart.animation}
-                />
-              </CardHeader>
-              <CardBody>
-                <h4 className={classes.cardTitle}>Cholesterin Werte</h4>
-                <p className={classes.cardCategory}>Erbliche Veranlagung</p>
-              </CardBody>
-              <CardFooter chart>
-                <div className={classes.stats}>
-                  <AccessTime /> Kampagne vor 1,5 Jahren gestartet
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={12} md={4}>
-            <Card chart>
-              <CardHeader color="danger">
-                <ChartistGraph
-                  className="ct-chart"
-                  data={getChart(this.state.healthDataperWeek["Heart"]).data}
-                  type="Line"
-                  options={
-                    getChart(this.state.healthDataperWeek["Heart"]).options
-                  }
-                  listener={
-                    getChart(this.state.healthDataperWeek["Heart"]).animation
-                  }
-                />
-              </CardHeader>
-              <CardBody>
-                <h4 className={classes.cardTitle}>Herz Aktivität</h4>
-                <p className={classes.cardCategory}>
-                  Abhängig von der Bewegung
-                </p>
-              </CardBody>
-              <CardFooter chart>
-                <div className={classes.stats}>
-                  <AccessTime /> Verlauf innerhalb 1 Woche
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-        </GridContainer>
-        <GridContainer>
-          <GridItem xs={12} sm={12} md={6}>
-            <CustomTabs
-              title="Tasks:"
-              headerColor="primary"
-              tabs={[
-                {
-                  tabName: "Bugs",
-                  tabIcon: BugReport,
-                  tabContent: (
-                    <Tasks
-                      checkedIndexes={[0, 3]}
-                      tasksIndexes={[0, 1, 2, 3]}
-                      tasks={bugs}
-                    />
-                  ),
-                },
-                {
-                  tabName: "Website",
-                  tabIcon: Code,
-                  tabContent: (
-                    <Tasks
-                      checkedIndexes={[0]}
-                      tasksIndexes={[0, 1]}
-                      tasks={website}
-                    />
-                  ),
-                },
-                {
-                  tabName: "Server",
-                  tabIcon: Cloud,
-                  tabContent: (
-                    <Tasks
-                      checkedIndexes={[1]}
-                      tasksIndexes={[0, 1, 2]}
-                      tasks={server}
-                    />
-                  ),
-                },
-              ]}
-            />
-          </GridItem>
-          <GridItem xs={12} sm={12} md={6}>
-            <Card>
-              <CardHeader color="info">
-                {/* 5 letzte Benachrichtigungen hinschreiben, auch wenn gelesen? */}
-                <h4 className={classes.cardTitleWhite}>Neuste Aktivitäten</h4>
-                <p className={classes.cardCategoryWhite}></p>
-              </CardHeader>
-              <CardBody>
-                <Table
-                  tableHeaderColor="info"
-                  tableHead={["Verantwortlich", "Benachrichtigung"]}
-                  tableData={[
-                    ["Patient", "Online Visite vereinbaren"],
-                    ["Arzt Dr. Schieber", "Medikation prüfen"],
-                  ]}
-                />
-              </CardBody>
-            </Card>
-          </GridItem>
-        </GridContainer>
-      </div>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={4}>
+          <Card chart>
+            <CardHeader color="success">
+              <ChartistGraph
+                className="ct-chart"
+                data={getChart(this.state.healthDataperWeek["Calories"]).data}
+                type="Line"
+                options={
+                  getChart(this.state.healthDataperWeek["Calories"]).options
+                }
+                listener={
+                  getChart(this.state.healthDataperWeek["Calories"]).animation
+                }
+              />
+            </CardHeader>
+            <CardBody>
+              <h4 className={classes.cardTitle}>Verbrannte Kalorien</h4>
+              <p className={classes.cardCategory}>
+                <span className={classes.successText}>
+                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
+                </span>{" "}
+                Steigerung in dieser Woche.
+              </p>
+            </CardBody>
+            <CardFooter chart>
+              <div className={classes.stats}>
+                <AccessTime /> Verlauf innerhalb 1 Woche
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={4}>
+          <Card chart>
+            <CardHeader color="warning">
+              <ChartistGraph
+                className="ct-chart"
+                data={getChart(this.state.healthDataperWeek["Steps"]).data}
+                type="Line"
+                options={
+                  getChart(this.state.healthDataperWeek["Steps"]).options
+                }
+                listener={
+                  getChart(this.state.healthDataperWeek["Steps"]).animation
+                }
+              />
+            </CardHeader>
+            <CardBody>
+              <h4 className={classes.cardTitle}>Schritte</h4>
+              <p className={classes.cardCategory}>
+                <span className={classes.successText}>
+                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
+                </span>{" "}
+                Mehr als andere Teilnehmer in deinem Alter.
+              </p>
+            </CardBody>
+            <CardFooter chart>
+              <div className={classes.stats}>
+                <AccessTime /> Verlauf innerhalb 1 Woche
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={4}>
+          <Card chart>
+            <CardHeader color="danger">
+              <ChartistGraph
+                className="ct-chart"
+                data={getChart(this.state.healthDataperWeek["Heart"]).data}
+                type="Line"
+                options={
+                  getChart(this.state.healthDataperWeek["Heart"]).options
+                }
+                listener={
+                  getChart(this.state.healthDataperWeek["Heart"]).animation
+                }
+              />
+            </CardHeader>
+            <CardBody>
+              <h4 className={classes.cardTitle}>Herz Aktivität</h4>
+              <p className={classes.cardCategory}>Abhängig von der Bewegung</p>
+            </CardBody>
+            <CardFooter chart>
+              <div className={classes.stats}>
+                <AccessTime /> Verlauf innerhalb 1 Woche
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+      </GridContainer>
     );
   }
 }

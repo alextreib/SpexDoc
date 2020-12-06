@@ -17,7 +17,8 @@ const getMaxValueofArray= (array)=>{
 export const getChart = (pointList) => {
   const completedTasksChart = {
     data: {
-      labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
+      // Transform to Mo, Di, Mi
+      labels: [0,1,2,3,4,5,6],
       series: [pointList],
     },
     options: {
