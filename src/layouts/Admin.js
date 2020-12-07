@@ -21,7 +21,7 @@ import bgImage from "assets/img/doctor_stock_1.jpg";
 import Hidden from "@material-ui/core/Hidden";
 
 import logo from "assets/img/SpexDoc_logo_png.png";
-import BottomAppBarMobile from "components/Navbars/BottomAppBarMobile";
+import BottomAppBarMobile from "components/Navbars/BottomAppBarMobile.js";
 
 let ps;
 

@@ -8,7 +8,7 @@ import {
   removeAccessToken,
 } from "components/Internal/Redux.js";
 import {
-loginUser,
+  loginUser,
   loginUserWithFit,
   logoutUser,
 } from "components/Internal/LoginFunctions.js";
@@ -39,6 +39,10 @@ import { grey, red } from "@material-ui/core/colors";
 const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundColor: red[500],
+    height: 30,
+    width: 30,
+  },
+  buttonLink: {
     height: 30,
     width: 30,
   },
@@ -197,12 +201,12 @@ function ProfileButton() {
       <Hidden mdUp implementation="css">
         {/* Mobile Version */}
         <IconButton
-          edge="end"
           aria-label="account of current user"
           aria-controls={menuId}
           aria-haspopup="true"
           onClick={handleProfileMenuOpen}
           color="inherit"
+          className={classes.buttonLink}
         >
           {userProfile != null ? (
             <Avatar aria-label="recipe" className={classes.avatar}>

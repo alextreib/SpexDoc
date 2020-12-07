@@ -8,19 +8,20 @@ import { Link } from "react-router-dom";
 import NotificationData from "components/NotificationData/NotificationData.js";
 import NotificationIcon from "@material-ui/icons/Notifications";
 import ProfileButton from "components/Navbars/ProfileButton.js";
+import BottomNavigation from "@material-ui/core/BottomNavigation";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+
 import React from "react";
 import Toolbar from "@material-ui/core/Toolbar";
+import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
+import RestoreIcon from "@material-ui/icons/Restore";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { useState, useEffect } from "react";
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    "& > * + *": {
-      marginLeft: theme.spacing(5),
-    },
-  },
+  root: {},
   text: {
     padding: theme.spacing(2, 2, 0),
   },
@@ -59,15 +60,12 @@ const useStyles = makeStyles((theme) => ({
   },
   Home: {
     color: "inherit",
-    marginLeft: theme.spacing(2),
   },
   LinkNotification: {
     color: "inherit",
-    marginRight: theme.spacing(2),
   },
   Profile: {
     color: "inherit",
-    marginRight: theme.spacing(5),
   },
 }));
 
@@ -75,8 +73,7 @@ export default function BottomAppBarMobile() {
   const classes = useStyles();
 
   const [notificationList, setnotificationList] = React.useState([]);
-
-  const [openNotification, setOpenNotification] = React.useState(null);
+  const [value, setValue] = React.useState(0);
 
   useEffect(() => {
     fetchTable();
@@ -93,42 +90,47 @@ export default function BottomAppBarMobile() {
     });
   };
 
-  // When child (NotificationData) triggers change -> this function is called
-  const notificationDataChange = (newList) => {
-    setnotificationList(newList);
-  };
-
-  //todo: What about the notification on bottom bar? Displaying Popper or only redirect?
-  const handleClickNotification = () => {
-    if (openNotification) {
-      setOpenNotification(null);
-    } else {
-      console.log("else");
-      // setOpenNotification(event.currentTarget);
-    }
-  };
-
-  const handleCloseNotification = () => {
-    setOpenNotification(null);
-  };
-
   return (
     <React.Fragment>
       <CssBaseline />
-      <NotificationData onNotificationDataChange={notificationDataChange} />
       <AppBar position="fixed" className={classes.appBar}>
-        <Toolbar>
-          <Link className={classes.Home} to="/dashboard">
-            <HomeIcon />
-          </Link>
-          <div className={classes.grow} />
-          <Link className={classes.LinkNotification} to="/notifications">
-            <Badge badgeContent={notificationList.length} color="secondary">
-              <NotificationIcon />
-            </Badge>
-          </Link>
-          <ProfileButton className={classes.Profile} />
-        </Toolbar>
+        <BottomNavigation
+          value={value}
+          onChange={(event, newValue) => {
+            setValue(newValue);
+          }}
+          showLabels
+          className={classes.root}
+        >
+          <BottomNavigationAction
+            label="Notification"
+            icon={
+              <Link className={classes.Home} to="/dashboard">
+                <HomeIcon />
+              </Link>
+            }
+          />
+
+          <BottomNavigationAction
+            label="Recents"
+            icon={
+              <Link className={classes.LinkNotification} to="/notifications">
+                <Badge badgeContent={notificationList.length} color="secondary">
+                  <NotificationIcon />
+                </Badge>
+              </Link>
+            }
+          />
+
+          <BottomNavigationAction
+            label="Profile"
+            icon={
+              <Link className={classes.Profile} to="/user">
+                <ProfileButton />
+              </Link>
+            }
+          />
+        </BottomNavigation>
       </AppBar>
     </React.Fragment>
   );
