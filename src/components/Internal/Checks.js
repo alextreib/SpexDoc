@@ -1,4 +1,5 @@
 import { firebase, firestore, auth } from "components/Internal/Firebase.js";
+import { defaultURL} from "components/Internal/DefaultData.js";
 
 const BitlyClient = require("bitly").BitlyClient;
 //todo: Hide key

@@ -51,7 +51,7 @@ class QRCodeCard extends React.Component {
     this.setState({ link: this.props.link });
   }
 
-  shareLink(){
+  shareLink=()=>{
     return shareLink("Hallo, schau dir das doch mal an: \n", this.state.link);
   }
 
@@ -83,10 +83,10 @@ class QRCodeCard extends React.Component {
             alignItems: "center",
           }}
         >
-          <a href={this.state.link}>{this.state.link}</a>
+          <a href="#" onClick={this.shareLink}>{this.state.link}</a>
           {/* Oder einfach nur auf den Link klicken */}
-          <IconButton style={{ marginLeft: "auto" }} aria-label="share">
-            <ShareIcon onClick={this.shareLink()} />
+          <IconButton onClick={this.shareLink}  style={{ marginLeft: "auto" }} aria-label="share">
+            <ShareIcon />
           </IconButton>
         </div>
       </div>

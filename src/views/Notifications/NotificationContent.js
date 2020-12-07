@@ -1,6 +1,8 @@
 import { grey, red } from "@material-ui/core/colors";
 // @material-ui/core components
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
+import { shareLink } from "components/Internal/Sharing.js";
+import { defaultURL} from "components/Internal/DefaultData.js";
 
 import Avatar from "@material-ui/core/Avatar";
 // @material-ui/icons
@@ -173,6 +175,18 @@ class Notifications extends React.Component {
     );
   };
 
+  handleShareClick = (notification) => {
+    var message="Hallo, ich habe die folgende Nachricht erhalten: \n";
+    message+=notification.title + "\n";
+    message+=notification.message + "\n";
+    message+=notification.sender+ ", " + notification.date;
+    console.log(message);
+    return shareLink(message, defaultURL);
+
+  };
+
+  
+
   handleCloseClick = (notification) => {
     this.removeNotification(notification);
   };
@@ -215,7 +229,9 @@ class Notifications extends React.Component {
                   </Typography>
                 </CardContent>
                 <CardActions disableSpacing>
-                  <IconButton aria-label="share">
+                  <IconButton 
+                  onClick={() => this.handleShareClick(notification)} 
+                  aria-label="share">
                     <ShareIcon />
                   </IconButton>
                   <IconButton

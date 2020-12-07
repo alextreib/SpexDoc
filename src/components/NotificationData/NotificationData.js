@@ -21,9 +21,7 @@ class NotificationData extends React.Component {
     // this.setOpenProfile(null);
   };
 
-
-
-  appendList(item) {
+  appendList=(item) => {
     this.setState({ notificationList: [...this.state.notificationList, item] });
   }
 

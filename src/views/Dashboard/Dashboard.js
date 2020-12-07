@@ -32,6 +32,8 @@ import TestComp from "components/VisuComps/TestComp.js";
 import Table from "components/Table/Table.js";
 import Tasks from "components/Tasks/Tasks.js";
 import Update from "@material-ui/icons/Update";
+import SmartDocIcon from "@material-ui/icons/TabletMac";
+
 import Warning from "@material-ui/icons/Warning";
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
@@ -67,7 +69,6 @@ export default function Dashboard() {
   return (
     <div>
       <GridContainer>
-        <Button onClick={askUserPermission}>TestButton</Button>
         <GridItem xs={12} sm={6} md={3}>
           <Card>
             <CardHeader color="warning" stats icon>
@@ -143,6 +144,7 @@ export default function Dashboard() {
             <CardHeader color="info" stats icon>
               <CardIcon color="info">
                 <Accessibility />
+                {/* Syringe Icon */}
               </CardIcon>
               <p className={classes.cardCategory}>Impfungen</p>
               <h3 className={classes.cardTitle}>15 aktiv</h3>
@@ -157,16 +159,19 @@ export default function Dashboard() {
         </GridItem>
         <GridItem xs={12} sm={6} md={3}>
           <Card>
-            <CardHeader color="info" stats icon>
-              <CardIcon color="info">
-                <Accessibility />
+            <CardHeader color="warning" stats icon>
+              <CardIcon color="warning">
+                <SmartDocIcon />
               </CardIcon>
-              <p className={classes.cardCategory}>Nutzng Smart Doc</p>
+              <p className={classes.cardCategory}>Nutzung Smart Doc</p>
               <h3 className={classes.cardTitle}>3</h3>
             </CardHeader>
             <CardFooter stats>
-              <div className={classes.stats}>
-                <Update />
+            <div className={classes.stats}>
+                <Assignment>
+                  <Warning />
+                </Assignment>
+                Analysiert
               </div>
             </CardFooter>
           </Card>
