@@ -2,6 +2,8 @@ import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 import { checkUser, getUserEmail } from "components/Internal/Checks.js";
 import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
 import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
+import VisuComp from "components/Internal/VisuComp.js";
+import { CommonCompsData } from "components/Internal/DefaultData.js";
 
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
@@ -50,7 +52,7 @@ const styles = (theme) => ({
   },
 });
 
-class UserProfile extends React.Component {
+class UserProfile extends VisuComp {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,12 +61,7 @@ class UserProfile extends React.Component {
         AGB: false,
         DSGVO: false,
       },
-      commonProps: {
-        LoginAlertProps: {
-          openLoginRequired: false,
-          FuncParams: "test",
-        },
-      },
+      commonProps: { ...CommonCompsData, updateComp: this.updateComp },
       userProfile: {
         email: "",
         firstName: "",
@@ -92,12 +89,17 @@ class UserProfile extends React.Component {
   }
 
   componentDidMount() {
+    this.updateComp();
+  }
+
+  // Required from CommonProps
+  updateComp = () => {
     this.fetchTable();
-    this.setState({ loginState: checkUser() });
+    // this.setState({ loginState: checkUser() });
     this.setState({
       userProfile: { ...this.state.userProfile, email: getUserEmail() },
     });
-  }
+  };
 
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
@@ -113,13 +115,15 @@ class UserProfile extends React.Component {
 
   // Is called when table is changed
   uploadProfile = () => {
-    var user_id = getUserID();
-    if (user_id == null) {
-      this.displayLogin();
-      return false;
-    }
-    var success = writeDBData("UserProfile", this.state.userProfile);
-    if (success == false) this.displayLogin();
+    console.log("upload");
+    this.displayLogin();
+    // var user_id = getUserID();
+    // if (user_id == null) {
+    //   this.displayLogin();
+    //   return false;
+    // }
+    // var success = writeDBData("UserProfile", this.state.userProfile);
+    // if (success == false) this.displayLogin();
   };
 
   // Nice function: Sets states automatically
@@ -133,17 +137,6 @@ class UserProfile extends React.Component {
         this.uploadProfile();
       }
     );
-  };
-
-  // todo: Find a way to cluster/extract it to a common place
-  displayLogin = () => {
-    console.log("displaylogin");
-    // This is how a function in CommonProps is called
-    this.setState({
-      commonProps: {
-        LoginAlertProps: { openLoginRequired: true, FuncParams: "test" },
-      },
-    });
   };
 
   handleLoginProfile = () => {
@@ -203,11 +196,18 @@ class UserProfile extends React.Component {
     });
   };
 
+  testfunc = () => {
+    console.log("testfunc");
+    this.displayLogin();
+  };
+
   render() {
     const { classes } = this.props;
     return (
       <div>
         <CommonComps commonProps={this.state.commonProps} />
+
+        <Button onClick={this.testfunc}>Testbutton</Button>
 
         <GridContainer>
           <GridItem xs={12} sm={12} md={8}>
@@ -216,7 +216,7 @@ class UserProfile extends React.Component {
                 <h4 className={classes.cardTitleWhite}>Profil</h4>
                 <p className={classes.cardCategoryWhite}></p>
               </CardHeader>
-              {!this.state.loginState ? (
+              {!this.state.commonProps.loginState ? (
                 <CardBody>
                   <Typography variant="h4" component="h2">
                     <Switch
@@ -426,21 +426,4 @@ UserProfile.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-// Required for each component that relies on the loginState
-
-const mapStateToProps = (state) => ({
-  loginState: state.loginState,
-  access_token:state.access_token
-});
-
-const mapDispatchToProps = {
-  loginRedux,
-  logoutRedux,
-};
-
-const UserProfileWithRedux = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserProfile);
-
-export default withStyles(styles)(UserProfileWithRedux);
+export default withStyles(styles)(UserProfile);

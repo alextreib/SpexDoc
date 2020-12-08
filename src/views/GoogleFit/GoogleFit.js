@@ -29,7 +29,6 @@ import LocalOffer from "@material-ui/icons/LocalOffer";
 import React from "react";
 import Store from "@material-ui/icons/Store";
 import Success from "components/Typography/Success.js";
-import TestComp from "components/VisuComps/TestComp.js";
 import Table from "components/Table/Table.js";
 import Tasks from "components/Tasks/Tasks.js";
 import Update from "@material-ui/icons/Update";

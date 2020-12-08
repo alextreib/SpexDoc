@@ -2,8 +2,13 @@ import React from "react";
 
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
+import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
+import { connect } from "react-redux";
+import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
+
 
 import { openLoginAlert } from "components/Internal/VisuElements.js";
+import LoginAlert from "components/LoginAlert/LoginAlert";
 
 const styles = () => ({
   // This group of buttons will be aligned to the right
@@ -39,24 +44,27 @@ class CommonComps extends React.Component {
     };
   }
 
+  componentDidMount(){
+    console.log(this.props.commonProps)
+  }
+
   // Listens to own and assigned parent state
   componentDidUpdate(prevProps) {
-    if (prevProps != this.props) {
-      if (this.props.commonProps.LoginAlertProps.openLoginRequired == true) {
-        // Append element to list, just calling openLoginAlert from VisuElements
-        this.setState((prevState) => ({
-          additionalComp: [
-            ...prevState.additionalComp,
-            openLoginAlert(this.props.commonProps.LoginAlertProps.FuncParams),
-          ],
-        }));
-        this.props.commonProps.LoginAlertProps.openLoginRequired = false;
-      }
-    }
+    console.log("commonupdate")
+    console.log(this.props);
+
+    console.log(this.state);
+    this.props.commonProps.loginState=this.props.loginState;
+
+    this.props.commonProps.updateComp();
+
+
   }
 
   render() {
-    return <div>{this.state.additionalComp.map((addComp) => addComp)}</div>;
+    return <div>
+      <LoginAlert loginState={this.props.commonProps.LoginAlertProps}/>
+    </div>;
   }
 }
 
@@ -64,4 +72,22 @@ CommonComps.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(CommonComps);
+const mapStateToProps = (state) => ({
+  loginState: state.loginState,
+  access_token: state.access_token,
+});
+
+const mapDispatchToProps = {
+  loginRedux,
+  logoutRedux,
+};
+
+const CommonCompsWithRedux = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CommonComps);
+
+export default withStyles(styles)(CommonCompsWithRedux);
+
+
+

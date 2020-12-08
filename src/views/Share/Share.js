@@ -22,7 +22,6 @@ import ShareIcon from "@material-ui/icons/Share";
 import Snackbar from "components/Snackbar/Snackbar.js";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import Switch from "@material-ui/core/Switch";
-import TestComp from "components/VisuComps/TestComp.js";
 import { connect } from "react-redux";
 import { defaultCommonParams } from "components/Internal/Utils.js";
 import { getShortLink } from "components/Internal/Checks";
