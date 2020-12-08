@@ -83,7 +83,7 @@ class Navbar extends React.Component {
           <div className={classes.flex}>
             {/* Here we create navbar brand, based on route name */}
             <Button color="transparent" href="/" className={classes.title}>
-            <Typography color="primary">
+            <Typography variant="h5" color="primary">
               SpexDoc
               </Typography>
             </Button>

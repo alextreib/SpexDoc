@@ -61,6 +61,8 @@ export default function Dashboard() {
         });
     }
   };
+
+  
   const askUserPermission = async () => {
     return await Notification.requestPermission();
   };
@@ -177,57 +179,7 @@ export default function Dashboard() {
           </Card>
         </GridItem>
       </GridContainer>
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={6}>
-          <CustomTabs
-            title="Notizen:"
-            headerColor="primary"
-            tabs={[
-              {
-                tabName: "Todos",
-                tabIcon: BugReport,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[0, 3]}
-                    tasksIndexes={[0, 1, 2, 3]}
-                    tasks={bugs}
-                  />
-                ),
-              },
-              {
-                tabName: "Arzt",
-                tabIcon: Code,
-                tabContent: (
-                  <Tasks
-                    checkedIndexes={[0]}
-                    tasksIndexes={[0, 1]}
-                    tasks={website}
-                  />
-                ),
-              },
-            ]}
-          />
-        </GridItem>
-        <GridItem xs={12} sm={12} md={6}>
-          <Card>
-            <CardHeader color="info">
-              {/* 5 letzte Benachrichtigungen hinschreiben, auch wenn gelesen? */}
-              <h4 className={classes.cardTitleWhite}>Neuste Aktivitäten</h4>
-              <p className={classes.cardCategoryWhite}></p>
-            </CardHeader>
-            <CardBody>
-              <Table
-                tableHeaderColor="info"
-                tableHead={["Verantwortlich", "Benachrichtigung"]}
-                tableData={[
-                  ["Patient", "Online Visite vereinbaren"],
-                  ["Arzt Dr. Schieber", "Medikation prüfen"],
-                ]}
-              />
-            </CardBody>
-          </Card>
-        </GridItem>
-      </GridContainer>
+      
     </div>
   );
 }
