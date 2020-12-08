@@ -3,6 +3,7 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
+import { checkUser} from "components/Internal/Checks.js";
 import { connect } from "react-redux";
 import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
 
@@ -45,20 +46,15 @@ class CommonComps extends React.Component {
   }
 
   componentDidMount(){
-    console.log(this.props.commonProps)
+    this.props.commonProps.loginState=checkUser();
   }
 
   // Listens to own and assigned parent state
   componentDidUpdate(prevProps) {
-    console.log("commonupdate")
-    console.log(this.props);
+    this.props.commonProps.loginState=checkUser();
 
-    console.log(this.state);
-    this.props.commonProps.loginState=this.props.loginState;
-
+    // Call function in parent
     this.props.commonProps.updateComp();
-
-
   }
 
   render() {

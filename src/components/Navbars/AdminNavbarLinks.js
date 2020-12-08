@@ -16,6 +16,8 @@ import Badge from "@material-ui/core/Badge";
 import NotificationIcon from "@material-ui/icons/Notifications";
 import Paper from "@material-ui/core/Paper";
 import Person from "@material-ui/icons/Person";
+import CommonComps from "components/Internal/CommonComps.js";
+
 import Popper from "@material-ui/core/Popper";
 import ProfileButton from "components/Navbars/ProfileButton.js";
 import PropTypes from "prop-types";
@@ -27,6 +29,7 @@ import grey from "@material-ui/core/colors/grey";
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import { withStyles } from "@material-ui/core/styles";
+import { CommonCompsData } from "components/Internal/DefaultData.js";
 
 
 class AdminNavbarLinks extends React.Component {
@@ -36,6 +39,7 @@ class AdminNavbarLinks extends React.Component {
     this.state = {
       openNotification: null,
       notificationList: [],
+      commonProps: { ...CommonCompsData, updateComp: this.updateComp },
     };
 
     this.handleClickNotification = this.handleClickNotification.bind(this);
@@ -46,12 +50,18 @@ class AdminNavbarLinks extends React.Component {
       // No change from above (currently nothing else is needed)
       return;
     }
-    this.fetchTable();
+    this.updateComp();
   }
 
   componentDidMount() {
-    this.fetchTable();
+    this.updateComp();
   }
+
+  
+  // Required from CommonProps
+  updateComp = () => {
+    this.fetchTable();
+  };
 
   fetchTable = () => {
     return readDBData("Notifications", false).then((doc_data) => {
@@ -88,6 +98,8 @@ class AdminNavbarLinks extends React.Component {
 
     return (
       <Hidden smDown implementation="css">
+        <CommonComps commonProps={this.state.commonProps} />
+
         <div>
           <div className={classes.searchWrapper}>
             <CustomInput
@@ -120,12 +132,15 @@ class AdminNavbarLinks extends React.Component {
             </Button>
           </Link>
           <div className={classes.manager}>
-          <Link className={classes.LinkNotification} to="/notifications">
-            <Badge badgeContent={this.state.notificationList.length} color="secondary">
-              <NotificationIcon />
-            </Badge>
-          </Link>
-          
+            <Link className={classes.LinkNotification} to="/notifications">
+              <Badge
+                badgeContent={this.state.notificationList.length}
+                color="secondary"
+              >
+                <NotificationIcon />
+              </Badge>
+            </Link>
+
             <Popper
               open={Boolean(this.state.openNotification)}
               anchorEl={this.state.openNotification}
@@ -181,7 +196,9 @@ class AdminNavbarLinks extends React.Component {
             </Popper>
           </div>
           <div className={classes.manager}>
-            <ProfileButton />
+            <Link style={{ color: "inherit" }} to="/user">
+              <ProfileButton />
+            </Link>
           </div>
         </div>
       </Hidden>
@@ -193,18 +210,5 @@ AdminNavbarLinks.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  loginState: state.loginState,
-});
 
-const mapDispatchToProps = {
-  loginRedux,
-  logoutRedux,
-};
-
-const AdminNavbarLinksWithRedux = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AdminNavbarLinks);
-
-export default withStyles(styles)(AdminNavbarLinksWithRedux);
+export default withStyles(styles)(AdminNavbarLinks);

@@ -1,4 +1,3 @@
-
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 
 import Button from "components/CustomButtons/Button.js";
@@ -8,6 +7,7 @@ import { Paper } from "@material-ui/core";
 import React from "react";
 import { connect } from "react-redux";
 import { getPublicKey } from "components/Internal/Extraction.js";
+import { CommonCompsData } from "components/Internal/DefaultData.js";
 
 class EditableTableReport extends React.Component {
   constructor(props) {
@@ -16,17 +16,15 @@ class EditableTableReport extends React.Component {
     this.state = {
       // Default data
       data: this.props.tableOptions.data,
-      commonProps: {
-        LoginAlertProps: {
-          openLoginRequired: false,
-          FuncParams: "test",
-        },
-        update: false,
-      },
+      commonProps: { ...CommonCompsData, updateComp: this.updateComp },
     };
 
     this.tableChanged = this.tableChanged.bind(this);
     this.fetchTable = this.fetchTable.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchTable();
   }
 
   // Will trigger update from e.g. Emergency->linkAccess that will be triggered after componentdidmount
@@ -35,16 +33,14 @@ class EditableTableReport extends React.Component {
       // No change from above (currently nothing else is needed)
       return;
     } else {
-      this.fetchTable();
+      this.updateComp();
     }
-
-    // Why do I need this?
-    // this.setState({ showFileParams: this.props.showFileParams });
   }
 
-  componentDidMount() {
+  // Required from CommonProps
+  updateComp = () => {
     this.fetchTable();
-  }
+  };
 
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
@@ -100,56 +96,56 @@ class EditableTableReport extends React.Component {
             },
             rowStyle: {
               fontSize: 13,
-              fontWeight:300
-            }
+              fontWeight: 300,
+            },
           }}
           data={this.state.data}
           localization={{
             body: {
-              emptyDataSourceMessage: 'Keine Einträge',
-              addTooltip: 'Hinzufügen',
-              deleteTooltip: 'Löschen',
-              editTooltip: 'Bearbeiten',
+              emptyDataSourceMessage: "Keine Einträge",
+              addTooltip: "Hinzufügen",
+              deleteTooltip: "Löschen",
+              editTooltip: "Bearbeiten",
               filterRow: {
-                filterTooltip: 'Filter'
+                filterTooltip: "Filter",
               },
               editRow: {
-                deleteText: 'Diese Zeile wirklich löschen?',
-                cancelTooltip: 'Abbrechen',
-                saveTooltip: 'Speichern'
-              }
+                deleteText: "Diese Zeile wirklich löschen?",
+                cancelTooltip: "Abbrechen",
+                saveTooltip: "Speichern",
+              },
             },
             grouping: {
-              placeholder: 'Spalten ziehen ...',
-              groupedBy: 'Gruppiert nach:'
+              placeholder: "Spalten ziehen ...",
+              groupedBy: "Gruppiert nach:",
             },
             header: {
-              actions: 'Aktionen'
+              actions: "Aktionen",
             },
             pagination: {
-              labelDisplayedRows: '{from}-{to} von {count}',
-              labelRowsSelect: 'Zeilen',
-              labelRowsPerPage: 'Zeilen pro Seite:',
-              firstAriaLabel: 'Erste Seite',
-              firstTooltip: 'Erste Seite',
-              previousAriaLabel: 'Vorherige Seite',
-              previousTooltip: 'Vorherige Seite',
-              nextAriaLabel: 'Nächste Seite',
-              nextTooltip: 'Nächste Seite',
-              lastAriaLabel: 'Letzte Seite',
-              lastTooltip: 'Letzte Seite'
+              labelDisplayedRows: "{from}-{to} von {count}",
+              labelRowsSelect: "Zeilen",
+              labelRowsPerPage: "Zeilen pro Seite:",
+              firstAriaLabel: "Erste Seite",
+              firstTooltip: "Erste Seite",
+              previousAriaLabel: "Vorherige Seite",
+              previousTooltip: "Vorherige Seite",
+              nextAriaLabel: "Nächste Seite",
+              nextTooltip: "Nächste Seite",
+              lastAriaLabel: "Letzte Seite",
+              lastTooltip: "Letzte Seite",
             },
             toolbar: {
-              addRemoveColumns: 'Spalten hinzufügen oder löschen',
-              nRowsSelected: '{0} Zeile(n) ausgewählt',
-              showColumnsTitle: 'Zeige Spalten',
-              showColumnsAriaLabel: 'Zeige Spalten',
-              exportTitle: 'Export',
-              exportAriaLabel: 'Export',
-              exportName: 'Export als CSV',
-              searchTooltip: 'Suche',
-              searchPlaceholder: 'Suche'
-            }
+              addRemoveColumns: "Spalten hinzufügen oder löschen",
+              nRowsSelected: "{0} Zeile(n) ausgewählt",
+              showColumnsTitle: "Zeige Spalten",
+              showColumnsAriaLabel: "Zeige Spalten",
+              exportTitle: "Export",
+              exportAriaLabel: "Export",
+              exportName: "Export als CSV",
+              searchTooltip: "Suche",
+              searchPlaceholder: "Suche",
+            },
           }}
           editable={{
             onRowAdd: (newData) =>
@@ -197,13 +193,4 @@ class EditableTableReport extends React.Component {
   }
 }
 
-// Required for each component that relies on the loginState
-const mapStateToProps = (state) => ({
-  loginState: state.loginState,
-});
-
-const EditableTableReportWithRedux = connect(mapStateToProps)(
-  EditableTableReport
-);
-
-export default EditableTableReportWithRedux;
+export default EditableTableReport;

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 import Avatar from "@material-ui/core/Avatar";
+import { checkUser, getUserEmail } from "components/Internal/Checks.js";
+
 import {
   loginRedux,
   logoutRedux,
@@ -32,11 +34,13 @@ import React from "react";
 import classNames from "classnames";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
+// import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import { withStyles } from "@material-ui/core/styles";
 import { grey, red } from "@material-ui/core/colors";
+import { CommonCompsData } from "components/Internal/DefaultData.js";
+import CommonComps from "components/Internal/CommonComps.js";
 
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
   avatar: {
     backgroundColor: red[500],
     height: 30,
@@ -46,202 +50,231 @@ const useStyles = makeStyles((theme) => ({
     height: 30,
     width: 30,
   },
-}));
+});
 
-function ProfileButton() {
-  const classes = useStyles();
+class ProfileButton extends React.Component {
+  constructor(props) {
+    super(props);
 
-  const [loginState, setUserLogin] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const [userProfile, setUserProfile] = React.useState(null);
+    this.state = {
+      // List of additional rendered components (several concurrently)
+      additionalComp: [],
+      anchorEl: null,
+      mobileMoreAnchorEl: null,
+      userProfile: null,
+      isMenuOpen: null,
+      isMobileMenuOpen: null,
+      commonProps: { ...CommonCompsData, updateComp: this.updateComp },
+    };
+  }
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  componentDidMount() {
+    console.log(this.props);
+    this.updateComp();
+  }
 
-  // Redux
-  const loginStateRedux = useSelector((state) => state.loginStateRedux);
-  const dispatch = useDispatch();
+  componentDidUpdate(prevProps) {
+    if (prevProps == this.props) {
+      // No change from above (currently nothing else is needed)
+      return;
+    } else {
+      this.updateComp();
+      // Only required for visu, not loading
+      this.setState({
+        commonProps: { ...this.state.commonProps, loginState: checkUser() },
+      });
+    }
+  }
 
-  const menuId = "primary-search-account-menu";
+  // Required from CommonProps
+  updateComp = () => {
+    this.fetchTable();
+  };
 
-  useEffect(() => {
-    fetchTable();
-  });
-
-  const fetchTable = () => {
+  fetchTable = () => {
     readDBData("UserProfile", false).then((doc_data) => {
       if (doc_data == null) {
         return;
       } else {
-        setUserProfile(doc_data);
+        this.setState({ userProfile: doc_data });
       }
     });
   };
 
-  const handleLoginProfile = () => {
+  // Currently all functions are silent because component is only navlink
+
+  handleLoginProfile = () => {
     console.log("login process");
-    loginUser()
-      .then((result) => {
-        console.log(result);
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        var access_token = result.credential.accessToken;
-        // setUserToken(access_token);
+    // loginUser()
+    //   .then((result) => {
+    //     console.log(result);
+    //     // This gives you a Google Access Token. You can use it to access the Google API.
+    //     var access_token = result.credential.accessToken;
+    //     // setUserToken(access_token);
+    //     var user = result.user;
+    //     this.setState({ loginState: true });
 
-        var user = result.user;
-        setUserLogin(true);
-        console.log("User successfully logged in ");
-        dispatch(loginRedux({ user_id: user.uid }));
-        dispatch(loginRedux({ user_id: user.uid }));
-        dispatch(setAccessToken(access_token));
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        // The email of the user's account used.
-        var email = error.email;
-        // The firebase.auth.AuthCredential type that was used.
-        var credential = error.credential;
-        console.log("error: " + errorCode + ":" + errorMessage);
-        // ...
-      });
-    handleMenuClose();
+    //     console.log("User successfully logged in ");
+    //     dispatch(loginRedux({ user_id: user.uid }));
+    //     dispatch(loginRedux({ user_id: user.uid }));
+    //     dispatch(setAccessToken(access_token));
+    //   })
+    //   .catch((error) => {
+    //     // Handle Errors here.
+    //     var errorCode = error.code;
+    //     var errorMessage = error.message;
+    //     // The email of the user's account used.
+    //     var email = error.email;
+    //     // The firebase.auth.AuthCredential type that was used.
+    //     var credential = error.credential;
+    //     console.log("error: " + errorCode + ":" + errorMessage);
+    //     // ...
+    //   });
+    this.handleMenuClose();
   };
 
-  const handleLogoutProfile = () => {
-    logoutUser()
-      .then(() => {
-        window.user = null;
-        console.log("User successfully logged out");
-        // todo: PopUp
-        // Sign-out successful.
-        setUserLogin(false);
-        dispatch(logoutRedux());
-        dispatch(removeAccessToken());
-      })
-      .catch((error) => {
-        console.log("error while logging out");
-        // An error happened.
-      });
-    handleMenuClose();
+  handleLogoutProfile = () => {
+    // logoutUser()
+    //   .then(() => {
+    //     window.user = null;
+    //     console.log("User successfully logged out");
+    //     // todo: PopUp
+    //     // Sign-out successful.
+    //     this.setState({ loginState: false });
+
+    //     dispatch(logoutRedux());
+    //     dispatch(removeAccessToken());
+    //   })
+    //   .catch((error) => {
+    //     console.log("error while logging out");
+    //     // An error happened.
+    //   });
+    this.handleMenuClose();
   };
-  const handleProfileMenuOpen = (event) => {
-    // Not logged in:
-    if (loginState == false) {
-      handleLoginProfile();
+
+  handleProfileMenuOpen = (event) => {
+    console.log("click");
+    // // Not logged in:
+    if (this.state.commonProps.loginState == false) {
+      this.handleLoginProfile();
     } else {
-      setAnchorEl(event.currentTarget);
+      console.log("currenttarget");
+      console.log(event.currentTarget);
+      this.setState({ anchorEl: event.currentTarget });
     }
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
+  handleMobileMenuClose = () => {
+    this.setState({ mobileMoreAnchorEl: null });
   };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
+  handleMenuClose = () => {
+    this.handleMobileMenuClose();
+    this.setState({ anchorEl: null });
   };
 
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
+  handleMobileMenuOpen = (event) => {
+    this.setState({ mobileMoreAnchorEl: event.currentTarget });
   };
 
-  const renderPopper = (
-    <Popper
-      open={isMenuOpen}
-      anchorEl={anchorEl}
-      transition
-      disablePortal
-      className={
-        classNames({
-          [classes.popperClose]: !isMenuOpen,
-        }) +
-        " " +
-        classes.popperNav
-      }
-    >
-      {({ TransitionProps, placement }) => (
-        <Grow
-          {...TransitionProps}
-          id="profile-menu-list-grow"
-          style={{
-            transformOrigin:
-              placement === "bottom" ? "center top" : "center bottom",
-          }}
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <div>
+        <CommonComps commonProps={this.state.commonProps} />
+
+        <Hidden mdUp implementation="css">
+          {/* Mobile Version */}
+          <IconButton
+            aria-label="account of current user"
+            aria-controls="primary-search-account-menu"
+            aria-haspopup="true"
+            onClick={this.handleProfileMenuOpen}
+            color="inherit"
+            className={classes.buttonLink}
+          >
+            {this.state.userProfile != null ? (
+              <Avatar aria-label="recipe" className={classes.avatar}>
+                {this.state.userProfile.firstName.charAt(0)}
+              </Avatar>
+            ) : (
+              <AccountCircle />
+            )}
+          </IconButton>
+        </Hidden>
+
+        <Hidden smDown implementation="css">
+          {/* Desktop Version */}
+          <Button
+            color={window.innerWidth > 959 ? "transparent" : "white"}
+            justIcon={window.innerWidth > 959}
+            simple={!(window.innerWidth > 959)}
+            aria-owns="profile-menu-list-grow"
+            aria-haspopup="true"
+            onClick={this.handleProfileMenuOpen}
+            className={classes.buttonLink}
+          >
+            {this.state.commonProps.loginState != false &&
+            this.state.userProfile != null ? (
+              <Avatar aria-label="recipe" className={classes.avatar}>
+                {this.state.userProfile.firstName.charAt(0)}
+              </Avatar>
+            ) : (
+              <Person className={classes.icons} />
+            )}
+          </Button>
+        </Hidden>
+
+        <Popper
+          open={this.state.isMenuOpen}
+          anchorEl={this.state.anchorEl}
+          transition
+          disablePortal
+          className={
+            classNames({
+              [classes.popperClose]: !this.state.isMenuOpen,
+            }) +
+            " " +
+            classes.popperNav
+          }
         >
-          <Paper>
-            <ClickAwayListener onClickAway={handleMenuClose}>
-              {renderMenuList}
-            </ClickAwayListener>
-          </Paper>
-        </Grow>
-      )}
-    </Popper>
-  );
-
-  // MenuList
-  const renderMenuList = (
-    <MenuList role="menu">
-      <Link style={{ textDecoration: "none" }} to="/user">
-        <MenuItem onClick={handleMenuClose} className={classes.dropdownItem}>
-          Profile
-        </MenuItem>
-      </Link>
-      <Divider light />
-      <MenuItem onClick={handleLogoutProfile} className={classes.dropdownItem}>
-        Logout
-      </MenuItem>
-    </MenuList>
-  );
-
-  return (
-    <div>
-      <Hidden mdUp implementation="css">
-        {/* Mobile Version */}
-        <IconButton
-          aria-label="account of current user"
-          aria-controls={menuId}
-          aria-haspopup="true"
-          onClick={handleProfileMenuOpen}
-          color="inherit"
-          className={classes.buttonLink}
-        >
-          {userProfile != null ? (
-            <Avatar aria-label="recipe" className={classes.avatar}>
-              {userProfile.firstName.charAt(0)}
-            </Avatar>
-          ) : (
-            <AccountCircle />
+          {({ TransitionProps, placement }) => (
+            <Grow
+              {...TransitionProps}
+              id="profile-menu-list-grow"
+              style={{
+                transformOrigin:
+                  placement === "bottom" ? "center top" : "center bottom",
+              }}
+            >
+              <Paper>
+                <ClickAwayListener onClickAway={this.handleMenuClose}>
+                  <MenuList role="menu">
+                    <Link style={{ textDecoration: "none" }} to="/user">
+                      <MenuItem
+                        onClick={this.handleMenuClose}
+                        className={classes.dropdownItem}
+                      >
+                        Profile
+                      </MenuItem>
+                    </Link>
+                    <Divider light />
+                    <MenuItem
+                      onClick={this.handleLogoutProfile}
+                      className={classes.dropdownItem}
+                    >
+                      Logout
+                    </MenuItem>
+                  </MenuList>
+                </ClickAwayListener>
+              </Paper>
+            </Grow>
           )}
-        </IconButton>
-      </Hidden>
-
-      <Hidden smDown implementation="css">
-        {/* Desktop Version */}
-        <Button
-          color={window.innerWidth > 959 ? "transparent" : "white"}
-          justIcon={window.innerWidth > 959}
-          simple={!(window.innerWidth > 959)}
-          aria-owns="profile-menu-list-grow"
-          aria-haspopup="true"
-          onClick={handleProfileMenuOpen}
-          className={classes.buttonLink}
-        >
-          {userProfile != null ? (
-            <Avatar aria-label="recipe" className={classes.avatar}>
-              {userProfile.firstName.charAt(0)}
-            </Avatar>
-          ) : (
-            <Person className={classes.icons} />
-          )}
-        </Button>
-      </Hidden>
-
-      {renderPopper}
-    </div>
-  );
+        </Popper>
+      </div>
+    );
+  }
 }
 
 ProfileButton.propTypes = {
@@ -250,6 +283,7 @@ ProfileButton.propTypes = {
 
 const mapStateToProps = (state) => ({
   loginState: state.loginState,
+  access_token: state.access_token,
 });
 
 const mapDispatchToProps = {
@@ -262,4 +296,4 @@ const ProfileButtonWithRedux = connect(
   mapDispatchToProps
 )(ProfileButton);
 
-export default withStyles(styles)(ProfileButtonWithRedux);
+export default withStyles(styles)(ProfileButton);

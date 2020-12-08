@@ -56,7 +56,6 @@ class UserProfile extends VisuComp {
   constructor(props) {
     super(props);
     this.state = {
-      loginState: null,
       Switches: {
         AGB: false,
         DSGVO: false,
@@ -76,7 +75,11 @@ class UserProfile extends VisuComp {
     };
   }
 
-  // For redux and others
+  componentDidMount() {
+    console.log(this.props);
+    this.updateComp();
+  }
+
   componentDidUpdate(prevProps) {
     if (prevProps == this.props) {
       // No change from above (currently nothing else is needed)
@@ -84,18 +87,15 @@ class UserProfile extends VisuComp {
     } else {
       this.fetchTable();
       // Only required for visu, not loading
-      this.setState({ loginState: checkUser() });
+      this.setState({
+        commonProps: { ...this.state.commonProps, loginState: checkUser() },
+      });
     }
-  }
-
-  componentDidMount() {
-    this.updateComp();
   }
 
   // Required from CommonProps
   updateComp = () => {
     this.fetchTable();
-    // this.setState({ loginState: checkUser() });
     this.setState({
       userProfile: { ...this.state.userProfile, email: getUserEmail() },
     });
@@ -116,14 +116,13 @@ class UserProfile extends VisuComp {
   // Is called when table is changed
   uploadProfile = () => {
     console.log("upload");
-    this.displayLogin();
-    // var user_id = getUserID();
-    // if (user_id == null) {
-    //   this.displayLogin();
-    //   return false;
-    // }
-    // var success = writeDBData("UserProfile", this.state.userProfile);
-    // if (success == false) this.displayLogin();
+    var user_id = getUserID();
+    if (user_id == null) {
+      this.displayLogin();
+      return false;
+    }
+    var success = writeDBData("UserProfile", this.state.userProfile);
+    if (success == false) this.displayLogin();
   };
 
   // Nice function: Sets states automatically
@@ -150,6 +149,7 @@ class UserProfile extends VisuComp {
         // setUserLogin(true);
         console.log("User successfully logged in ");
         // dispatch(loginRedux({ user_id: user.uid }));
+        console.log(this.props);
         this.props.loginRedux({ user_id: user.uid });
       })
       .catch((error) => {
@@ -207,7 +207,7 @@ class UserProfile extends VisuComp {
       <div>
         <CommonComps commonProps={this.state.commonProps} />
 
-        <Button onClick={this.testfunc}>Testbutton</Button>
+        <Button onClick={this.handleLogoutProfile}>Logout</Button>
 
         <GridContainer>
           <GridItem xs={12} sm={12} md={8}>
@@ -426,4 +426,19 @@ UserProfile.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(UserProfile);
+const mapStateToProps = (state) => ({
+  loginState: state.loginState,
+  access_token: state.access_token,
+});
+
+const mapDispatchToProps = {
+  loginRedux,
+  logoutRedux,
+};
+
+const UserProfileWithRedux = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UserProfile);
+
+export default withStyles(styles)(UserProfileWithRedux);
