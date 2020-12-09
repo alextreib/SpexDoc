@@ -24,6 +24,8 @@ import Warning from "@material-ui/icons/Warning";
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import { withStyles } from "@material-ui/core/styles";
+import Typography from '@material-ui/core/Typography';
+
 
 const useStyles = makeStyles(styles);
 class Dashboard extends VisuComp {
@@ -107,6 +109,7 @@ class Dashboard extends VisuComp {
     return (
       <div>
         <CommonComps commonProps={this.state.commonProps} />
+        <Typography variant="h3">Hallo {this.state.UserProfile? this.state.UserProfile.firstName: null} {this.state.UserProfile? this.state.UserProfile.lastName: null}</Typography>
         <GridContainer>
           <GridItem xs={12} sm={6} md={3}>
             <Card>

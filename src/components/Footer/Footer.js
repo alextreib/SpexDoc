@@ -18,12 +18,12 @@ export default function Footer(props) {
         <div className={classes.left}>
           <List className={classes.list}>
             <ListItem className={classes.inlineBlock}>
-              <a href="www.spexdoc.net" className={classes.block}>
+              <a href="https://spexdoc.net" className={classes.block}>
                 Home
               </a>
             </ListItem>
             <ListItem className={classes.inlineBlock}>
-              <a href="www.spexdoc.net/about-us" className={classes.block}>
+              <a href="https://spexdoc.net/about-us" className={classes.block}>
                 Über uns
               </a>
             </ListItem>
@@ -38,7 +38,7 @@ export default function Footer(props) {
           <span>
             &copy; {1900 + new Date().getYear()}{" "}
             <a
-              href="https://www.spexdoc.net"
+              href="https://spexdoc.net"
               target="_blank"
               className={classes.a}
             >

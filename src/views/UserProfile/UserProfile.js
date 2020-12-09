@@ -1,6 +1,10 @@
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 import { checkUser, getUserEmail } from "components/Internal/Checks.js";
-import { loginRedux, logoutRedux ,setAccessToken} from "components/Internal/Redux.js";
+import {
+  loginRedux,
+  logoutRedux,
+  setAccessToken,
+} from "components/Internal/Redux.js";
 import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
 import VisuComp from "components/Internal/VisuComp.js";
 import { CommonCompsData } from "components/Internal/DefaultData.js";
@@ -206,9 +210,7 @@ class UserProfile extends VisuComp {
     return (
       <div>
         <CommonComps commonProps={this.state.commonProps} />
-
         <Button onClick={this.handleLogoutProfile}>Logout</Button>
-
         <GridContainer>
           <GridItem xs={12} sm={12} md={8}>
             <Card>

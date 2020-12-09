@@ -41,9 +41,9 @@ export const access_token = (state = {}, action) => {
     case "SET":
       return action.access_token;
     case "REMOVE":
-      return {};
+      return null;
     default:
-      return state;
+      return null;
   }
 };
 

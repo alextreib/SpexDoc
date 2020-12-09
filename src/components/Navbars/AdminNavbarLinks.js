@@ -99,7 +99,7 @@ class AdminNavbarLinks extends React.Component {
         <CommonComps commonProps={this.state.commonProps} />
 
         <div>
-          <div className={classes.searchWrapper}>
+          {/* <div className={classes.searchWrapper}>
             <CustomInput
               formControlProps={{
                 className: classes.margin + " " + classes.search,
@@ -114,7 +114,7 @@ class AdminNavbarLinks extends React.Component {
             <Button color="white" aria-label="edit" justIcon round>
               <Search />
             </Button>
-          </div>
+          </div> */}
 
           <Link to="/dashboard" style={{ color: "inherit" }}>
             <Button
