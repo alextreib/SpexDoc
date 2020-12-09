@@ -3,7 +3,11 @@ import { dailySalesChart, emailsSubscriptionChart } from "variables/charts.js";
 
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 import { checkUser, getUserEmail } from "components/Internal/Checks.js";
-import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
+import {
+  loginRedux,
+  logoutRedux,
+  setAccessToken,
+} from "components/Internal/Redux.js";
 import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
 
 import AccessTime from "@material-ui/icons/AccessTime";
@@ -33,6 +37,8 @@ import Table from "components/Table/Table.js";
 import Tasks from "components/Tasks/Tasks.js";
 import Update from "@material-ui/icons/Update";
 import Warning from "@material-ui/icons/Warning";
+import CommonComps from "components/Internal/CommonComps.js";
+import { CommonCompsData } from "components/Internal/DefaultData.js";
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import Button from "@material-ui/core/Button";
@@ -59,6 +65,7 @@ class GoogleFit extends VisuComp {
       healthData: [],
       testArray: [],
       // Default data
+      commonProps: { ...CommonCompsData, updateComp: this.updateComp },
       healthDataperWeek: {
         ["Steps"]: [10, 10, 10, 10, 10, 10, 10],
         ["Calories"]: [10, 10, 10, 10, 10, 10, 10],
@@ -75,15 +82,20 @@ class GoogleFit extends VisuComp {
       // No change from above (currently nothing else is needed)
       return;
     } else {
-      this.fetchData();
+      this.updateComp();
     }
   }
 
   componentDidMount() {
     if (checkUser()) {
-      this.fetchData();
+      this.updateComp();
     }
   }
+
+  // Required from CommonProps
+  updateComp = () => {
+    this.fetchData();
+  };
 
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
@@ -108,11 +120,11 @@ class GoogleFit extends VisuComp {
     // Load User Firebase data (maybe)
   };
 
-
   loadGoogleData = async () => {
     if (this.props.access_token) {
       // get access_token
       var access_token = this.props.access_token;
+      console.log(access_token);
       // await this.timeout(3000); // todo: remove hotfix
 
       // read data through api
@@ -128,14 +140,32 @@ class GoogleFit extends VisuComp {
     }
   };
 
-  testFunc = () => {
-    this.loadGoogleData();
+  enableGoogleFit = () => {
+    loginUser(true)
+      .then((result) => {
+        var token = result.credential.accessToken;
+        var user = result.user;
+        this.props.loginRedux({ user_id: user.uid });
+        this.props.setAccessToken(token);
+        this.displayPopUp("Google Fit enabled");
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        var email = error.email;
+        var credential = error.credential;
+        console.log("error: " + errorCode + ":" + errorMessage);
+      });
   };
+
   render() {
     const { classes } = this.props;
 
     return (
       <GridContainer>
+        <CommonComps commonProps={this.state.commonProps} />
+
+        <Button onClick={this.enableGoogleFit}> Enable Google Fit</Button>
         <GridItem xs={12} sm={12} md={4}>
           <Card chart>
             <CardHeader color="success">
@@ -237,6 +267,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   loginRedux,
   logoutRedux,
+  setAccessToken,
 };
 
 const GoogleFitWithRedux = connect(

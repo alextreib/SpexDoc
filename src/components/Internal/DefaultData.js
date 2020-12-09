@@ -6,4 +6,10 @@ export const CommonCompsData = {
     openLoginRequired: false,
     FuncParams: "test",
   },
+  PopUpProps: {
+    openPopUp: false,
+    message: "Test Message",
+    type: "info", //info, success, warning, danger, primary
+    FuncParams: "test",
+  },
 };

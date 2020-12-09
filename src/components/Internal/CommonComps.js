@@ -3,10 +3,10 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
-import { checkUser} from "components/Internal/Checks.js";
+import { checkUser } from "components/Internal/Checks.js";
 import { connect } from "react-redux";
 import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
-
+import PopUp from "components/PopUp/PopUp.js";
 
 import { openLoginAlert } from "components/Internal/VisuElements.js";
 import LoginAlert from "components/LoginAlert/LoginAlert";
@@ -45,22 +45,25 @@ class CommonComps extends React.Component {
     };
   }
 
-  componentDidMount(){
-    this.props.commonProps.loginState=checkUser();
+  componentDidMount() {
+    this.props.commonProps.loginState = checkUser();
   }
 
   // Listens to own and assigned parent state
   componentDidUpdate(prevProps) {
-    this.props.commonProps.loginState=checkUser();
+    this.props.commonProps.loginState = checkUser();
 
     // Call function in parent
     this.props.commonProps.updateComp();
   }
 
   render() {
-    return <div>
-      <LoginAlert loginState={this.props.commonProps.LoginAlertProps}/>
-    </div>;
+    return (
+      <div>
+        <LoginAlert loginState={this.props.commonProps.LoginAlertProps} />
+        <PopUp popUp={this.props.commonProps.PopUpProps} />
+      </div>
+    );
   }
 }
 
@@ -84,6 +87,3 @@ const CommonCompsWithRedux = connect(
 )(CommonComps);
 
 export default withStyles(styles)(CommonCompsWithRedux);
-
-
-

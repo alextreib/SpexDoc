@@ -117,9 +117,7 @@ class Dashboard extends VisuComp {
                   <Icon>content_copy</Icon>
                 </CardIcon>
                 <p className={classes.cardCategory}>Befunde</p>
-                <h3 className={classes.cardTitle}>
-                  {this.state.medRecords ? this.state.medRecords.length : 0}
-                </h3>
+                <h3 className={classes.cardTitle}>{this.state.medRecords ? this.state.medRecords.length:0}</h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
@@ -143,9 +141,7 @@ class Dashboard extends VisuComp {
               <CardFooter stats>
                 <div className={classes.stats}>
                   <DateRange />
-                  {this.state.UserProfile
-                    ? this.state.UserProfile.insurance
-                    : "Versicherung"}
+                  {this.state.UserProfile?this.state.UserProfile.insurance : "Versicherung"}
                 </div>
               </CardFooter>
             </Card>

@@ -55,6 +55,7 @@ class PopUp extends React.Component {
       bl: false,
       bc: false,
       br: false,
+      // Default actually not necessary see DefaultData
       duration: 2500, //ms
       message: "Test Message",
       type: "info", //info, success, warning, danger, primary
@@ -70,6 +71,8 @@ class PopUp extends React.Component {
     // Is called when the corresponding state is changed in parent class (indirect trigger)
     // Is also called a 2nd time when setState{open:true} is called inside this function
     if (prevProps != this.props) {
+      this.state.type = this.props.popUp.type;
+      this.state.message = this.props.popUp.message;
       this.state.open = this.props.popUp.openPopUp;
       this.checkAction();
     }
@@ -116,7 +119,7 @@ class PopUp extends React.Component {
               <GridItem xs={12} sm={12} md={4}>
                 <Snackbar
                   place="tl"
-                  color="info"
+                  color={this.state.type}
                   icon={AddAlert}
                   message={this.state.message}
                   open={this.state.tl}
@@ -127,7 +130,7 @@ class PopUp extends React.Component {
               <GridItem xs={12} sm={12} md={4}>
                 <Snackbar
                   place="tc"
-                  color="info"
+                  color={this.state.type}
                   icon={AddAlert}
                   message={this.props.popUp.message}
                   open={this.state.tc}
@@ -138,7 +141,7 @@ class PopUp extends React.Component {
               <GridItem xs={12} sm={12} md={4}>
                 <Snackbar
                   place="tr"
-                  color="info"
+                  color={this.state.type}
                   icon={AddAlert}
                   message={this.props.popUp.message}
                   open={this.state.tr}
@@ -155,7 +158,7 @@ class PopUp extends React.Component {
               <GridItem xs={12} sm={12} md={4}>
                 <Snackbar
                   place="bl"
-                  color="info"
+                  color={this.state.type}
                   icon={AddAlert}
                   message={this.state.message}
                   open={this.state.bl}
@@ -166,7 +169,7 @@ class PopUp extends React.Component {
               <GridItem xs={12} sm={12} md={4}>
                 <Snackbar
                   place="bc"
-                  color="info"
+                  color={this.state.type}
                   icon={AddAlert}
                   message={this.state.message}
                   open={this.state.bc}
@@ -177,7 +180,7 @@ class PopUp extends React.Component {
               <GridItem xs={12} sm={12} md={4}>
                 <Snackbar
                   place="br"
-                  color="info"
+                  color={this.state.type}
                   icon={AddAlert}
                   message={this.state.message}
                   open={this.state.br}
