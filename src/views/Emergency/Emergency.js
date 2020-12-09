@@ -18,7 +18,27 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
+import { green, blue } from "@material-ui/core/colors";
+
 import Box from "@material-ui/core/Box";
+
+const GreenRadio = withStyles({
+  root: {
+    "&$checked": {
+      color: green[600],
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
+
+const BlueRadio = withStyles({
+  root: {
+    "&$checked": {
+      color: blue[600],
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
 
 const styles = {
   margin: {
@@ -226,7 +246,7 @@ class Emergency extends React.Component {
         </GridItem>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
-            <CardHeader color="rose">
+            <CardHeader color="warning">
               <h4 className={classes.cardTitleWhite}>Organspende</h4>
               <p className={classes.cardCategoryWhite}>
                 Weitere Infos{" "}
@@ -245,27 +265,29 @@ class Emergency extends React.Component {
                     value={this.state.OrganDonationData.RadioSelection}
                     onChange={this.radioChange}
                   >
+                    Für den Fall, dass nach meinem Tod eine Spende von
+                    Organen/Geweben zur Transplantation in Frage kommt, erkläre
+                    ich:
+                    <br />
                     <FormControlLabel
                       value="JaTod"
-                      control={<Radio />}
+                      control={<GreenRadio />}
                       style={{ color: "black" }}
                       label={
                         <div>
-                          <Typography variant="body1">
-                            JA, ich gestattet, dass nach der ärztlichen
+                          <Typography>
+                            JA, ich gestatte, dass nach der ärztlichen
                             Festellung meines Todes meinem Körper Organe und
                             Gewebe entnommen werden.
                           </Typography>
                         </div>
                       }
                     />
-
                     <br />
                     <br />
-
                     <FormControlLabel
                       value="JAAusnahme"
-                      control={<Radio />}
+                      control={<GreenRadio />}
                       style={{ color: "black" }}
                       label={
                         <div>
@@ -289,13 +311,11 @@ class Emergency extends React.Component {
                         </div>
                       }
                     />
-
                     <br />
                     <br />
-
                     <FormControlLabel
                       value="JANur"
-                      control={<Radio />}
+                      control={<GreenRadio />}
                       style={{ color: "black" }}
                       label={
                         <div>
@@ -318,10 +338,8 @@ class Emergency extends React.Component {
                         </div>
                       }
                     />
-
                     <br />
                     <br />
-
                     <FormControlLabel
                       value="Nein"
                       control={<Radio />}
@@ -330,10 +348,9 @@ class Emergency extends React.Component {
                     />
                     <br />
                     <br />
-
                     <FormControlLabel
                       value="NeinNachlass"
-                      control={<Radio />}
+                      control={<BlueRadio />}
                       style={{ color: "black" }}
                       label={
                         <div>
