@@ -1,29 +1,49 @@
-import Box from "@material-ui/core/Box";
-import React from "react";
-import ReactDOM from "react-dom";
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-// core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardBody from "components/Card/CardBody.js";
-
-import EditableTableReport from "components/EditableTableReport/EditableTableReport.js";
-import CommonComps from "components/Internal/CommonComps.js";
+import { checkUser, getUserEmail } from "components/Internal/Checks.js";
+import { getUser, getUserID } from "components/Internal/Checks.js";
+import {
+  loginRedux,
+  logoutRedux,
+  setAccessToken,
+} from "components/Internal/Redux.js";
+import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
+import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 
 import AddAlert from "@material-ui/icons/AddAlert";
+import Box from "@material-ui/core/Box";
 import Button from "components/CustomButtons/Button.js";
-import SnackbarContent from "components/Snackbar/SnackbarContent.js";
-import Snackbar from "components/Snackbar/Snackbar.js";
-
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+import Card from "components/Card/Card.js";
+import CardBody from "components/Card/CardBody.js";
+import CardHeader from "components/Card/CardHeader.js";
+import CommonComps from "components/Internal/CommonComps.js";
+import CustomInput from "components/CustomInput/CustomInput.js";
 import EditableSwitch from "components/EditableTableReport/EditableSwitch";
+import EditableTableReport from "components/EditableTableReport/EditableTableReport.js";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormLabel from "@material-ui/core/FormLabel";
+import GridContainer from "components/Grid/GridContainer.js";
+// core components
+import GridItem from "components/Grid/GridItem.js";
+import PropTypes from "prop-types";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import React from "react";
+import ReactDOM from "react-dom";
+import Snackbar from "components/Snackbar/Snackbar.js";
+import SnackbarContent from "components/Snackbar/SnackbarContent.js";
+import Switch from "@material-ui/core/Switch";
+import Table from "components/Table/Table.js";
+import Typography from "@material-ui/core/Typography";
+// @material-ui/core components
+import { makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = {
+  margin: {
+    margin: "0",
+  },
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
       color: "rgba(255,255,255,.62)",
@@ -59,6 +79,12 @@ class Emergency extends React.Component {
     super(props);
 
     this.state = {
+      OrganDonationData: {
+        RadioSelection: "JaTod",
+        TextBoxJAAusnahme: "",
+        TextBoxJANur: "",
+        TextBoxNeinNachlass: "",
+      },
       predispositionTable: {
         name: "EmergencyPredisposition",
         columns: [
@@ -102,13 +128,88 @@ class Emergency extends React.Component {
           },
         ],
       },
-      organSwitch: {
-        name: "OrganDonation",
-        data: false,
-      },
     };
   }
 
+  
+  componentDidMount() {
+    console.log(this.props);
+    this.fetchTable();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps == this.props) {
+      // No change from above (currently nothing else is needed)
+      return;
+    } else {
+      this.fetchTable();
+      // Only required for visu, not loading
+      this.setState({
+        commonProps: { ...this.state.commonProps, loginState: checkUser() },
+      });
+    }
+  }
+
+
+   // Fetch the table from Firebase (Original data)
+  // Is called when table is changed
+  fetchTable = () => {
+    // todo: default parameter
+    return readDBData("OrganDonationData", false).then((doc_data) => {
+      if (doc_data != null) this.setState({ OrganDonationData: doc_data });
+      // Cannot get data -> set default data from parent class
+      // this.setState({ userProfile: this.state.user });
+      // else ;
+    });
+  };
+
+  uploadProfile = () => {
+    console.log("update")
+    var user_id = getUserID();
+    if (user_id == null) {
+      this.displayLogin();
+      return false;
+    }
+    var success = writeDBData("OrganDonationData", this.state.OrganDonationData);
+    if (success == false) this.displayLogin();
+  };
+
+  // Nice function: Sets states automatically
+  inputChange = (property, event) => {
+    var changedValue = event.target.value;
+    // this.setState(
+    //   {
+    //     OrganDonationData: {
+    //       ...this.state.OrganDonationData,
+    //       [property]: changedValue,
+    //     },
+    //   },
+    //   () => {
+    //     // this.uploadProfile();
+    //   }
+    // );
+  };
+
+  radioChange = (event) => {
+    console.log(event.target.value)
+    this.setState(
+      {
+        OrganDonationData: {
+          ...this.state.OrganDonationData,
+          RadioSelection: event.target.value,
+        },
+      },
+      () => {
+        this.uploadProfile();
+      }
+    );
+
+
+    // this.setState({ checked: event.target.checked }, () => {
+    //   this.uploadTable(); // ganze Table
+    //   console.log("upload");
+    // });
+  };
   
 
   render() {
@@ -120,7 +221,7 @@ class Emergency extends React.Component {
           <Card>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>Vorerkrankungen</h4>
-              <p className={classes.cardCategoryWhite}>Untertitel</p>
+              <p className={classes.cardCategoryWhite}></p>
             </CardHeader>
             <CardBody>
               <EditableTableReport
@@ -134,7 +235,7 @@ class Emergency extends React.Component {
           <Card>
             <CardHeader color="warning">
               <h4 className={classes.cardTitleWhite}>Medikamente</h4>
-              <p className={classes.cardCategoryWhite}>Untertitel</p>
+              <p className={classes.cardCategoryWhite}></p>
             </CardHeader>
             <CardBody>
               <EditableTableReport tableOptions={this.state.medicationTable} />
@@ -157,10 +258,132 @@ class Emergency extends React.Component {
           <Card>
             <CardHeader color="rose">
               <h4 className={classes.cardTitleWhite}>Organspende</h4>
-              <p className={classes.cardCategoryWhite}>Untertitel</p>
+              <p className={classes.cardCategoryWhite}>
+                Weitere Infos{" "}
+                <a target="_blank" href="https://www.organspende-info.de">
+                  {" "}
+                  hier
+                </a>
+              </p>
             </CardHeader>
             <CardBody>
-              <EditableSwitch switchOptions={this.state.organSwitch} />
+              <FormControl component="fieldset">
+                <FormGroup>
+                  <RadioGroup
+                    aria-label="ge2nder"
+                    name="gender1"
+                    value={this.state.OrganDonationData.RadioSelection}
+                    onChange={this.radioChange}
+                  >
+                    <FormControlLabel
+                      value="JaTod"
+                      control={<Radio />}
+                      label={
+                        <div>
+                          <Typography variant="body1">
+                            JA, ich gestattet, dass nach der ärztlichen
+                            Festellung meines Todes meinem Körper Organe und
+                            Gewebe entnommen werden.
+                          </Typography>
+                        </div>
+                      }
+                    />
+
+                    <br />
+
+                    <FormControlLabel
+                      value="JAAusnahme"
+                      control={<Radio />}
+                      label={
+                        <div>
+                          <Typography variant="body1">
+                            JA, ich gestatte dies, mit Ausnahme folgender
+                            Organe/Gewebe:
+                          </Typography>
+
+                          <CustomInput
+                          labelText="Email"
+                          id="email"
+
+                            inputProps={{
+                              value: this.state.OrganDonationData
+                                .TextBoxJAAusnahme,
+                              onChange: (e) =>
+                                this.inputChange("TextBoxJAAusnahme", e),
+                            }}
+                            formControlProps={{
+                              className: classes.margin,
+                              fullWidth: true,
+                            }}
+                          />
+                        </div>
+                      }
+                    />
+
+                    <br />
+
+                    <FormControlLabel
+                      value="JANur"
+                      control={<Radio />}
+                      label={
+                        <div>
+                          <Typography variant="body1">
+                            JA, ich gestatte dies, jedoch nur für folgende
+                            Organe/Gewebe:
+                          </Typography>
+
+                          <CustomInput
+                            inputProps={{
+                              value: this.state.OrganDonationData.TextBoxJANur,
+                              onChange: (e) =>
+                                this.inputChange("TextBoxJANur", e),
+                            }}
+                            formControlProps={{
+                              className: classes.margin,
+                              fullWidth: true,
+                            }}
+                          />
+                        </div>
+                      }
+                    />
+
+                    <br />
+
+                    <FormControlLabel
+                      value="Nein"
+                      control={<Radio />}
+                      label="NEIN, ich widerspreche einer Entnahme von Organen oder Geweben."
+                    />
+                    <br />
+
+                    <FormControlLabel
+                      value="NeinNachlass"
+                      control={<Radio />}
+                      label={
+                        <div>
+                          <Typography variant="body1">
+                            Über JA oder NEIN soll dann folgende Person
+                            entscheiden:
+                          </Typography>
+
+                          <CustomInput
+                            inputProps={{
+                              value: this.state.OrganDonationData
+                                .TextBoxNeinNachlass,
+                              onChange: (e) =>
+                                this.inputChange("TextBoxNeinNachlass", e),
+                            }}
+                            formControlProps={{
+                              className: classes.margin,
+                              fullWidth: true,
+                            }}
+                          />
+                        </div>
+                      }
+                    />
+                  </RadioGroup>
+                </FormGroup>
+              </FormControl>
             </CardBody>
           </Card>
         </GridItem>

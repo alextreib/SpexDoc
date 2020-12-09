@@ -55,7 +55,6 @@ class AdminNavbarLinks extends React.Component {
     this.updateComp();
   }
 
-  
   // Required from CommonProps
   updateComp = () => {
     this.fetchTable();
@@ -95,11 +94,11 @@ class AdminNavbarLinks extends React.Component {
     const { classes } = this.props;
 
     return (
-      <Hidden smDown implementation="css">
+      <div>
         <CommonComps commonProps={this.state.commonProps} />
-
-        <div>
-          {/* <div className={classes.searchWrapper}>
+        <Hidden smDown implementation="css">
+          <div>
+            {/* <div className={classes.searchWrapper}>
             <CustomInput
               formControlProps={{
                 className: classes.margin + " " + classes.search,
@@ -116,90 +115,91 @@ class AdminNavbarLinks extends React.Component {
             </Button>
           </div> */}
 
-          <Link to="/dashboard" style={{ color: "inherit" }}>
-            <Button
-              color={window.innerWidth > 959 ? "transparent" : "white"}
-              justIcon={window.innerWidth > 959}
-              simple={!(window.innerWidth > 959)}
-              aria-label="Dashboard"
-            >
-              <Dashboard style={{ color: grey[700] }} />
-              <Hidden mdUp implementation="css">
-                <p className={classes.linkText}>Dashboard</p>
-              </Hidden>
-            </Button>
-          </Link>
-          <div className={classes.manager}>
-            <Link className={classes.LinkNotification} to="/notifications">
-              <Badge
-                badgeContent={this.state.notificationList.length}
-                color="secondary"
+            <Link to="/dashboard" style={{ color: "inherit" }}>
+              <Button
+                color={window.innerWidth > 959 ? "transparent" : "white"}
+                justIcon={window.innerWidth > 959}
+                simple={!(window.innerWidth > 959)}
+                aria-label="Dashboard"
               >
-                <NotificationIcon />
-              </Badge>
+                <Dashboard style={{ color: grey[700] }} />
+                <Hidden mdUp implementation="css">
+                  <p className={classes.linkText}>Dashboard</p>
+                </Hidden>
+              </Button>
             </Link>
-
-            <Popper
-              open={Boolean(this.state.openNotification)}
-              anchorEl={this.state.openNotification}
-              transition
-              disablePortal
-              className={
-                classNames({
-                  [classes.popperClose]: !this.state.openNotification,
-                }) +
-                " " +
-                classes.popperNav
-              }
-            >
-              {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  id="notification-menu-list-grow"
-                  style={{
-                    transformOrigin:
-                      placement === "bottom" ? "center top" : "center bottom",
-                  }}
+            <div className={classes.manager}>
+              <Link className={classes.LinkNotification} to="/notifications">
+                <Badge
+                  badgeContent={this.state.notificationList.length}
+                  color="secondary"
                 >
-                  <Paper>
-                    <ClickAwayListener
-                      onClickAway={this.handleCloseNotification}
-                    >
-                      <Link
-                        style={{ textDecoration: "none" }}
-                        to="/notifications"
+                  <NotificationIcon />
+                </Badge>
+              </Link>
+
+              <Popper
+                open={Boolean(this.state.openNotification)}
+                anchorEl={this.state.openNotification}
+                transition
+                disablePortal
+                className={
+                  classNames({
+                    [classes.popperClose]: !this.state.openNotification,
+                  }) +
+                  " " +
+                  classes.popperNav
+                }
+              >
+                {({ TransitionProps, placement }) => (
+                  <Grow
+                    {...TransitionProps}
+                    id="notification-menu-list-grow"
+                    style={{
+                      transformOrigin:
+                        placement === "bottom" ? "center top" : "center bottom",
+                    }}
+                  >
+                    <Paper>
+                      <ClickAwayListener
+                        onClickAway={this.handleCloseNotification}
                       >
-                        <MenuList role="menu">
-                          {this.state.notificationList.map(
-                            (notificationItem) => (
-                              <Link
-                                style={{ textDecoration: "none" }}
-                                to="/notifications"
-                              >
-                                <MenuItem
-                                  //todo add link
-                                  className={classes.dropdownItem}
+                        <Link
+                          style={{ textDecoration: "none" }}
+                          to="/notifications"
+                        >
+                          <MenuList role="menu">
+                            {this.state.notificationList.map(
+                              (notificationItem) => (
+                                <Link
+                                  style={{ textDecoration: "none" }}
+                                  to="/notifications"
                                 >
-                                  {notificationItem}
-                                </MenuItem>
-                              </Link>
-                            )
-                          )}
-                        </MenuList>
-                      </Link>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
+                                  <MenuItem
+                                    //todo add link
+                                    className={classes.dropdownItem}
+                                  >
+                                    {notificationItem}
+                                  </MenuItem>
+                                </Link>
+                              )
+                            )}
+                          </MenuList>
+                        </Link>
+                      </ClickAwayListener>
+                    </Paper>
+                  </Grow>
+                )}
+              </Popper>
+            </div>
+            <div className={classes.manager}>
+              <Link style={{ color: "inherit" }} to="/user">
+                <ProfileButton />
+              </Link>
+            </div>
           </div>
-          <div className={classes.manager}>
-            <Link style={{ color: "inherit" }} to="/user">
-              <ProfileButton />
-            </Link>
-          </div>
-        </div>
-      </Hidden>
+        </Hidden>
+      </div>
     );
   }
 }
@@ -207,6 +207,5 @@ class AdminNavbarLinks extends React.Component {
 AdminNavbarLinks.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
 
 export default withStyles(styles)(AdminNavbarLinks);

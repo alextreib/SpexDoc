@@ -18,8 +18,8 @@ class EditableSwitch extends React.Component {
 
     this.state = {
       // Default data
-      name: this.props.switchOptions.name,
-      checked: this.props.switchOptions.data,
+      name: "Switch" + this.props.switchOptions.name,
+      checked: this.props.switchOptions.checked,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -33,9 +33,6 @@ class EditableSwitch extends React.Component {
     } else {
       this.fetchTable();
     }
-
-    // Why do I need this?
-    // this.setState({ showFileParams: this.props.showFileParams });
   }
 
   componentDidMount() {
@@ -55,6 +52,7 @@ class EditableSwitch extends React.Component {
 
   // Is called when table is changed
   uploadTable = async () => {
+    this.props.switchOptions.checked = this.state.checked;
     return await writeDBData(this.state.name, this.state.checked);
   };
 
@@ -63,16 +61,17 @@ class EditableSwitch extends React.Component {
     this.setState({ checked: event.target.checked }, () => {
       this.uploadTable();
     });
+    if (this.props.switchOptions.updateComp != null) {
+      this.props.switchOptions.updateComp();
+    }
   };
 
   render() {
     return (
       <div>
-        {this.state.checked ? "JA" : "NEIN"}
         <Switch
           checked={this.state.checked}
           onChange={this.handleChange}
-          name="checkedA"
           inputProps={{ "aria-label": "secondary checkbox" }}
         />
       </div>

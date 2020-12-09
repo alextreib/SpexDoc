@@ -54,9 +54,9 @@ class Notifications extends React.Component {
         <GridItem xs={12} sm={12} md={12}>
           <Card>
             <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Hochgeladene Befunde</h4>
+              <h4 className={classes.cardTitleWhite}>Benachrichtungen</h4>
               <p className={classes.cardCategoryWhite}>
-                Verwalte und teile deine Befunde
+                Verwalte deine Benachrichtungen
               </p>
             </CardHeader>
             <CardBody>

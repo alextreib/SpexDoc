@@ -1,14 +1,14 @@
-import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 import { checkUser, getUserEmail } from "components/Internal/Checks.js";
+import { getUser, getUserID } from "components/Internal/Checks.js";
 import {
   loginRedux,
   logoutRedux,
   setAccessToken,
 } from "components/Internal/Redux.js";
 import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
-import VisuComp from "components/Internal/VisuComp.js";
-import { CommonCompsData } from "components/Internal/DefaultData.js";
+import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 
+import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardAvatar from "components/Card/CardAvatar.js";
@@ -16,10 +16,16 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CommonComps from "components/Internal/CommonComps.js";
+import { CommonCompsData } from "components/Internal/DefaultData.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import EditableSwitch from "components/EditableTableReport/EditableSwitch";
 
+import FormLabel from "@material-ui/core/FormLabel";
+import GridContainer from "components/Grid/GridContainer.js";
 // @material-ui/core components
 // core components
 import GridItem from "components/Grid/GridItem.js";
@@ -27,11 +33,11 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import React from "react";
 import Switch from "@material-ui/core/Switch";
+import Typography from "@material-ui/core/Typography";
+import VisuComp from "components/Internal/VisuComp.js";
 import avatar from "assets/img/faces/profile_white.png";
 import { connect } from "react-redux";
-import { getUserID, getUser } from "components/Internal/Checks.js";
 import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 
 const styles = (theme) => ({
   cardCategoryWhite: {
@@ -63,6 +69,7 @@ class UserProfile extends VisuComp {
       Switches: {
         AGB: false,
         DSGVO: false,
+        SpexDoc: false,
       },
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
       userProfile: {
@@ -75,6 +82,21 @@ class UserProfile extends VisuComp {
         birthDate: "",
         insurance: "",
         aboutMe: "",
+      },
+      legal: {
+        name: "Nutzungsbedingungen",
+        checked: false,
+        updateComp: this.updateComp,
+      },
+      DSGVO: {
+        name: "DSGVO",
+        checked: false,
+        updateComp: this.updateComp,
+      },
+      acceptConditions: {
+        name: "acceptConditions",
+        checked: false,
+        updateComp: this.updateComp,
       },
     };
   }
@@ -202,7 +224,15 @@ class UserProfile extends VisuComp {
 
   testfunc = () => {
     console.log("testfunc");
-    this.displayLogin();
+    console.log(this.state);
+    // this.displayLogin();
+
+    var test =
+      this.state.legal.checked &&
+      this.state.DSGVO.checked &&
+      this.state.acceptConditions.checked;
+    console.log(test);
+    console.log(this.props);
   };
 
   render() {
@@ -210,7 +240,7 @@ class UserProfile extends VisuComp {
     return (
       <div>
         <CommonComps commonProps={this.state.commonProps} />
-        <Button onClick={this.handleLogoutProfile}>Logout</Button>
+        <Button onClick={this.testfunc}>Testubtton</Button>
         <GridContainer>
           <GridItem xs={12} sm={12} md={8}>
             <Card>
@@ -220,29 +250,66 @@ class UserProfile extends VisuComp {
               </CardHeader>
               {!this.state.commonProps.loginState ? (
                 <CardBody>
-                  <Typography variant="h4" component="h2">
-                    <Switch
-                      checked={this.state.Switches.AGB}
-                      onChange={(ev) => this.handleSwitchChange("AGB", ev)}
-                      color="primary"
-                      name="Emergency_switch"
-                      inputProps={{ "aria-label": "secondary checkbox" }}
-                    />
-                    AGB
-                  </Typography>
-                  <Typography variant="h4" component="h2">
-                    <Switch
-                      checked={this.state.Switches.DSGVO}
-                      onChange={(ev) => this.handleSwitchChange("DSGVO", ev)}
-                      color="primary"
-                      name="Emergency_switch"
-                      inputProps={{ "aria-label": "secondary checkbox" }}
-                    />
-                    DSGVO
-                  </Typography>
+                  <FormControl>
+                    <FormLabel component="h2"></FormLabel>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <EditableSwitch switchOptions={this.state.legal} />
+                        }
+                        label={
+                          <Typography variant="body1">
+                            Ich habe die{" "}
+                            <a href="https://spexdoc.net/agb">
+                              Nutzungsbedingungen
+                            </a>{" "}
+                            gelesen und akzeptiere sie.
+                          </Typography>
+                        }
+                      />
+                      <br />
+                      <FormControlLabel
+                        control={
+                          <EditableSwitch switchOptions={this.state.DSGVO} />
+                        }
+                        label={
+                          <Typography variant="body1">
+                            Ich habe die{" "}
+                            <a href="https://spexdoc.net/datenschutzerklarung">
+                              Datenschutzerklärung
+                            </a>{" "}
+                            gelesen.
+                          </Typography>
+                        }
+                      />
+                      <br />
+
+                      <FormControlLabel
+                        control={
+                          <EditableSwitch
+                            switchOptions={this.state.acceptConditions}
+                          />
+                        }
+                        label={
+                          <Typography variant="body1">
+                            Ich bin damit einverstanden, dass SpexDoc die von
+                            mir zur Verfügung gestellten persönlichen
+                            Gesundheitsdaten verarbeitet, um ein Konto zu
+                            erstellen.
+                          </Typography>
+                        }
+                      />
+                    </FormGroup>
+                  </FormControl>
+                  <br />
+
                   <Button
                     disabled={
-                      !(this.state.Switches.AGB && this.state.Switches.DSGVO)
+                      !(
+                        this.state.legal.checked &&
+                        this.state.DSGVO.checked &&
+                        this.state.acceptConditions.checked
+                      )
                     }
                     onClick={this.handleLoginProfile}
                     color="primary"
@@ -254,6 +321,10 @@ class UserProfile extends VisuComp {
               ) : (
                 <div>
                   <CardBody>
+                    <Button color="primary" onClick={this.handleLogoutProfile}>
+                      Logout
+                    </Button>
+
                     <GridContainer>
                       <GridItem xs={12} sm={12} md={4}>
                         <CustomInput
@@ -412,9 +483,9 @@ class UserProfile extends VisuComp {
                 <p className={classes.description}>
                   {this.state.userProfile.aboutMe}
                 </p>
-                <Button color="primary" onClick={this.shareProfile} round>
+                {/* <Button color="primary" onClick={this.shareProfile} round>
                   Share
-                </Button>
+                </Button> */}
               </CardBody>
             </Card>
           </GridItem>
