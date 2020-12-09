@@ -106,10 +106,8 @@ class Dashboard extends VisuComp {
     const { classes } = this.props;
     return (
       <div>
+        <CommonComps commonProps={this.state.commonProps} />
         <GridContainer>
-          <Button onClick={this.calculateProperties} />
-          <CommonComps commonProps={this.state.commonProps} />
-
           <GridItem xs={12} sm={6} md={3}>
             <Card>
               <CardHeader color="warning" stats icon>
@@ -117,7 +115,9 @@ class Dashboard extends VisuComp {
                   <Icon>content_copy</Icon>
                 </CardIcon>
                 <p className={classes.cardCategory}>Befunde</p>
-                <h3 className={classes.cardTitle}>{this.state.medRecords ? this.state.medRecords.length:0}</h3>
+                <h3 className={classes.cardTitle}>
+                  {this.state.medRecords ? this.state.medRecords.length : 0}
+                </h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
@@ -141,7 +141,9 @@ class Dashboard extends VisuComp {
               <CardFooter stats>
                 <div className={classes.stats}>
                   <DateRange />
-                  {this.state.UserProfile?this.state.UserProfile.insurance : "Versicherung"}
+                  {this.state.UserProfile
+                    ? this.state.UserProfile.insurance
+                    : "Versicherung"}
                 </div>
               </CardFooter>
             </Card>

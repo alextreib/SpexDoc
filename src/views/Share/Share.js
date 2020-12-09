@@ -21,6 +21,8 @@ import React from "react";
 import ShareIcon from "@material-ui/icons/Share";
 import Snackbar from "components/Snackbar/Snackbar.js";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
+import { CommonCompsData } from "components/Internal/DefaultData.js";
+
 import Switch from "@material-ui/core/Switch";
 import { connect } from "react-redux";
 import { defaultCommonParams } from "components/Internal/Utils.js";
@@ -67,7 +69,8 @@ class Share extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      commonProps: defaultCommonParams,
+      commonProps: { ...CommonCompsData, updateComp: this.updateComp },
+
       data: {
         emergency: {
           QRCodeactive: false,
@@ -92,13 +95,18 @@ class Share extends React.Component {
       // No change from above (currently nothing else is needed)
       return;
     } else {
-      this.fetchTable();
+      this.updateComp();
     }
   }
 
   componentDidMount() {
-    this.fetchTable();
+    this.updateComp();
   }
+
+  // Required from CommonProps
+  updateComp = async () => {
+    this.fetchTable();
+  };
 
   // Fetch the table from Firebase (Original data)
   fetchTable = () => {
@@ -160,7 +168,6 @@ class Share extends React.Component {
     return (
       <Card>
         <CommonComps commonProps={this.state.commonProps} />
-        <LoginAlert loginState={this.state} />
         <CardHeader color="primary">
           <h4 className={classes.cardTitleWhite}>Freigaben</h4>
           <p className={classes.cardCategoryWhite}>
