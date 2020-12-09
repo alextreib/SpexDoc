@@ -1,38 +1,21 @@
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 
-// @material-ui/icons
-import AddAlert from "@material-ui/icons/AddAlert";
-import Box from "@material-ui/core/Box";
-import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CommonComps from "components/Internal/CommonComps.js";
-import GridContainer from "components/Grid/GridContainer.js";
-// core components
-import GridItem from "components/Grid/GridItem.js";
-import IconButton from "@material-ui/core/IconButton";
-import LoginAlert from "components/LoginAlert/LoginAlert.js";
-import PropTypes from "prop-types";
-import QRCode from "qrcode.react";
-import QRCodeCard from "components/VisuComps/QRCodeCard.js";
-/*eslint-disable*/
-import React from "react";
-import ShareIcon from "@material-ui/icons/Share";
-import Snackbar from "components/Snackbar/Snackbar.js";
-import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import { CommonCompsData } from "components/Internal/DefaultData.js";
-
+import GridContainer from "components/Grid/GridContainer.js";
+import GridItem from "components/Grid/GridItem.js";
+import PropTypes from "prop-types";
+import QRCodeCard from "components/VisuComps/QRCodeCard.js";
+import React from "react";
 import Switch from "@material-ui/core/Switch";
 import { connect } from "react-redux";
-import { defaultCommonParams } from "components/Internal/Utils.js";
 import { getShortLink } from "components/Internal/Checks";
 import { getUserID } from "components/Internal/Checks";
-// nodejs library to set properties for components
-// @material-ui/core components
-
-import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/core/styles";
+
 
 const styles = {
   cardCategoryWhite: {
@@ -233,7 +216,9 @@ class Share extends React.Component {
                     />
                   </div>
                   {this.state.data.medRecords.QRCodeactive ? (
-                    <QRCodeCard link={this.state.data.medRecords.shortLink} />
+                    <div>
+                      <QRCodeCard link={this.state.data.medRecords.shortLink} />
+                    </div>
                   ) : null}
                 </CardBody>
               </Card>

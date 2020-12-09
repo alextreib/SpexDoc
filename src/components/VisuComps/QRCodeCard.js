@@ -1,11 +1,9 @@
-import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
-
 import IconButton from "@material-ui/core/IconButton";
 import PropTypes from "prop-types";
-import QRCode from "qrcode.react";
+import QRCodeComp from "components/VisuComps/QRCodeComp.js";
 import React from "react";
+import ReactToPrint from "react-to-print";
 import ShareIcon from "@material-ui/icons/Share";
-import { getUserID } from "components/Internal/Checks";
 import { shareLink } from "components/Internal/Sharing";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -45,49 +43,43 @@ class QRCodeCard extends React.Component {
       return;
     }
   }
-  
-  componentDidMount()
-  {
+
+  componentDidMount() {
     this.setState({ link: this.props.link });
   }
 
-  shareLink=()=>{
+  shareLink = () => {
     return shareLink("Hallo, schau dir das doch mal an: \n", this.state.link);
-  }
+  };
 
   render() {
     return (
       <div>
-        <QRCode
-          value={this.props.link}
-          size={200}
-          bgColor={"#ffffff"}
-          fgColor={"#000000"}
-          level={"L"}
-          includeMargin={true}
-          renderAs={"svg"}
-          imageSettings={{
-            src:
-              "https://spexdoc.net/wp-content/uploads/2020/07/SpexDoc_logo_png.png",
-            x: null,
-            y: null,
-            height: 20,
-            width: 20,
-            excavate: true,
-          }}
+        <ReactToPrint
+          trigger={() => <a href="#">Hier ausdrucken</a>}
+          content={() => this.componentRef}
         />
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <a href="#" onClick={this.shareLink}>{this.state.link}</a>
-          {/* Oder einfach nur auf den Link klicken */}
-          <IconButton onClick={this.shareLink}  style={{ marginLeft: "auto" }} aria-label="share">
-            <ShareIcon />
-          </IconButton>
+        <div>
+          <QRCodeComp ref={(el) => (this.componentRef = el)} {...this.props} />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <a href="#" onClick={this.shareLink}>
+              {this.state.link}
+            </a>
+            {/* Oder einfach nur auf den Link klicken */}
+            <IconButton
+              onClick={this.shareLink}
+              style={{ marginLeft: "auto" }}
+              aria-label="share"
+            >
+              <ShareIcon />
+            </IconButton>
+          </div>
         </div>
       </div>
     );
