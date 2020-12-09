@@ -60,7 +60,7 @@ class Emergency extends React.Component {
 
     this.state = {
       predispositionTable: {
-        name: "Predisposition",
+        name: "EmergencyPredisposition",
         columns: [
           { title: "Vorerkrankung", field: "predisposition" },
           { title: "Diagnose seit", field: "diagnosis_year" },
@@ -73,7 +73,7 @@ class Emergency extends React.Component {
         ],
       },
       medicationTable: {
-        name: "Medication",
+        name: "EmergencyMedication",
         columns: [
           { title: "Medikament", field: "medication" },
           { title: "Rhythmus", field: "rythme" },
@@ -86,7 +86,7 @@ class Emergency extends React.Component {
         ],
       },
       contactTable: {
-        name: "Contacts",
+        name: "EmergencyContacts",
         columns: [
           { title: "Name", field: "name" },
           { title: "Beziehung", field: "relation" },
@@ -103,7 +103,7 @@ class Emergency extends React.Component {
         ],
       },
       organSwitch: {
-        name: "organ_donation",
+        name: "OrganDonation",
         data: false,
       },
     };

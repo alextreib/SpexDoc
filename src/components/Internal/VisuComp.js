@@ -10,7 +10,6 @@ import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
 import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
 import { connect } from "react-redux";
 
-
 // Is more or less an abstract class that clusters
 // Expect commonProps
 export default class VisuComp extends React.Component {
@@ -18,23 +17,41 @@ export default class VisuComp extends React.Component {
     super(props);
   }
 
-  componentDidUpdate(){
-    console.log("visu comp update")
+  componentDidUpdate() {
+    console.log("visu comp update");
   }
-    
+
+  fetchTable = (property) => {
+    // Promis probably won't work
+    return new Promise((resolve, reject) => {
+      console.log("fetchTable");
+      readDBData(property, false).then((doc_data) => {
+        if (doc_data != null) 
+        {
+          this.setState({ [property]: doc_data });
+        resolve(true)
+        }
+      });
+    });
+  };
+
+  timeout(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+
   // Combining the function in a way to display it everywhere the same
   displayLogin = () => {
     console.log("displaylogin");
     // This is how a function in CommonProps is called
     this.setState({
-      commonProps: { ...this.state.commonProps,
+      commonProps: {
+        ...this.state.commonProps,
         LoginAlertProps: { openLoginRequired: true, FuncParams: "test" },
       },
     });
     console.log("update force");
   };
- 
 
   // Rendering not possible in abstract class
 }
-

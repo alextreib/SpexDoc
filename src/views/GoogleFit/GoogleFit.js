@@ -46,11 +46,12 @@ import {
 } from "components/Internal/GoogleFitFunc.js";
 
 import { getChart } from "components/Internal/GoogleFitCharts.js";
+import VisuComp from "components/Internal/VisuComp.js";
 var Chartist = require("chartist");
 
 const useStyles = makeStyles(styles);
 
-class GoogleFit extends React.Component {
+class GoogleFit extends VisuComp {
   constructor(props) {
     super(props);
 
@@ -107,9 +108,6 @@ class GoogleFit extends React.Component {
     // Load User Firebase data (maybe)
   };
 
-  timeout(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
 
   loadGoogleData = async () => {
     if (this.props.access_token) {
