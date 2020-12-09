@@ -110,7 +110,6 @@ const headerLinksStyle = theme => ({
   },
   LinkNotification: {
     color: "inherit",
-    innerWidth:50,
   },
 });
 

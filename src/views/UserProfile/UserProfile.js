@@ -240,7 +240,6 @@ class UserProfile extends VisuComp {
     return (
       <div>
         <CommonComps commonProps={this.state.commonProps} />
-        <Button onClick={this.testfunc}>Testubtton</Button>
         <GridContainer>
           <GridItem xs={12} sm={12} md={8}>
             <Card>
@@ -260,7 +259,7 @@ class UserProfile extends VisuComp {
                         label={
                           <Typography variant="body1">
                             Ich habe die{" "}
-                            <a href="https://spexdoc.net/agb">
+                            <a target="_blank" href="https://spexdoc.net/agb">
                               Nutzungsbedingungen
                             </a>{" "}
                             gelesen und akzeptiere sie.
@@ -275,7 +274,7 @@ class UserProfile extends VisuComp {
                         label={
                           <Typography variant="body1">
                             Ich habe die{" "}
-                            <a href="https://spexdoc.net/datenschutzerklarung">
+                            <a target="_blank" href="https://spexdoc.net/datenschutzerklarung">
                               Datenschutzerklärung
                             </a>{" "}
                             gelesen.

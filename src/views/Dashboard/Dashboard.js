@@ -24,8 +24,7 @@ import Warning from "@material-ui/icons/Warning";
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import { withStyles } from "@material-ui/core/styles";
-import Typography from '@material-ui/core/Typography';
-
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(styles);
 class Dashboard extends VisuComp {
@@ -109,7 +108,11 @@ class Dashboard extends VisuComp {
     return (
       <div>
         <CommonComps commonProps={this.state.commonProps} />
-        <Typography variant="h3">Hallo {this.state.UserProfile? this.state.UserProfile.firstName: null} {this.state.UserProfile? this.state.UserProfile.lastName: null}</Typography>
+        <Typography variant="h3">
+          Hallo{" "}
+          {this.state.UserProfile ? this.state.UserProfile.firstName : null}{" "}
+          {this.state.UserProfile ? this.state.UserProfile.lastName : null}
+        </Typography>
         <GridContainer>
           <GridItem xs={12} sm={6} md={3}>
             <Card>
@@ -138,15 +141,18 @@ class Dashboard extends VisuComp {
                 <CardIcon color="success">
                   <Store />
                 </CardIcon>
-                <p className={classes.cardCategory}>Krankenkassenkosten</p>
-                <h3 className={classes.cardTitle}>Nicht verfügbar</h3>
+                <p className={classes.cardCategory}>Krankenkasse</p>
+                <h3 className={classes.cardTitle}>
+                  {" "}
+                  {this.state.UserProfile
+                    ? this.state.UserProfile.insurance
+                    : ""}
+                </h3>
               </CardHeader>
               <CardFooter stats>
                 <div className={classes.stats}>
                   <DateRange />
-                  {this.state.UserProfile
-                    ? this.state.UserProfile.insurance
-                    : "Versicherung"}
+                  Noch nicht verknüpft
                 </div>
               </CardFooter>
             </Card>
