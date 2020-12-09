@@ -172,7 +172,7 @@ export default function Dashboard() {
                 <Assignment>
                   <Warning />
                 </Assignment>
-                Analysiert
+                Analysiertv 
               </div>
             </CardFooter>
           </Card>
