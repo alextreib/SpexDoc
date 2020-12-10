@@ -66,11 +66,6 @@ class UserProfile extends VisuComp {
   constructor(props) {
     super(props);
     this.state = {
-      Switches: {
-        AGB: false,
-        DSGVO: false,
-        SpexDoc: false,
-      },
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
       userProfile: {
         email: "",
@@ -83,20 +78,16 @@ class UserProfile extends VisuComp {
         insurance: "",
         aboutMe: "",
       },
-      legal: {
-        name: "Nutzungsbedingungen",
-        checked: false,
-        updateComp: this.updateComp,
-      },
-      DSGVO: {
-        name: "DSGVO",
-        checked: false,
-        updateComp: this.updateComp,
-      },
-      acceptConditions: {
-        name: "acceptConditions",
-        checked: false,
-        updateComp: this.updateComp,
+      UserSwitches: {
+        legal: {
+          checked: false,
+        },
+        DSGVO: {
+          checked: false,
+        },
+        acceptConditions: {
+          checked: false,
+        },
       },
     };
   }
@@ -111,8 +102,9 @@ class UserProfile extends VisuComp {
       // No change from above (currently nothing else is needed)
       return;
     } else {
-      this.fetchTable();
+      this.updateComp();
       // Only required for visu, not loading
+      //todo: Cleanup
       this.setState({
         commonProps: { ...this.state.commonProps, loginState: checkUser() },
       });
@@ -122,6 +114,8 @@ class UserProfile extends VisuComp {
   // Required from CommonProps
   updateComp = () => {
     this.fetchTable();
+
+    //todo: Cleanup
     this.setState({
       userProfile: { ...this.state.userProfile, email: getUserEmail() },
     });
@@ -131,7 +125,7 @@ class UserProfile extends VisuComp {
   // Is called when table is changed
   fetchTable = () => {
     // todo: default parameter
-    return readDBData("UserProfile", false).then((doc_data) => {
+    readDBData("UserProfile", false).then((doc_data) => {
       if (doc_data != null) this.setState({ userProfile: doc_data });
       // Cannot get data -> set default data from parent class
       // this.setState({ userProfile: this.state.user });
@@ -140,7 +134,7 @@ class UserProfile extends VisuComp {
   };
 
   // Is called when table is changed
-  uploadProfile = () => {
+  uploadData = () => {
     console.log("upload");
     var user_id = getUserID();
     if (user_id == null) {
@@ -159,7 +153,7 @@ class UserProfile extends VisuComp {
         userProfile: { ...this.state.userProfile, [property]: changedValue },
       },
       () => {
-        this.uploadProfile();
+        this.uploadData();
       }
     );
   };
@@ -199,8 +193,6 @@ class UserProfile extends VisuComp {
         console.log("User successfully logged out");
         // todo: PopUp
         // Sign-out successful.
-        // setUserLogin(false);
-        // dispatch(logoutRedux());
         this.props.logoutRedux();
       })
       .catch((error) => {
@@ -211,28 +203,31 @@ class UserProfile extends VisuComp {
   };
 
   handleSwitchChange = async (property, event) => {
-    console.log("handleSwitch");
+    // console.log("handleSwitch");
     var checked = event.target.checked;
 
     this.setState({
-      Switches: {
-        ...this.state.Switches,
-        [property]: checked,
+      UserSwitches: {
+        ...this.state.UserSwitches,
+        [property]: {
+          ...this.state.property,
+          checked: checked,
+        },
       },
     });
   };
 
   testfunc = () => {
-    console.log("testfunc");
+    // console.log("testfunc");
+    // console.log(this.state);
+    // // this.displayLogin();
+    // var test =
+    //   this.state.legal.checked &&
+    //   this.state.DSGVO.checked &&
+    //   this.state.acceptConditions.checked;
+    // console.log(test);
     console.log(this.state);
-    // this.displayLogin();
-
-    var test =
-      this.state.legal.checked &&
-      this.state.DSGVO.checked &&
-      this.state.acceptConditions.checked;
-    console.log(test);
-    console.log(this.props);
+    // console.log(this.props);
   };
 
   render() {
@@ -254,7 +249,13 @@ class UserProfile extends VisuComp {
                     <FormGroup>
                       <FormControlLabel
                         control={
-                          <EditableSwitch switchOptions={this.state.legal} />
+                          <Switch
+                            checked={this.state.UserSwitches.legal.checked}
+                            onChange={(ev) =>
+                              this.handleSwitchChange("legal", ev)
+                            }
+                            inputProps={{ "aria-label": "secondary checkbox" }}
+                          />
                         }
                         label={
                           <Typography variant="body1">
@@ -269,12 +270,21 @@ class UserProfile extends VisuComp {
                       <br />
                       <FormControlLabel
                         control={
-                          <EditableSwitch switchOptions={this.state.DSGVO} />
+                          <Switch
+                            checked={this.state.UserSwitches.DSGVO.checked}
+                            onChange={(ev) =>
+                              this.handleSwitchChange("DSGVO", ev)
+                            }
+                            inputProps={{ "aria-label": "secondary checkbox" }}
+                          />
                         }
                         label={
                           <Typography variant="body1">
                             Ich habe die{" "}
-                            <a target="_blank" href="https://spexdoc.net/datenschutzerklarung">
+                            <a
+                              target="_blank"
+                              href="https://spexdoc.net/datenschutzerklarung"
+                            >
                               Datenschutzerklärung
                             </a>{" "}
                             gelesen.
@@ -285,8 +295,14 @@ class UserProfile extends VisuComp {
 
                       <FormControlLabel
                         control={
-                          <EditableSwitch
-                            switchOptions={this.state.acceptConditions}
+                          <Switch
+                            checked={
+                              this.state.UserSwitches.acceptConditions.checked
+                            }
+                            onChange={(ev) =>
+                              this.handleSwitchChange("acceptConditions", ev)
+                            }
+                            inputProps={{ "aria-label": "secondary checkbox" }}
                           />
                         }
                         label={
@@ -305,9 +321,9 @@ class UserProfile extends VisuComp {
                   <Button
                     disabled={
                       !(
-                        this.state.legal.checked &&
-                        this.state.DSGVO.checked &&
-                        this.state.acceptConditions.checked
+                        this.state.UserSwitches.legal.checked &&
+                        this.state.UserSwitches.acceptConditions.checked &&
+                        this.state.UserSwitches.DSGVO.checked
                       )
                     }
                     onClick={this.handleLoginProfile}

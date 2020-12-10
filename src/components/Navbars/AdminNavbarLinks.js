@@ -62,7 +62,7 @@ class AdminNavbarLinks extends React.Component {
 
   fetchTable = () => {
     return readDBData("Notifications", false).then((doc_data) => {
-      if (doc_data == null) return;
+      if (doc_data == null) this.setState({ notificationList: [] });
       // Cannot get data -> set default data from parent class
       // this.setState({ data: this.props.tableOptions.data });
       else this.setState({ notificationList: doc_data });
@@ -208,4 +208,19 @@ AdminNavbarLinks.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AdminNavbarLinks);
+const mapStateToProps = (state) => ({
+  loginState: state.loginState,
+  access_token: state.access_token,
+});
+
+const mapDispatchToProps = {
+  loginRedux,
+  logoutRedux,
+};
+
+const AdminNavbarLinksWithRedux = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AdminNavbarLinks);
+
+export default withStyles(styles)(AdminNavbarLinksWithRedux);

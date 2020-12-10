@@ -1,26 +1,43 @@
-import { grayColor } from "assets/jss/material-dashboard-react.js";
+import { checkUser, getUserEmail } from "components/Internal/Checks.js";
+import {
+  loginRedux,
+  logoutRedux,
+  removeAccessToken,
+  setAccessToken,
+} from "components/Internal/Redux.js";
+import {
+  loginUser,
+  loginUserWithFit,
+  logoutUser,
+} from "components/Internal/LoginFunctions.js";
+import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 
+import AccountCircle from "@material-ui/icons/AccountCircle";
 import AppBar from "@material-ui/core/AppBar";
+import Avatar from "@material-ui/core/Avatar";
 import Badge from "@material-ui/core/Badge";
+import BottomNavigation from "@material-ui/core/BottomNavigation";
+import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
+import CommonComps from "components/Internal/CommonComps.js";
+import { CommonCompsData } from "components/Internal/DefaultData.js";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import HomeIcon from "@material-ui/icons/Home";
 import { Link } from "react-router-dom";
 import NotificationData from "components/NotificationData/NotificationData.js";
 import NotificationIcon from "@material-ui/icons/Notifications";
 import ProfileButton from "components/Navbars/ProfileButton.js";
-import BottomNavigation from "@material-ui/core/BottomNavigation";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-
+import PropTypes from "prop-types";
 import React from "react";
-import Toolbar from "@material-ui/core/Toolbar";
-import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
 import RestoreIcon from "@material-ui/icons/Restore";
+import Toolbar from "@material-ui/core/Toolbar";
+import { connect } from "react-redux";
+import { grayColor } from "assets/jss/material-dashboard-react.js";
 import { makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 
-import { useState, useEffect } from "react";
-import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
-
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
   root: {},
   text: {
     padding: theme.spacing(2, 2, 0),
@@ -67,71 +84,116 @@ const useStyles = makeStyles((theme) => ({
   Profile: {
     color: "inherit",
   },
-}));
+});
 
-export default function BottomAppBarMobile() {
-  const classes = useStyles();
+class BottomAppBarMobile extends React.Component {
+  constructor(props) {
+    super(props);
 
-  const [notificationList, setnotificationList] = React.useState([]);
-  const [value, setValue] = React.useState(0);
+    this.state = {
+      // List of additional rendered components (several concurrently)
+      notificationList: [],
+      value: "",
+      commonProps: { ...CommonCompsData, updateComp: this.updateComp },
+    };
+  }
 
-  useEffect(() => {
-    fetchTable();
-  });
+  componentDidMount() {
+    console.log(this.props);
+    this.fetchTable();
+  }
 
-  const fetchTable = () => {
+  componentDidUpdate(prevProps) {
+    if (prevProps == this.props) {
+      // No change from above (currently nothing else is needed)
+      return;
+    } else {
+      this.fetchTable();
+    }
+  }
+
+  fetchTable = () => {
     readDBData("Notifications", false).then((doc_data) => {
       if (doc_data == null) {
         console.log(doc_data);
-        return;
+        this.setState({ notificationList: [] });
       } else {
-        setnotificationList(doc_data);
+        this.setState({ notificationList: doc_data });
       }
     });
   };
 
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <AppBar position="fixed" className={classes.appBar}>
-        <BottomNavigation
-          value={value}
-          onChange={(event, newValue) => {
-            setValue(newValue);
-          }}
-          showLabels
-          className={classes.root}
-        >
-          <BottomNavigationAction
-            label="Notification"
-            icon={
-              <Link className={classes.Home} to="/dashboard">
-                <HomeIcon />
-              </Link>
-            }
-          />
+  render() {
+    const { classes } = this.props;
 
-          <BottomNavigationAction
-            label="Recents"
-            icon={
-              <Link className={classes.LinkNotification} to="/notifications">
-                <Badge badgeContent={notificationList.length} color="secondary">
-                  <NotificationIcon />
-                </Badge>
-              </Link>
-            }
-          />
+    return (
+      <React.Fragment>
+        <CssBaseline />
+        <AppBar position="fixed" className={classes.appBar}>
+          <BottomNavigation
+            value={this.state.value}
+            onChange={(event, newValue) => {
+              //   setValue(newValue);
+              this.setState({ value: newValue });
+            }}
+            showLabels
+            className={classes.root}
+          >
+            <BottomNavigationAction
+              label="Notification"
+              icon={
+                <Link className={classes.Home} to="/dashboard">
+                  <HomeIcon />
+                </Link>
+              }
+            />
 
-          <BottomNavigationAction
-            label="Profile"
-            icon={
-              <Link className={classes.Profile} to="/user">
-                <ProfileButton />
-              </Link>
-            }
-          />
-        </BottomNavigation>
-      </AppBar>
-    </React.Fragment>
-  );
+            <BottomNavigationAction
+              label="Recents"
+              icon={
+                <Link className={classes.LinkNotification} to="/notifications">
+                  <Badge
+                    badgeContent={this.state.notificationList.length}
+                    color="secondary"
+                  >
+                    <NotificationIcon />
+                  </Badge>
+                </Link>
+              }
+            />
+
+            <BottomNavigationAction
+              label="Profile"
+              icon={
+                <Link className={classes.Profile} to="/user">
+                  <ProfileButton />
+                </Link>
+              }
+            />
+          </BottomNavigation>
+        </AppBar>
+      </React.Fragment>
+    );
+  }
 }
+
+BottomAppBarMobile.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  loginState: state.loginState,
+  access_token: state.access_token,
+});
+
+const mapDispatchToProps = {
+  loginRedux,
+  logoutRedux,
+};
+
+const BottomAppBarMobileWithRedux = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BottomAppBarMobile);
+
+export default withStyles(styles)(BottomAppBarMobileWithRedux);
