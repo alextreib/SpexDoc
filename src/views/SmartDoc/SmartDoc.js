@@ -76,85 +76,80 @@ const styles = {
   ref: "https://google.de",
 };
 
-const dict = {
+const LabKeyToUnit = {
   Magnesium: "mol",
   Eisen: "mg",
+};
+
+const limits = {
+  1: [5, 15],
+  2: [50, 100],
+};
+
+const labKeyToNameMapping = {
+  1: "Eisen",
+  2: "Magnesium",
+  3: "LDL Cholesterin",
+  4: "HDL Cholesterin",
+};
+
+const labKeyToNameUnit = {
+  1: labKeyToNameMapping[1] + " in " + LabKeyToUnit[labKeyToNameMapping[1]],
+  2: labKeyToNameMapping[2] + " in " + LabKeyToUnit[labKeyToNameMapping[2]],
+  3: labKeyToNameMapping[3] + " in " + LabKeyToUnit[labKeyToNameMapping[3]],
+  4: labKeyToNameMapping[4] + " in " + LabKeyToUnit[labKeyToNameMapping[4]],
 };
 
 class SmartDoc extends VisuComp {
   constructor(props) {
     super(props);
-    console.log(dict["Magnesium"]);
+    console.log(LabKeyToUnit["Magnesium"]);
 
     this.state = {
-      data: [
-        {
-          labKey: 1,
-          value: "9123",
-          // unit: dict[this.state.predispositionTable.data.labKey],
-        },
-      ],
-
       OrganDonationData: {
         RadioSelection: "Nein",
         TextBoxJAAusnahme: "",
         TextBoxJANur: "",
         TextBoxNeinNachlass: "",
       },
-      predispositionTable: {
+      bloodValueTable: {
+        //todo: capsulate and parameterize
+        name: "bloodValueTable",
         editable: {
           onRowAdd: (newData) =>
             new Promise((resolve) => {
-              setTimeout(() => {
-                resolve();
-                this.setState((prevState) => {
-                  const data = [...prevState.predispositionTable.data];
-                  data.push(newData);
-                  return { ...prevState, predispositionTable: {
-                    ...prevState.predispositionTable,
-                    data: data} };
-                });
-                this.tableChanged();
-              }, 600);
+              resolve(this.onRowAdd(newData, "bloodValueTable"));
             }),
           onRowUpdate: (newData, oldData) =>
             new Promise((resolve) => {
-             resolve(this.onRowUpdate(newData,oldData,"predispositionTable"));
+              resolve(this.onRowUpdate(newData, oldData, "bloodValueTable"));
             }),
           onRowDelete: (oldData) =>
             new Promise((resolve) => {
-              setTimeout(() => {
-                resolve();
-                this.setState((prevState) => {
-                  const data = [...prevState.data];
-                  data.splice(data.indexOf(oldData), 1);
-                  return { ...prevState, data };
-                });
-                this.tableChanged();
-              }, 600);
+              resolve(this.onRowDelete(oldData, "bloodValueTable"));
             }),
         },
-        name: "EmergencyPredisposition",
-        updateComp: this.updateComp,
         columns: [
           {
             title: "Laborwert",
             field: "labKey",
             lookup: {
-              1: "Eisen",
-              2: "Magnesium",
-              3: "LDL Cholesterin",
-              4: "HDL Cholesterin",
+              1: labKeyToNameUnit[1],
+              2: labKeyToNameUnit[2],
+              3: labKeyToNameUnit[3],
+              4: labKeyToNameUnit[4],
             },
           },
+          //todo: type: 'numeric' without layout problems
           { title: "Wert", field: "value" },
-          { title: "Einheit", field: "unit", editable: "never" },
+          //todo: unit is dependent on the layKey -> should be updated accordingly
+          // { title: "Einheit", field: "unit", editable: "never" },
         ],
         data: [
           {
             labKey: 1,
             value: "9",
-            // unit: dict[this.state.predispositionTable.data.labKey],
+            unit: "test",
           },
         ],
       },
@@ -191,7 +186,6 @@ class SmartDoc extends VisuComp {
     };
   }
 
-
   componentDidMount() {
     console.log(this.props);
     this.fetchTable();
@@ -202,9 +196,6 @@ class SmartDoc extends VisuComp {
       // No change from above (currently nothing else is needed)
       return;
     } else {
-      // this.setState({
-      //   predispositionTable: { ...this.state.predispositionTable, data: {...this.state.predispositionTable.data, unit:this.state.predispositionTable.labKey }},
-      // });
 
       this.fetchTable();
       // Only required for visu, not loading
@@ -214,17 +205,30 @@ class SmartDoc extends VisuComp {
     }
   }
 
+  result = () => {
+    var returnText = "";
+    this.state.bloodValueTable.data.forEach((element) => {
+      var value = element.value;
+      var labKey = element.labKey;
+      var minValue = limits[labKey][0];
+      var maxValue = limits[labKey][1];
+      if (value < minValue) {
+        returnText +=
+          "Der Wert für " + labKeyToNameMapping[labKey] + " ist vermindert. ";
+      } else if (value > maxValue) {
+        returnText +=
+          "Der Wert für " + labKeyToNameMapping[labKey] + " ist erhöht. ";
+      } else {
+        // Nothing
+      }
+    });
+    if (returnText == "") returnText += "Alle Werte sind in Ordnung. ";
+
+    return returnText;
+  };
+
   // Required from CommonProps
   updateComp = () => {
-    console.log("test");
-    console.log(this.state.predispositionTable.data);
-    // console.log(dict)
-    // this.fetchTable();
-
-    // //todo: Cleanup
-    // this.setState({
-    //   userProfile: { ...this.state.userProfile, email: getUserEmail() },
-    // });
   };
 
   // Fetch the table from Firebase (Original data)
@@ -288,19 +292,17 @@ class SmartDoc extends VisuComp {
         <GridItem xs={12} sm={12} md={12}>
           <Card>
             <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Laborwert Analyse</h4>
+              <h4 className={classes.cardTitleWhite}>Blutwert Analyse</h4>
               <p className={classes.cardCategoryWhite}>
-                Gehe deinen Laborwerten auf den Grund
+                Gehe deinen Blutwerten auf den Grund
               </p>
             </CardHeader>
             <CardBody>
-              <PlainTable tableOptions={this.state.predispositionTable} />
+              <PlainTable tableOptions={this.state.bloodValueTable} />
               <br />
               <Typography variant="h4">Auswertung</Typography>
               <br />
-              <Typography variant="body1">
-                Der Wert für Eisen ist leicht erhöht.
-              </Typography>
+              <Typography variant="body1">{this.result()}</Typography>
             </CardBody>
           </Card>
         </GridItem>

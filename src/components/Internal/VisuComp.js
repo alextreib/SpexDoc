@@ -68,11 +68,28 @@ export default class VisuComp extends React.Component {
     console.log("update force");
   };
 
-
-
   // PlainTable functions
+  // TableName is also property name, data required (but also from MaterialTable required)
+  onRowAdd = (newData, TableName) => {
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+        this.setState((prevState) => {
+          const data = [...prevState[TableName].data];
+          data.push(newData);
+          return {
+            ...prevState,
+            [TableName]: {
+              ...prevState[TableName],
+              data: data,
+            },
+          };
+        });
+        this.TableChanged(TableName, this.state[TableName].data);
+      }, 600);
+    });
+  };
 
-  // TableName is also property name
   onRowUpdate = (newData, oldData, TableName) => {
     new Promise((resolve) => {
       setTimeout(() => {
@@ -81,7 +98,7 @@ export default class VisuComp extends React.Component {
           this.setState((prevState) => {
             TableName: {
               const data = [...prevState[TableName].data];
-              console.log(data)
+              console.log(data);
               data[data.indexOf(oldData)] = newData;
               return {
                 ...prevState,
@@ -93,13 +110,34 @@ export default class VisuComp extends React.Component {
             }
           });
         }
-        console.log(newData)
+        console.log(newData);
+        this.TableChanged(TableName, this.state[TableName].data);
+      }, 600);
+    });
+  };
+
+  onRowDelete = ( oldData, TableName) => {
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+        this.setState((prevState) => {
+          const data = [...prevState[TableName].data];
+          data.splice(data.indexOf(oldData), 1);
+          return {
+            ...prevState,
+            [TableName]: {
+              ...prevState[TableName],
+              data: data,
+            },
+          };
+        });
         this.TableChanged(TableName, this.state[TableName].data);
       }, 600);
     })
-  }
+  };
 
-    // Fetch the table from Firebase (Original data)
+
+  // Fetch the table from Firebase (Original data)
   // Is called when table is changed
   fetchTable = () => {
     return readDBData(
@@ -114,7 +152,7 @@ export default class VisuComp extends React.Component {
   };
 
   // Is called when table is changed
-  TableChanged = (name,data) => {
+  TableChanged = (name, data) => {
     return writeDBData(name, data);
   };
 
