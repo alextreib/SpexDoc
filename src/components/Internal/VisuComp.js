@@ -116,7 +116,7 @@ export default class VisuComp extends React.Component {
     });
   };
 
-  onRowDelete = ( oldData, TableName) => {
+  onRowDelete = (oldData, TableName) => {
     new Promise((resolve) => {
       setTimeout(() => {
         resolve();
@@ -133,21 +133,18 @@ export default class VisuComp extends React.Component {
         });
         this.TableChanged(TableName, this.state[TableName].data);
       }, 600);
-    })
+    });
   };
-
 
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
-  fetchTable = () => {
-    return readDBData(
-      this.props.tableOptions.name,
-      this.props.tableOptions.name == "Emergency"
-    ).then((doc_data) => {
-      if (doc_data == null)
-        // Cannot get data -> set default data from parent class
-        this.setState({ data: this.props.tableOptions.data });
-      else this.setState({ data: doc_data });
+  TableFetch = (TableName) => {
+    readDBData(TableName, TableName == "Emergency").then((doc_data) => {
+      if (doc_data != null)
+        this.setState({
+          [TableName]: { ...this.state[TableName], data: doc_data },
+        });
+      return;
     });
   };
 

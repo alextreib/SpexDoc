@@ -93,6 +93,9 @@ const labKeyToNameMapping = {
   4: "HDL Cholesterin",
 };
 
+
+
+
 const labKeyToNameUnit = {
   1: labKeyToNameMapping[1] + " in " + LabKeyToUnit[labKeyToNameMapping[1]],
   2: labKeyToNameMapping[2] + " in " + LabKeyToUnit[labKeyToNameMapping[2]],
@@ -187,8 +190,7 @@ class SmartDoc extends VisuComp {
   }
 
   componentDidMount() {
-    console.log(this.props);
-    this.fetchTable();
+    this.TableFetch("bloodValueTable");
   }
 
   componentDidUpdate(prevProps) {
@@ -196,8 +198,8 @@ class SmartDoc extends VisuComp {
       // No change from above (currently nothing else is needed)
       return;
     } else {
+      this.TableFetch("bloodValueTable");
 
-      this.fetchTable();
       // Only required for visu, not loading
       this.setState({
         commonProps: { ...this.state.commonProps, loginState: checkUser() },
@@ -222,14 +224,15 @@ class SmartDoc extends VisuComp {
         // Nothing
       }
     });
-    if (returnText == "") returnText += "Alle Werte sind in Ordnung. ";
+    if (returnText == "")
+      returnText +=
+        "Alle Werte sind in Ordnung. Es liegen keine zugrundeliegende Erkrankungen vor. ";
 
     return returnText;
   };
 
   // Required from CommonProps
-  updateComp = () => {
-  };
+  updateComp = () => {};
 
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
