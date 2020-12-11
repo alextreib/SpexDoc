@@ -40,6 +40,7 @@ class EditableTableReport extends React.Component {
   // Required from CommonProps
   updateComp = () => {
     this.fetchTable();
+   
   };
 
   // Fetch the table from Firebase (Original data)
@@ -60,6 +61,11 @@ class EditableTableReport extends React.Component {
   tableChanged = () => {
     var success = writeDBData(this.props.tableOptions.name, this.state.data);
     if (success == false) this.displayLogin();
+    console.log("update")
+
+    if (this.props.tableOptions.updateComp != null) {
+      this.props.tableOptions.updateComp();
+    }
   };
 
   // todo: Find a way to cluster/extract it to a common place

@@ -1,33 +1,61 @@
-/*eslint-disable*/
-import React from "react";
-// nodejs library to set properties for components
-import PropTypes from "prop-types";
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-// @material-ui/icons
-import AddAlert from "@material-ui/icons/AddAlert";
-// core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Button from "components/CustomButtons/Button.js";
-import SnackbarContent from "components/Snackbar/SnackbarContent.js";
-import Snackbar from "components/Snackbar/Snackbar.js";
+import { checkUser } from "components/Internal/Checks.js";
+import { getUserID } from "components/Internal/Checks.js";
+import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
+import VisuComp from "components/Internal/VisuComp.js";
+
 import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
+import CardHeader from "components/Card/CardHeader.js";
+import CustomInput from "components/CustomInput/CustomInput.js";
+import EditableTableReport from "components/EditableTableReport/EditableTableReport.js";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import GridContainer from "components/Grid/GridContainer.js";
+import GridItem from "components/Grid/GridItem.js";
+import PropTypes from "prop-types";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import React from "react";
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core/styles";
+import { green, blue } from "@material-ui/core/colors";
+
+import Box from "@material-ui/core/Box";
+
+const GreenRadio = withStyles({
+  root: {
+    "&$checked": {
+      color: green[600],
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
+
+const BlueRadio = withStyles({
+  root: {
+    "&$checked": {
+      color: blue[600],
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
 
 const styles = {
+  margin: {
+    margin: "0",
+  },
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
       color: "rgba(255,255,255,.62)",
       margin: "0",
       fontSize: "14px",
       marginTop: "0",
-      marginBottom: "0"
+      marginBottom: "0",
     },
     "& a,& a:hover,& a:focus": {
-      color: "#FFFFFF"
-    }
+      color: "#FFFFFF",
+    },
   },
   cardTitleWhite: {
     color: "#FFFFFF",
@@ -41,306 +69,357 @@ const styles = {
       color: "#777",
       fontSize: "65%",
       fontWeight: "400",
-      lineHeight: "1"
-    }
-  }
+      lineHeight: "1",
+    },
+  },
+  ref: "https://google.de",
 };
 
-const useStyles = makeStyles(styles);
-
-export default function Notifications() {
-  const classes = useStyles();
-  const [tl, setTL] = React.useState(false);
-  const [tc, setTC] = React.useState(false);
-  const [tr, setTR] = React.useState(false);
-  const [bl, setBL] = React.useState(false);
-  const [bc, setBC] = React.useState(false);
-  const [br, setBR] = React.useState(false);
-  React.useEffect(() => {
-    // Specify how to clean up after this effect:
-    return function cleanup() {
-      // to stop the warning of calling setState of unmounted component
-      var id = window.setTimeout(null, 0);
-      while (id--) {
-        window.clearTimeout(id);
-      }
-    };
-  });
-  const showNotification = place => {
-    switch (place) {
-      case "tl":
-        if (!tl) {
-          setTL(true);
-          setTimeout(function() {
-            setTL(false);
-          }, 6000);
-        }
-        break;
-      case "tc":
-        if (!tc) {
-          setTC(true);
-          setTimeout(function() {
-            setTC(false);
-          }, 6000);
-        }
-        break;
-      case "tr":
-        if (!tr) {
-          setTR(true);
-          setTimeout(function() {
-            setTR(false);
-          }, 6000);
-        }
-        break;
-      case "bl":
-        if (!bl) {
-          setBL(true);
-          setTimeout(function() {
-            setBL(false);
-          }, 6000);
-        }
-        break;
-      case "bc":
-        if (!bc) {
-          setBC(true);
-          setTimeout(function() {
-            setBC(false);
-          }, 6000);
-        }
-        break;
-      case "br":
-        if (!br) {
-          setBR(true);
-          setTimeout(function() {
-            setBR(false);
-          }, 6000);
-        }
-        break;
-      default:
-        break;
-    }
-  };
-  return (
-    <Card>
-      <CardHeader color="primary">
-        <h4 className={classes.cardTitleWhite}>Notifications</h4>
-        <p className={classes.cardCategoryWhite}>
-          Handcrafted by our friends from{" "}
-          <a
-            target="_blank"
-            href="https://material-ui-next.com/?ref=creativetime"
-          >
-            Material UI
-          </a>{" "}
-          and styled by{" "}
-          <a
-            target="_blank"
-            href="https://www.creative-tim.com/?ref=mdr-notifications-page"
-          >
-            Creative Tim
-          </a>
-          . Please checkout the{" "}
-          <a href="#pablo" target="_blank">
-            full documentation
-          </a>
-          .
-        </p>
-      </CardHeader>
-      <CardBody>
-        <GridContainer>
-          <GridItem xs={12} sm={12} md={6}>
-            <h5>Notifications Style</h5>
-            <br />
-            <SnackbarContent message={"This is a plain notification"} />
-            <SnackbarContent
-              message={"This is a notification with close button."}
-              close
-            />
-            <SnackbarContent
-              message={"This is a notification with close button and icon."}
-              close
-              icon={AddAlert}
-            />
-            <SnackbarContent
-              message={
-                "This is a notification with close button and icon and have many lines. You can see that the icon and the close button are always vertically aligned. This is a beautiful notification. So you don't have to worry about the style."
-              }
-              close
-              icon={AddAlert}
-            />
-          </GridItem>
-          <GridItem xs={12} sm={12} md={6}>
-            <h5>Notifications States</h5>
-            <br />
-            <SnackbarContent
-              message={
-                'INFO - This is a regular notification made with color="info"'
-              }
-              close
-              color="info"
-            />
-            <SnackbarContent
-              message={
-                'SUCCESS - This is a regular notification made with color="success"'
-              }
-              close
-              color="success"
-            />
-            <SnackbarContent
-              message={
-                'WARNING - This is a regular notification made with color="warning"'
-              }
-              close
-              color="warning"
-            />
-            <SnackbarContent
-              message={
-                'DANGER - This is a regular notification made with color="danger"'
-              }
-              close
-              color="danger"
-            />
-            <SnackbarContent
-              message={
-                'PRIMARY - This is a regular notification made with color="primary"'
-              }
-              close
-              color="primary"
-            />
-          </GridItem>
-        </GridContainer>
-        <br />
-        <br />
-        <GridContainer justify="center">
-          <GridItem xs={12} sm={12} md={6} style={{ textAlign: "center" }}>
-            <h5>
-              Notifications Places
-              <br />
-              <small>Click to view notifications</small>
-            </h5>
-          </GridItem>
-        </GridContainer>
-        <GridContainer justify="center">
-          <GridItem xs={12} sm={12} md={10} lg={8}>
-            <GridContainer>
-              <GridItem xs={12} sm={12} md={4}>
-                <Button
-                  fullWidth
-                  color="primary"
-                  onClick={() => showNotification("tl")}
-                >
-                  Top Left
-                </Button>
-                <Snackbar
-                  place="tl"
-                  color="info"
-                  icon={AddAlert}
-                  message="Welcome to MATERIAL DASHBOARD React - a beautiful freebie for every web developer."
-                  open={tl}
-                  closeNotification={() => setTL(false)}
-                  close
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={4}>
-                <Button
-                  fullWidth
-                  color="primary"
-                  onClick={() => showNotification("tc")}
-                >
-                  Top Center
-                </Button>
-                <Snackbar
-                  place="tc"
-                  color="info"
-                  icon={AddAlert}
-                  message="Welcome to MATERIAL DASHBOARD React - a beautiful freebie for every web developer."
-                  open={tc}
-                  closeNotification={() => setTC(false)}
-                  close
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={4}>
-                <Button
-                  fullWidth
-                  color="primary"
-                  onClick={() => showNotification("tr")}
-                >
-                  Top Right
-                </Button>
-                <Snackbar
-                  place="tr"
-                  color="info"
-                  icon={AddAlert}
-                  message="Sie sind Arzt? Dann erleichern Sie sich die tägliche Arbeit."
-                  open={tr}
-                  closeNotification={() => setTR(false)}
-                  close
-                />
-              </GridItem>
-            </GridContainer>
-          </GridItem>
-        </GridContainer>
-        <GridContainer justify={"center"}>
-          <GridItem xs={12} sm={12} md={10} lg={8}>
-            <GridContainer>
-              <GridItem xs={12} sm={12} md={4}>
-                <Button
-                  fullWidth
-                  color="primary"
-                  onClick={() => showNotification("bl")}
-                >
-                  Bottom Left
-                </Button>
-                <Snackbar
-                  place="bl"
-                  color="info"
-                  icon={AddAlert}
-                  message="Welcome to MATERIAL DASHBOARD React - a beautiful freebie for every web developer."
-                  open={bl}
-                  closeNotification={() => setBL(false)}
-                  close
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={4}>
-                <Button
-                  fullWidth
-                  color="primary"
-                  onClick={() => showNotification("bc")}
-                >
-                  Bottom Center
-                </Button>
-                <Snackbar
-                  place="bc"
-                  color="info"
-                  icon={AddAlert}
-                  message="Welcome to MATERIAL DASHBOARD React - a beautiful freebie for every web developer."
-                  open={bc}
-                  closeNotification={() => setBC(false)}
-                  close
-                />
-              </GridItem>
-              <GridItem xs={12} sm={12} md={4}>
-                <Button
-                  fullWidth
-                  color="primary"
-                  onClick={() => showNotification("br")}
-                >
-                  Bottom Right
-                </Button>
-                <Snackbar
-                  place="br"
-                  color="info"
-                  icon={AddAlert}
-                  message="Welcome to MATERIAL DASHBOARD React - a beautiful freebie for every web developer."
-                  open={br}
-                  closeNotification={() => setBR(false)}
-                  close
-                />
-              </GridItem>
-            </GridContainer>
-          </GridItem>
-        </GridContainer>
-      </CardBody>
-    </Card>
-  );
+const dict = {
+  Magnesium: 'mol',
+  Eisen: "mg"
 }
+
+
+class SmartDoc extends VisuComp {
+  constructor(props) {
+    super(props);
+    console.log(dict["Magnesium"]);
+
+    this.state = {
+      OrganDonationData: {
+        RadioSelection: "Nein",
+        TextBoxJAAusnahme: "",
+        TextBoxJANur: "",
+        TextBoxNeinNachlass: "",
+      },
+      predispositionTable: {
+        name: "EmergencyPredisposition",
+        updateComp: this.updateComp,
+        columns: [
+          {
+            title: "Laborwert",
+            field: "labKey",
+            lookup: {
+              1: "Eisen",
+              2: "Magnesium",
+              3: "LDL Cholesterin",
+              4: "HDL Cholesterin",
+            },
+          },
+          { title: "Wert", field: "value" },
+          { title: "Einheit", field: "unit" , editable:'never' },
+        ],
+        data: [
+          {
+            labKey: 1,
+            value: "9",
+            // unit: dict[this.state.predispositionTable.data.labKey],
+          },
+        ],
+      },
+      medicationTable: {
+        name: "EmergencyMedication",
+        columns: [
+          { title: "Medikament", field: "medication" },
+          { title: "Rhythmus", field: "rythme" },
+        ],
+        data: [
+          {
+            medication: "IbuHEXAL",
+            rythme: "2x Täglich",
+          },
+        ],
+      },
+      contactTable: {
+        name: "EmergencyContacts",
+        columns: [
+          { title: "Name", field: "name" },
+          { title: "Beziehung", field: "relation" },
+          { title: "Telefonnummer", field: "phone" },
+          { title: "Adresse", field: "address" },
+        ],
+        data: [
+          {
+            name: "Nora Tilmann",
+            relation: "Mutter",
+            rythme: "01522722892",
+            rythme: "Seestraße 24, München",
+          },
+        ],
+      },
+    };
+  }
+
+  componentDidMount() {
+    console.log(this.props);
+    this.fetchTable();
+  }
+
+  componentDidUpdate(prevProps) {
+
+
+    if (prevProps == this.props) {
+      // No change from above (currently nothing else is needed)
+      return;
+    } else {
+      // this.setState({
+      //   predispositionTable: { ...this.state.predispositionTable, data: {...this.state.predispositionTable.data, unit:this.state.predispositionTable.labKey }},
+      // });
+     
+      this.fetchTable();
+      // Only required for visu, not loading
+      this.setState({
+        commonProps: { ...this.state.commonProps, loginState: checkUser() },
+      });
+    }
+  }
+
+  
+  // Required from CommonProps
+  updateComp = () => {
+    console.log("test")
+    console.log(this.state.predispositionTable.data)
+    // console.log(dict)
+    // this.fetchTable();
+
+    // //todo: Cleanup
+    // this.setState({
+    //   userProfile: { ...this.state.userProfile, email: getUserEmail() },
+    // });
+  };
+
+
+  // Fetch the table from Firebase (Original data)
+  // Is called when table is changed
+  fetchTable = () => {
+    // todo: default parameter
+    return readDBData("OrganDonationData", false).then((doc_data) => {
+      if (doc_data != null) this.setState({ OrganDonationData: doc_data });
+    });
+  };
+
+  uploadProfile = () => {
+    console.log("update");
+    var user_id = getUserID();
+    if (user_id == null) {
+      this.displayLogin();
+      return false;
+    }
+    var success = writeDBData(
+      "OrganDonationData",
+      this.state.OrganDonationData
+    );
+    if (success == false) this.displayLogin();
+  };
+
+  // Nice function: Sets states automatically
+  inputChange = async (property, event) => {
+    var changedValue = event.target.value;
+    this.setState(
+      {
+        OrganDonationData: {
+          ...this.state.OrganDonationData,
+          [property]: changedValue,
+        },
+      },
+      () => {
+        this.uploadProfile();
+      }
+    );
+  };
+
+  radioChange = (event) => {
+    this.setState(
+      {
+        OrganDonationData: {
+          ...this.state.OrganDonationData,
+          RadioSelection: event.target.value,
+        },
+      },
+      () => {
+        this.uploadProfile();
+      }
+    );
+  };
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Laborwert Analyse</h4>
+              <p className={classes.cardCategoryWhite}>
+                Gehe deinen Laborwerten auf den Grund
+              </p>
+            </CardHeader>
+            <CardBody>
+              <EditableTableReport
+                tableOptions={this.state.predispositionTable}
+              />
+              <br />
+              <Typography variant="h4">Auswertung</Typography>
+              <br />
+              <Typography variant="body1">
+                Der Wert für Eisen ist leicht erhöht.
+              </Typography>
+            </CardBody>
+          </Card>
+        </GridItem>
+
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="info">
+              <h4 className={classes.cardTitleWhite}>Muttermal Analyse</h4>
+              <p className={classes.cardCategoryWhite}>Photographiere dein Muttermal</p>
+            </CardHeader>
+            <CardBody>
+              <EditableTableReport tableOptions={this.state.contactTable} />
+            </CardBody>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="warning">
+              <h4 className={classes.cardTitleWhite}>Frag den Arzt</h4>
+              <p className={classes.cardCategoryWhite}>
+                Deine Daten werden anonym übermittelt und vertraulich behandelt.
+              </p>
+            </CardHeader>
+            <CardBody>
+              <FormControl component="fieldset">
+                <FormGroup>
+                  <RadioGroup
+                    aria-label="ge2nder"
+                    name="gender1"
+                    value={this.state.OrganDonationData.RadioSelection}
+                    onChange={this.radioChange}
+                  >
+                    Für den Fall, dass nach meinem Tod eine Spende von
+                    Organen/Geweben zur Transplantation in Frage kommt, erkläre
+                    ich:
+                    <br />
+                    <FormControlLabel
+                      value="JaTod"
+                      control={<GreenRadio />}
+                      style={{ color: "black" }}
+                      label={
+                        <div>
+                          <Typography>
+                            JA, ich gestatte, dass nach der ärztlichen
+                            Festellung meines Todes meinem Körper Organe und
+                            Gewebe entnommen werden.
+                          </Typography>
+                        </div>
+                      }
+                    />
+                    <br />
+                    <br />
+                    <FormControlLabel
+                      value="JAAusnahme"
+                      control={<GreenRadio />}
+                      style={{ color: "black" }}
+                      label={
+                        <div>
+                          <Typography variant="body1">
+                            JA, ich gestatte dies, mit Ausnahme folgender
+                            Organe/Gewebe:
+                          </Typography>
+
+                          <CustomInput
+                            inputProps={{
+                              value: this.state.OrganDonationData
+                                .TextBoxJAAusnahme,
+                              onChange: (e) =>
+                                this.inputChange("TextBoxJAAusnahme", e),
+                            }}
+                            formControlProps={{
+                              className: classes.margin,
+                              fullWidth: true,
+                            }}
+                          />
+                        </div>
+                      }
+                    />
+                    <br />
+                    <br />
+                    <FormControlLabel
+                      value="JANur"
+                      control={<GreenRadio />}
+                      style={{ color: "black" }}
+                      label={
+                        <div>
+                          <Typography variant="body1">
+                            JA, ich gestatte dies, jedoch nur für folgende
+                            Organe/Gewebe:
+                          </Typography>
+
+                          <CustomInput
+                            inputProps={{
+                              value: this.state.OrganDonationData.TextBoxJANur,
+                              onChange: (e) =>
+                                this.inputChange("TextBoxJANur", e),
+                            }}
+                            formControlProps={{
+                              className: classes.margin,
+                              fullWidth: true,
+                            }}
+                          />
+                        </div>
+                      }
+                    />
+                    <br />
+                    <br />
+                    <FormControlLabel
+                      value="Nein"
+                      control={<Radio />}
+                      style={{ color: "black" }}
+                      label="NEIN, ich widerspreche einer Entnahme von Organen oder Geweben."
+                    />
+                    <br />
+                    <br />
+                    <FormControlLabel
+                      value="NeinNachlass"
+                      control={<BlueRadio />}
+                      style={{ color: "black" }}
+                      label={
+                        <div>
+                          <Typography variant="body1">
+                            Über JA oder NEIN soll dann folgende Person
+                            entscheiden:
+                          </Typography>
+
+                          <CustomInput
+                            inputProps={{
+                              value: this.state.OrganDonationData
+                                .TextBoxNeinNachlass,
+                              onChange: (e) =>
+                                this.inputChange("TextBoxNeinNachlass", e),
+                            }}
+                            formControlProps={{
+                              className: classes.margin,
+                              fullWidth: true,
+                            }}
+                          />
+                        </div>
+                      }
+                    />
+                  </RadioGroup>
+                </FormGroup>
+              </FormControl>
+            </CardBody>
+          </Card>
+        </GridItem>
+      </GridContainer>
+    );
+  }
+}
+
+SmartDoc.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(SmartDoc);
