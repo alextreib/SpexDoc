@@ -76,37 +76,99 @@ const styles = {
   ref: "https://google.de",
 };
 
+// Source: https://www.apotheken-umschau.de/Laborwerte
 const LabKeyToUnit = {
-  Magnesium: "mol",
-  Eisen: "mg",
+  1: "mmol/l",
+  2: "mg/dl",
+  3: "mg/dl",
+  4: "μg/dl",
+  5: "Millionen/μl",
+  6: "μg/l",
+  7: "μg/dl",
+  8: "U/l",
+  9: "Prozent",
+  10: "g/dl",
+  11: "mmol/molHb",
+  12: "µg/l",
+  13: "mg/dl",
+  14: "Leu/µl",
+  15: "mmol/l",
+  16: "µg/l",
+  17: "mmol/l",
+  18: "µg/l",
+  19: "ng/ml",
+  20: "µg/l",
+  21: "Tausend/μl",
+  22: "ng/l",
+  23: "µg/l",
 };
-
 const limits = {
-  1: [5, 15],
-  2: [50, 100],
+  1: [2.2, 2.65],
+  2: [40, 1000],
+  3: [0, 160],
+  4: [65, 180],
+  5: [4.1, 5.1],
+  6: [3, 20],
+  7: [3, 20],
+  8: [0, 50],
+  9: [38, 50],
+  10: [12, 16],
+  11: [0, 30],
+  12: [45, 225],
+  13: [0, 1.2],
+  14: [74, 131],
+  15: [4000, 10000],
+  16: [0.7, 1.1],
+  17: [135, 145],
+  18: [1.0, 3.35],
+  19: [0, 2.5],
+  20: [2.41, 8.27],
+  21: [140, 360],
+  22: [200, 1000],
+  23: [70, 150],
 };
 
 const labKeyToNameMapping = {
-  1: "Eisen",
-  2: "Magnesium",
-  3: "LDL Cholesterin",
-  4: "HDL Cholesterin",
+  1: "Calcium (Kalzium)",
+  2: "Cholesterin-HDL",
+  3: "Cholesterin-LDL",
+  4: "Eisen",
+  5: "Erythrozyten",
+  6: "Ferritin",
+  7: "Folsäure",
+  8: "Gamma-GT (GGT)",
+  9: "Hämatokrit (Hk)",
+  10: "Hämoglobin (Hb)",
+  11: "HbA1c (Hämoglobin A1c)",
+  12: "Kortisol (Cortisol)",
+  13: "Kreatinin",
+  14: "Kupfer (Cu)",
+  15: "Leukozyten",
+  16: "Magnesium (Mg)",
+  17: "Natrium (Na)",
+  18: "Progesteron",
+  19: "Prostataspezifisches Antigen (PSA)",
+  20: "Testosteron",
+  21: "Thrombozyten",
+  22: "Vitamin B12",
+  23: "Zink",
 };
 
+function labKeyToNameUnit(number) {
+  return labKeyToNameMapping[number] + " in " + LabKeyToUnit[number];
+}
 
+// function getLookUps(){
+//   labKeyToNameMapping.forEach((element) => {
+//   console.log("test")
+//   });
+//   return "";
 
-
-const labKeyToNameUnit = {
-  1: labKeyToNameMapping[1] + " in " + LabKeyToUnit[labKeyToNameMapping[1]],
-  2: labKeyToNameMapping[2] + " in " + LabKeyToUnit[labKeyToNameMapping[2]],
-  3: labKeyToNameMapping[3] + " in " + LabKeyToUnit[labKeyToNameMapping[3]],
-  4: labKeyToNameMapping[4] + " in " + LabKeyToUnit[labKeyToNameMapping[4]],
-};
+// }
 
 class SmartDoc extends VisuComp {
   constructor(props) {
     super(props);
-    console.log(LabKeyToUnit["Magnesium"]);
 
     this.state = {
       OrganDonationData: {
@@ -137,10 +199,30 @@ class SmartDoc extends VisuComp {
             title: "Laborwert",
             field: "labKey",
             lookup: {
-              1: labKeyToNameUnit[1],
-              2: labKeyToNameUnit[2],
-              3: labKeyToNameUnit[3],
-              4: labKeyToNameUnit[4],
+              //todo: getall
+              1: labKeyToNameUnit(1),
+              2: labKeyToNameUnit(2),
+              3: labKeyToNameUnit(3),
+              4: labKeyToNameUnit(4),
+              5: labKeyToNameUnit(5),
+              6: labKeyToNameUnit(6),
+              7: labKeyToNameUnit(7),
+              8: labKeyToNameUnit(8),
+              9: labKeyToNameUnit(9),
+              10: labKeyToNameUnit(10),
+              11: labKeyToNameUnit(11),
+              12: labKeyToNameUnit(12),
+              13: labKeyToNameUnit(13),
+              14: labKeyToNameUnit(14),
+              15: labKeyToNameUnit(15),
+              16: labKeyToNameUnit(16),
+              17: labKeyToNameUnit(17),
+              18: labKeyToNameUnit(18),
+              19: labKeyToNameUnit(19),
+              20: labKeyToNameUnit(20),
+              21: labKeyToNameUnit(21),
+              22: labKeyToNameUnit(22),
+              23: labKeyToNameUnit(23),
             },
           },
           //todo: type: 'numeric' without layout problems
