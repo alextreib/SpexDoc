@@ -68,5 +68,55 @@ export default class VisuComp extends React.Component {
     console.log("update force");
   };
 
+
+
+  // PlainTable functions
+
+  // TableName is also property name
+  onRowUpdate = (newData, oldData, TableName) => {
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+        if (oldData) {
+          this.setState((prevState) => {
+            TableName: {
+              const data = [...prevState[TableName].data];
+              console.log(data)
+              data[data.indexOf(oldData)] = newData;
+              return {
+                ...prevState,
+                [TableName]: {
+                  ...prevState[TableName],
+                  data: data,
+                },
+              };
+            }
+          });
+        }
+        console.log(newData)
+        this.TableChanged(TableName, this.state[TableName].data);
+      }, 600);
+    })
+  }
+
+    // Fetch the table from Firebase (Original data)
+  // Is called when table is changed
+  fetchTable = () => {
+    return readDBData(
+      this.props.tableOptions.name,
+      this.props.tableOptions.name == "Emergency"
+    ).then((doc_data) => {
+      if (doc_data == null)
+        // Cannot get data -> set default data from parent class
+        this.setState({ data: this.props.tableOptions.data });
+      else this.setState({ data: doc_data });
+    });
+  };
+
+  // Is called when table is changed
+  TableChanged = (name,data) => {
+    return writeDBData(name, data);
+  };
+
   // Rendering not possible in abstract class
 }

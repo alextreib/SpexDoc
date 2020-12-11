@@ -2,6 +2,7 @@ import { checkUser } from "components/Internal/Checks.js";
 import { getUserID } from "components/Internal/Checks.js";
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 import VisuComp from "components/Internal/VisuComp.js";
+import PlainTable from "components/EditableTableReport/PlainTable.js";
 
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
@@ -76,10 +77,9 @@ const styles = {
 };
 
 const dict = {
-  Magnesium: 'mol',
-  Eisen: "mg"
-}
-
+  Magnesium: "mol",
+  Eisen: "mg",
+};
 
 class SmartDoc extends VisuComp {
   constructor(props) {
@@ -87,6 +87,14 @@ class SmartDoc extends VisuComp {
     console.log(dict["Magnesium"]);
 
     this.state = {
+      data: [
+        {
+          labKey: 1,
+          value: "9123",
+          // unit: dict[this.state.predispositionTable.data.labKey],
+        },
+      ],
+
       OrganDonationData: {
         RadioSelection: "Nein",
         TextBoxJAAusnahme: "",
@@ -94,6 +102,38 @@ class SmartDoc extends VisuComp {
         TextBoxNeinNachlass: "",
       },
       predispositionTable: {
+        editable: {
+          onRowAdd: (newData) =>
+            new Promise((resolve) => {
+              setTimeout(() => {
+                resolve();
+                this.setState((prevState) => {
+                  const data = [...prevState.predispositionTable.data];
+                  data.push(newData);
+                  return { ...prevState, predispositionTable: {
+                    ...prevState.predispositionTable,
+                    data: data} };
+                });
+                this.tableChanged();
+              }, 600);
+            }),
+          onRowUpdate: (newData, oldData) =>
+            new Promise((resolve) => {
+             resolve(this.onRowUpdate(newData,oldData,"predispositionTable"));
+            }),
+          onRowDelete: (oldData) =>
+            new Promise((resolve) => {
+              setTimeout(() => {
+                resolve();
+                this.setState((prevState) => {
+                  const data = [...prevState.data];
+                  data.splice(data.indexOf(oldData), 1);
+                  return { ...prevState, data };
+                });
+                this.tableChanged();
+              }, 600);
+            }),
+        },
         name: "EmergencyPredisposition",
         updateComp: this.updateComp,
         columns: [
@@ -108,7 +148,7 @@ class SmartDoc extends VisuComp {
             },
           },
           { title: "Wert", field: "value" },
-          { title: "Einheit", field: "unit" , editable:'never' },
+          { title: "Einheit", field: "unit", editable: "never" },
         ],
         data: [
           {
@@ -151,14 +191,13 @@ class SmartDoc extends VisuComp {
     };
   }
 
+
   componentDidMount() {
     console.log(this.props);
     this.fetchTable();
   }
 
   componentDidUpdate(prevProps) {
-
-
     if (prevProps == this.props) {
       // No change from above (currently nothing else is needed)
       return;
@@ -166,7 +205,7 @@ class SmartDoc extends VisuComp {
       // this.setState({
       //   predispositionTable: { ...this.state.predispositionTable, data: {...this.state.predispositionTable.data, unit:this.state.predispositionTable.labKey }},
       // });
-     
+
       this.fetchTable();
       // Only required for visu, not loading
       this.setState({
@@ -175,11 +214,10 @@ class SmartDoc extends VisuComp {
     }
   }
 
-  
   // Required from CommonProps
   updateComp = () => {
-    console.log("test")
-    console.log(this.state.predispositionTable.data)
+    console.log("test");
+    console.log(this.state.predispositionTable.data);
     // console.log(dict)
     // this.fetchTable();
 
@@ -188,7 +226,6 @@ class SmartDoc extends VisuComp {
     //   userProfile: { ...this.state.userProfile, email: getUserEmail() },
     // });
   };
-
 
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
@@ -257,9 +294,7 @@ class SmartDoc extends VisuComp {
               </p>
             </CardHeader>
             <CardBody>
-              <EditableTableReport
-                tableOptions={this.state.predispositionTable}
-              />
+              <PlainTable tableOptions={this.state.predispositionTable} />
               <br />
               <Typography variant="h4">Auswertung</Typography>
               <br />
@@ -274,7 +309,9 @@ class SmartDoc extends VisuComp {
           <Card>
             <CardHeader color="info">
               <h4 className={classes.cardTitleWhite}>Muttermal Analyse</h4>
-              <p className={classes.cardCategoryWhite}>Photographiere dein Muttermal</p>
+              <p className={classes.cardCategoryWhite}>
+                Photographiere dein Muttermal
+              </p>
             </CardHeader>
             <CardBody>
               <EditableTableReport tableOptions={this.state.contactTable} />
