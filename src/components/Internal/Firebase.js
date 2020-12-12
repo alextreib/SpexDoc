@@ -1,4 +1,4 @@
-import * as firebase from 'firebase';
+import * as firebase from "firebase";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCpS3fCBYZcehmfwhs6ma_6uyhw6FKmYfM",
@@ -15,8 +15,8 @@ firebase.initializeApp(firebaseConfig);
 
 const firestore = firebase.firestore();
 const auth = firebase.auth();
-const storage= firebase.storage()
+const storage = firebase.storage();
 
 firestore.enablePersistence();
 
-export { firestore, auth, firebase,storage };
+export { firestore, auth, firebase, storage };
