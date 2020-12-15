@@ -1,0 +1,25 @@
+[debug] [2020-12-15T21:55:26.062Z] ----------------------------------------------------------------------
+[debug] [2020-12-15T21:55:26.065Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Alexander\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init functions
+[debug] [2020-12-15T21:55:26.065Z] CLI Version:   8.19.0
+[debug] [2020-12-15T21:55:26.066Z] Platform:      win32
+[debug] [2020-12-15T21:55:26.066Z] Node Version:  v14.0.0
+[debug] [2020-12-15T21:55:26.067Z] Time:          Tue Dec 15 2020 22:55:26 GMT+0100 (Mitteleuropäische Normalzeit)
+[debug] [2020-12-15T21:55:26.067Z] ----------------------------------------------------------------------
+[debug] [2020-12-15T21:55:26.067Z] 
+[debug] [2020-12-15T21:55:26.079Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-12-15T21:55:26.080Z] > authorizing via signed-in user
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\Alexander\Desktop\spexdoc\spexdocapp
+
+Before we get started, keep in mind:
+
+  * You are initializing in an existing Firebase project directory
+

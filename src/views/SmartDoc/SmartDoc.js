@@ -2,6 +2,7 @@ import { checkUser } from "components/Internal/Checks.js";
 import { getUserID } from "components/Internal/Checks.js";
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 import VisuComp from "components/Internal/VisuComp.js";
+import VisuComp from "components/Internal/Firebase.js";
 import PlainTable from "components/EditableTableReport/PlainTable.js";
 
 import Card from "components/Card/Card.js";
@@ -20,7 +21,10 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
+import * as admin from "firebase-admin";
+
 import { green, blue } from "@material-ui/core/colors";
+import Button from "@material-ui/core/Button";
 
 import Box from "@material-ui/core/Box";
 
@@ -369,6 +373,30 @@ class SmartDoc extends VisuComp {
     );
   };
 
+  testfunc = () => {
+    // These registration tokens come from the client FCM SDKs.
+    var registrationTokens = [
+      "YOUR_REGISTRATION_TOKEN_1",
+      // ...
+      "YOUR_REGISTRATION_TOKEN_n",
+    ];
+
+    // Subscribe the devices corresponding to the registration tokens to the
+    // topic.
+    var topic="testTopic"
+    admin
+      .messaging()
+      .subscribeToTopic(registrationTokens, topic)
+      .then(function (response) {
+        // See the MessagingTopicManagementResponse reference documentation
+        // for the contents of response.
+        console.log("Successfully subscribed to topic:", response);
+      })
+      .catch(function (error) {
+        console.log("Error subscribing to topic:", error);
+      });
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -407,134 +435,14 @@ class SmartDoc extends VisuComp {
         </GridItem>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
+            <Button onClick={this.testfunc}>TestFunc</Button>
             <CardHeader color="warning">
               <h4 className={classes.cardTitleWhite}>Frag den Arzt</h4>
               <p className={classes.cardCategoryWhite}>
                 Deine Daten werden anonym übermittelt und vertraulich behandelt.
               </p>
             </CardHeader>
-            <CardBody>
-              <FormControl component="fieldset">
-                <FormGroup>
-                  <RadioGroup
-                    aria-label="ge2nder"
-                    name="gender1"
-                    value={this.state.OrganDonationData.RadioSelection}
-                    onChange={this.radioChange}
-                  >
-                    Für den Fall, dass nach meinem Tod eine Spende von
-                    Organen/Geweben zur Transplantation in Frage kommt, erkläre
-                    ich:
-                    <br />
-                    <FormControlLabel
-                      value="JaTod"
-                      control={<GreenRadio />}
-                      style={{ color: "black" }}
-                      label={
-                        <div>
-                          <Typography>
-                            JA, ich gestatte, dass nach der ärztlichen
-                            Festellung meines Todes meinem Körper Organe und
-                            Gewebe entnommen werden.
-                          </Typography>
-                        </div>
-                      }
-                    />
-                    <br />
-                    <br />
-                    <FormControlLabel
-                      value="JAAusnahme"
-                      control={<GreenRadio />}
-                      style={{ color: "black" }}
-                      label={
-                        <div>
-                          <Typography variant="body1">
-                            JA, ich gestatte dies, mit Ausnahme folgender
-                            Organe/Gewebe:
-                          </Typography>
-
-                          <CustomInput
-                            inputProps={{
-                              value: this.state.OrganDonationData
-                                .TextBoxJAAusnahme,
-                              onChange: (e) =>
-                                this.inputChange("TextBoxJAAusnahme", e),
-                            }}
-                            formControlProps={{
-                              className: classes.margin,
-                              fullWidth: true,
-                            }}
-                          />
-                        </div>
-                      }
-                    />
-                    <br />
-                    <br />
-                    <FormControlLabel
-                      value="JANur"
-                      control={<GreenRadio />}
-                      style={{ color: "black" }}
-                      label={
-                        <div>
-                          <Typography variant="body1">
-                            JA, ich gestatte dies, jedoch nur für folgende
-                            Organe/Gewebe:
-                          </Typography>
-
-                          <CustomInput
-                            inputProps={{
-                              value: this.state.OrganDonationData.TextBoxJANur,
-                              onChange: (e) =>
-                                this.inputChange("TextBoxJANur", e),
-                            }}
-                            formControlProps={{
-                              className: classes.margin,
-                              fullWidth: true,
-                            }}
-                          />
-                        </div>
-                      }
-                    />
-                    <br />
-                    <br />
-                    <FormControlLabel
-                      value="Nein"
-                      control={<Radio />}
-                      style={{ color: "black" }}
-                      label="NEIN, ich widerspreche einer Entnahme von Organen oder Geweben."
-                    />
-                    <br />
-                    <br />
-                    <FormControlLabel
-                      value="NeinNachlass"
-                      control={<BlueRadio />}
-                      style={{ color: "black" }}
-                      label={
-                        <div>
-                          <Typography variant="body1">
-                            Über JA oder NEIN soll dann folgende Person
-                            entscheiden:
-                          </Typography>
-
-                          <CustomInput
-                            inputProps={{
-                              value: this.state.OrganDonationData
-                                .TextBoxNeinNachlass,
-                              onChange: (e) =>
-                                this.inputChange("TextBoxNeinNachlass", e),
-                            }}
-                            formControlProps={{
-                              className: classes.margin,
-                              fullWidth: true,
-                            }}
-                          />
-                        </div>
-                      }
-                    />
-                  </RadioGroup>
-                </FormGroup>
-              </FormControl>
-            </CardBody>
+            <CardBody>TestBody</CardBody>
           </Card>
         </GridItem>
       </GridContainer>

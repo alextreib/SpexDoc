@@ -71,7 +71,11 @@ const styles = {
       lineHeight: "1",
     },
   },
-  ref: "https://google.de",
+  organsection:{
+    color:"black",
+    paddingTop:20,
+    paddingBottom:20,
+  }
 };
 
 class Emergency extends React.Component {
@@ -268,30 +272,25 @@ class Emergency extends React.Component {
                     Für den Fall, dass nach meinem Tod eine Spende von
                     Organen/Geweben zur Transplantation in Frage kommt, erkläre
                     ich:
-                    <br />
                     <FormControlLabel
                       value="JaTod"
                       control={<GreenRadio />}
-                      style={{ color: "black" }}
+                      className={classes.organsection}
                       label={
-                        <div>
-                          <Typography>
+                          <Typography variant="body2">
                             JA, ich gestatte, dass nach der ärztlichen
                             Festellung meines Todes meinem Körper Organe und
                             Gewebe entnommen werden.
                           </Typography>
-                        </div>
                       }
                     />
-                    <br />
-                    <br />
                     <FormControlLabel
                       value="JAAusnahme"
                       control={<GreenRadio />}
-                      style={{ color: "black" }}
+                      className={classes.organsection}
                       label={
                         <div>
-                          <Typography variant="body1">
+                          <Typography variant="body2">
                             JA, ich gestatte dies, mit Ausnahme folgender
                             Organe/Gewebe:
                           </Typography>
@@ -311,15 +310,13 @@ class Emergency extends React.Component {
                         </div>
                       }
                     />
-                    <br />
-                    <br />
                     <FormControlLabel
                       value="JANur"
                       control={<GreenRadio />}
-                      style={{ color: "black" }}
+                      className={classes.organsection}
                       label={
                         <div>
-                          <Typography variant="body1">
+                          <Typography variant="body2">
                             JA, ich gestatte dies, jedoch nur für folgende
                             Organe/Gewebe:
                           </Typography>
@@ -338,23 +335,24 @@ class Emergency extends React.Component {
                         </div>
                       }
                     />
-                    <br />
-                    <br />
                     <FormControlLabel
                       value="Nein"
                       control={<Radio />}
-                      style={{ color: "black" }}
-                      label="NEIN, ich widerspreche einer Entnahme von Organen oder Geweben."
+                      className={classes.organsection}
+                      label={
+                        <Typography variant="body2">
+                        NEIN, ich widerspreche einer Entnahme von Organen oder Geweben.
+                      </Typography>
+                      }
+
                     />
-                    <br />
-                    <br />
                     <FormControlLabel
                       value="NeinNachlass"
                       control={<BlueRadio />}
-                      style={{ color: "black" }}
+                      className={classes.organsection}
                       label={
                         <div>
-                          <Typography variant="body1">
+                          <Typography variant="body2">
                             Über JA oder NEIN soll dann folgende Person
                             entscheiden:
                           </Typography>

@@ -114,9 +114,9 @@ class MedRecordsContent extends React.Component {
       var newMedRecord = {
         link: fileLink,
         isImage: isImage,
-        date: "2011",
-        doctor: "Dr. Müller",
-        disease: "Hüftprobleme",
+        date: this.getCurrentDate(),
+        doctor: "Dr. Schneider",
+        disease: "Erkältung",
         category: category,
         open: false,
       };
@@ -181,6 +181,18 @@ class MedRecordsContent extends React.Component {
     );
   };
 
+  // Return 17.12.2020
+  getCurrentDate = (separator = ".") => {
+    let newDate = new Date();
+    let date = newDate.getDate();
+    let month = newDate.getMonth() + 1;
+    let year = newDate.getFullYear();
+
+    return `${date}${separator}${
+      month < 10 ? `0${month}` : `${month}`
+    }${separator}${year}`;
+  };
+
   // UI functions
   //todo: not save in db, only visu
   openModal = (medRecord) => {
@@ -199,6 +211,18 @@ class MedRecordsContent extends React.Component {
     this.addnewCategory(newValue);
   };
 
+  // Rendering functions
+  getMedRecord = (category) => {
+    var MedRecordList = [];
+    this.state.data.forEach((medRecord) => {
+      if (medRecord.category == category.title) {
+        MedRecordList.push(medRecord);
+      }
+    });
+
+    return MedRecordList;
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -206,6 +230,7 @@ class MedRecordsContent extends React.Component {
       <div>
         <GridContainer>
           {this.state.categoryList.map((category) => (
+            // this.getMedRecord(category).length>0 ?(
             <GridItem xs={12} sm={12} md={12}>
               <Card>
                 <CardHeader color="primary">
@@ -216,7 +241,7 @@ class MedRecordsContent extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <GridContainer>
-                    {this.state.data.map((medRecord) =>
+                    {this.getMedRecord(category).map((medRecord) =>
                       medRecord.category == category.title ? (
                         <GridItem xs={12} sm={6} md={4}>
                           <MedRecordCard
