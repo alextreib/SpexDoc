@@ -4,22 +4,13 @@ import {
   writeDBData,
 } from "components/Internal/DBFunctions.js";
 
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import { DefaultCategories } from "components/Internal/DefaultData.js";
-import DeleteIcon from "@material-ui/icons/Delete";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import IconButton from "@material-ui/core/IconButton";
-import MedRecordDialog from "views/MedRecords/MedRecordDialog.js";
 import PropTypes from "prop-types";
 import React from "react";
-import ShareIcon from "@material-ui/icons/Share";
-import Typography from "@material-ui/core/Typography";
 import UploadFileButton from "views/MedRecords/UploadFileButton.js";
+import MedRecordCard from "views/MedRecords/MedRecordCard.js";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 
@@ -126,6 +117,8 @@ class MedRecordsContent extends React.Component {
   // Data Table changes
 
   addnewCategory = (newCategory) => {
+    console.log("category addnewCategory")
+
     this.setState(
       (prevState) => {
         const categoryList = [...prevState.categoryList];
@@ -199,71 +192,22 @@ class MedRecordsContent extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
 
     return (
       <div>
         <GridContainer>
           {this.state.data.map((medRecord) => (
             <GridItem xs={12} sm={6} md={4}>
-              <Card className={classes.card}>
-                <CardActionArea onClick={(e) => this.openModal(medRecord, e)}>
-                  {medRecord.isImage ? (
-                    <CardMedia
-                      className={classes.media}
-                      component="img"
-                      image={medRecord.link}
-                      title="Befund"
-                    />
-                  ) : (
-                    <CardMedia
-                      className={classes.media}
-                      component="img"
-                      image="https://img.pngio.com/file-png-image-royalty-free-stock-png-images-for-your-design-file-png-256_256.png"
-                      title="Befund"
-                    />
-                  )}
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {medRecord.disease}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      component="p"
-                    >
-                      {medRecord.date}
-                    </Typography>
-                    <Typography
-                      variant="body2"
-                      color="textSecondary"
-                      component="p"
-                    >
-                      {medRecord.doctor}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-                <CardActions>
-                  <IconButton
-                    onClick={(e) => this.removeMedRecord(medRecord, e)}
-                    aria-label="test"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                  <IconButton style={{ marginLeft: "auto" }} aria-label="share">
-                    <ShareIcon />
-                  </IconButton>
-                </CardActions>
-                <MedRecordDialog
-                  handleClose={this.handleClose}
-                  tableChanges={this.tableChanges}
-                  changeMedRecord={this.changeMedRecord}
-                  addValueToOptionList={this.addValueToOptionList}
-                  categoryList={this.state.categoryList}
-                  medRecord={medRecord}
-                  {...this.props}
-                />
-              </Card>
+              <MedRecordCard
+                handleClose={this.handleClose}
+                tableChanges={this.tableChanges}
+                changeMedRecord={this.changeMedRecord}
+                addValueToOptionList={this.addValueToOptionList}
+                removeMedRecord={this.removeMedRecord}
+                openModal={this.openModal}
+                categoryList={this.state.categoryList}
+                medRecord={medRecord}
+              />
             </GridItem>
           ))}
         </GridContainer>
