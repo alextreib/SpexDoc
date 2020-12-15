@@ -1,42 +1,27 @@
 import {
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-} from "components/VisuComps/Dialog.js";
-import {
   readDBData,
   uploadFile,
   writeDBData,
 } from "components/Internal/DBFunctions.js";
 
-import GetAppIcon from "@material-ui/icons/GetApp";
-import AddIcon from "@material-ui/icons/Add";
-import Button from "@material-ui/core/Button";
-
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
-import CardBody from "components/Card/CardBody.js";
 import CardContent from "@material-ui/core/CardContent";
-import CardHeader from "components/Card/CardHeader.js";
 import CardMedia from "@material-ui/core/CardMedia";
-import CustomButton from "components/CustomButtons/Button.js";
-import CustomInput from "components/CustomInput/CustomInput.js";
+import { DefaultCategories } from "components/Internal/DefaultData.js";
 import DeleteIcon from "@material-ui/icons/Delete";
-import Dialog from "@material-ui/core/Dialog";
-import Fab from "@material-ui/core/Fab";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import IconButton from "@material-ui/core/IconButton";
+import MedRecordDialog from "views/MedRecords/MedRecordDialog.js";
 import PropTypes from "prop-types";
 import React from "react";
 import ShareIcon from "@material-ui/icons/Share";
 import Typography from "@material-ui/core/Typography";
+import UploadFileButton from "views/MedRecords/UploadFileButton.js";
 import { connect } from "react-redux";
-import DescriptionIcon from "@material-ui/icons/Description";
 import { withStyles } from "@material-ui/core/styles";
-import AutoCompletionForm from "components/VisuComps/AutoCompletionForm.js";
-import { DefaultCategories } from "components/Internal/DefaultData.js";
 
 const styles = (theme) => ({
   card: {
@@ -51,18 +36,9 @@ const styles = (theme) => ({
     margin: 0,
     padding: theme.spacing(2),
   },
-  rightToolbar: {
-    position: "relative",
-    minHeight: 100,
-  },
   menuButton: {
     marginRight: 16,
     marginLeft: -12,
-  },
-  fab: {
-    position: "absolute",
-    bottom: 15,
-    right: 15,
   },
   downloadButton: {
     position: "relative",
@@ -119,8 +95,6 @@ class MedRecordsContent extends React.Component {
   // Is called when table is changed
   uploadTable = () => {
     console.log(this.state.data);
-    var success = writeDBData(this.state.dbName, this.state.data);
-    var success = writeDBData("CategoryList", this.state.categoryList);
   };
 
   uploadFile = (event) => {
@@ -280,155 +254,21 @@ class MedRecordsContent extends React.Component {
                     <ShareIcon />
                   </IconButton>
                 </CardActions>
-                <Dialog
-                  fullWidth={true}
-                  maxWidth={"xl"}
-                  onClose={(e) => this.handleClose(medRecord, e)}
-                  aria-labelledby="customized-dialog-title"
-                  open={medRecord.open}
-                >
-                  <DialogTitle
-                    id="customized-dialog-title"
-                    onClose={(e) => this.handleClose(medRecord, e)}
-                  >
-                    Befund
-                  </DialogTitle>
-                  <DialogContent dividers>
-                    <Card>
-                      <CardBody>
-                        {medRecord.isImage ? (
-                          <div>
-                            <CardMedia
-                              component="img"
-                              image={medRecord.link}
-                              title="Befund"
-                            />
-                            <a href={medRecord.link} download>
-                              Expandieren
-                            </a>
-                          </div>
-                        ) : (
-                          <a href={medRecord.link} download>
-                            <GetAppIcon className={classes.downloadButton} />
-                          </a>
-                        )}
-                      </CardBody>
-                    </Card>
-
-                    <Card>
-                      <CardHeader color="primary">
-                        <h4 className={classes.cardTitleWhite}>Details</h4>
-                      </CardHeader>
-                      <CardBody>
-                        <GridContainer>
-                          <GridItem xs={12} sm={12} md={4}>
-                            <CustomInput
-                              labelText="Datum"
-                              id="date"
-                              inputProps={{
-                                value: medRecord.date,
-                                onChange: (e) =>
-                                  this.tableChanges(medRecord, "date", e),
-                              }}
-                              formControlProps={{
-                                fullWidth: true,
-                              }}
-                            />
-                          </GridItem>
-                          <GridItem xs={12} sm={12} md={4}>
-                            <CustomInput
-                              labelText="Arzt"
-                              id="doctor"
-                              inputProps={{
-                                value: medRecord.doctor,
-                                onChange: (e) =>
-                                  this.tableChanges(medRecord, "doctor", e),
-                              }}
-                              formControlProps={{
-                                fullWidth: true,
-                              }}
-                            />
-                          </GridItem>
-                          <GridItem xs={12} sm={12} md={4}>
-                            <CustomInput
-                              labelText="Krankheit"
-                              id="disease"
-                              inputProps={{
-                                value: medRecord.disease,
-                                onChange: (e) =>
-                                  this.tableChanges(medRecord, "disease", e),
-                              }}
-                              formControlProps={{
-                                fullWidth: true,
-                              }}
-                            />
-                          </GridItem>
-                          <GridItem xs={12} sm={12} md={4}>
-                            <AutoCompletionForm
-                              addValue={this.addValueToOptionList}
-                              medRecord={medRecord}
-                              value={medRecord.category}
-                              changeValue={this.changeMedRecord}
-                              optionList={this.state.categoryList}
-                            />
-                          </GridItem>
-                        </GridContainer>
-                        <GridContainer>
-                          <GridItem xs={12} sm={12} md={12}>
-                            <CustomInput
-                              labelText="Weiteres"
-                              id="moreInfo"
-                              formControlProps={{
-                                fullWidth: true,
-                              }}
-                              inputProps={{
-                                value: medRecord.moreInfo,
-                                onChange: (e) =>
-                                  this.tableChanges(medRecord, "moreInfo", e),
-                                multiline: true,
-                                rows: 5,
-                              }}
-                            />
-                          </GridItem>
-                        </GridContainer>
-                      </CardBody>
-                    </Card>
-                    {/* todo: Add QR Code to share */}
-                  </DialogContent>
-                  <DialogActions>
-                    <CustomButton
-                      autoFocus
-                      onClick={(e) => this.handleClose(medRecord, e)}
-                      color="primary"
-                    >
-                      Close
-                    </CustomButton>
-                  </DialogActions>
-                </Dialog>
+                <MedRecordDialog
+                  handleClose={this.handleClose}
+                  tableChanges={this.tableChanges}
+                  changeMedRecord={this.changeMedRecord}
+                  addValueToOptionList={this.addValueToOptionList}
+                  categoryList={this.state.categoryList}
+                  medRecord={medRecord}
+                  {...this.props}
+                />
               </Card>
             </GridItem>
           ))}
         </GridContainer>
 
-        <div className={classes.rightToolbar}>
-          <input
-            id="myInput"
-            type="file"
-            ref={(ref) => (this.myInput = ref)}
-            style={{ display: "none" }}
-            onChange={this.uploadFile}
-          />
-
-          {/* Only button */}
-          <Fab
-            className={classes.fab}
-            color="primary"
-            aria-label="add"
-            onClick={() => this.myInput.click()}
-          >
-            <AddIcon />
-          </Fab>
-        </div>
+        <UploadFileButton uploadFile={this.uploadFile} />
       </div>
     );
   }

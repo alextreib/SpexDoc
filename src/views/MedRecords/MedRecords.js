@@ -55,7 +55,7 @@ class MedRecords extends React.Component {
   componentDidUpdate(prevProps) {
     console.log("update MedRecords")
   }
-
+ 
   render() {
     const { classes } = this.props;
     return (
