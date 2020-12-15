@@ -29,10 +29,21 @@ class AutoCompletionForm extends React.Component {
               // wait - I don't know
             });
           } else if (newValue && newValue.inputValue) {
-            this.props.addValue(newValue.inputValue);
-            this.props.changeValue(this.props.medRecord, "category", newValue);
+            // newValue: {inputValue: "NewCategory"}
+            var newElement = { title: newValue.inputValue };
+            this.props.addValueToOptionList(newElement);
+            this.props.changeMedRecord(
+              this.props.medRecord,
+              "category",
+              newValue.inputValue
+            );
           } else {
-            this.props.changeValue(this.props.medRecord, "category", newValue);
+            // newValue: {title: "NewCategory"}
+            this.props.changeMedRecord(
+              this.props.medRecord,
+              "category",
+              newValue.title
+            );
           }
         }}
         filterOptions={(options, params) => {

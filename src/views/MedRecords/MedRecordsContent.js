@@ -13,30 +13,39 @@ import UploadFileButton from "views/MedRecords/UploadFileButton.js";
 import MedRecordCard from "views/MedRecords/MedRecordCard.js";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
+
+import Card from "components/Card/Card.js";
+import CardBody from "components/Card/CardBody.js";
+import CardHeader from "components/Card/CardHeader.js";
 
 const styles = (theme) => ({
-  card: {
-    maxWidth: 345,
-    marginBottom: 100,
-    paddingBottom: theme.spacing(1),
+  cardCategoryWhite: {
+    "&,& a,& a:hover,& a:focus": {
+      color: "rgba(255,255,255,.62)",
+      margin: "0",
+      fontSize: "14px",
+      marginTop: "0",
+      marginBottom: "0",
+    },
+    "& a,& a:hover,& a:focus": {
+      color: "#FFFFFF",
+    },
   },
-  media: {
-    height: 140,
-  },
-  dialogtitle: {
-    margin: 0,
-    padding: theme.spacing(2),
-  },
-  menuButton: {
-    marginRight: 16,
-    marginLeft: -12,
-  },
-  downloadButton: {
-    position: "relative",
-    left: "50%",
-    height: 150,
-    width: 150,
-    color: "grey",
+  cardTitleWhite: {
+    color: "#FFFFFF",
+    marginTop: "0px",
+    minHeight: "auto",
+    fontWeight: "300",
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    marginBottom: "3px",
+    textDecoration: "none",
+    "& small": {
+      color: "#777",
+      fontSize: "65%",
+      fontWeight: "400",
+      lineHeight: "1",
+    },
   },
 });
 
@@ -86,9 +95,11 @@ class MedRecordsContent extends React.Component {
   // Is called when table is changed
   uploadTable = () => {
     console.log(this.state.data);
+    var success = writeDBData(this.state.dbName, this.state.data);
+    success &= writeDBData("CategoryList", this.state.categoryList);
   };
 
-  uploadFile = (event) => {
+  uploadFile = (category, event) => {
     event.preventDefault();
 
     var fileToUpload = event.target.files[0];
@@ -106,7 +117,7 @@ class MedRecordsContent extends React.Component {
         date: "2011",
         doctor: "Dr. Müller",
         disease: "Hüftprobleme",
-        category: "Test",
+        category: category,
         open: false,
       };
 
@@ -117,8 +128,6 @@ class MedRecordsContent extends React.Component {
   // Data Table changes
 
   addnewCategory = (newCategory) => {
-    console.log("category addnewCategory")
-
     this.setState(
       (prevState) => {
         const categoryList = [...prevState.categoryList];
@@ -187,32 +196,52 @@ class MedRecordsContent extends React.Component {
   };
 
   addValueToOptionList = (newValue) => {
-    var newItem = { title: newValue, year: 2000 };
-    this.addnewCategory(newItem);
+    this.addnewCategory(newValue);
   };
 
   render() {
+    const { classes } = this.props;
 
     return (
       <div>
         <GridContainer>
-          {this.state.data.map((medRecord) => (
-            <GridItem xs={12} sm={6} md={4}>
-              <MedRecordCard
-                handleClose={this.handleClose}
-                tableChanges={this.tableChanges}
-                changeMedRecord={this.changeMedRecord}
-                addValueToOptionList={this.addValueToOptionList}
-                removeMedRecord={this.removeMedRecord}
-                openModal={this.openModal}
-                categoryList={this.state.categoryList}
-                medRecord={medRecord}
-              />
+          {this.state.categoryList.map((category) => (
+            <GridItem xs={12} sm={12} md={12}>
+              <Card>
+                <CardHeader color="primary">
+                  <h4 className={classes.cardTitleWhite}>{category.title}</h4>
+                  <p className={classes.cardCategoryWhite}>
+                    Verwalte und teile deine Befunde
+                  </p>
+                </CardHeader>
+                <CardBody>
+                  <GridContainer>
+                    {this.state.data.map((medRecord) =>
+                      medRecord.category == category.title ? (
+                        <GridItem xs={12} sm={6} md={4}>
+                          <MedRecordCard
+                            handleClose={this.handleClose}
+                            tableChanges={this.tableChanges}
+                            changeMedRecord={this.changeMedRecord}
+                            addValueToOptionList={this.addValueToOptionList}
+                            removeMedRecord={this.removeMedRecord}
+                            openModal={this.openModal}
+                            categoryList={this.state.categoryList}
+                            medRecord={medRecord}
+                          />
+                        </GridItem>
+                      ) : null
+                    )}
+                  </GridContainer>
+                  <UploadFileButton
+                    category={category.title}
+                    uploadFile={this.uploadFile}
+                  />
+                </CardBody>
+              </Card>
             </GridItem>
           ))}
         </GridContainer>
-
-        <UploadFileButton uploadFile={this.uploadFile} />
       </div>
     );
   }

@@ -179,10 +179,10 @@ class MedRecordDialog extends React.Component {
                 </GridItem>
                 <GridItem xs={12} sm={12} md={4}>
                   <AutoCompletionForm
-                    addValue={this.props.addValueToOptionList}
+                    addValueToOptionList={this.props.addValueToOptionList}
                     medRecord={this.props.medRecord}
                     value={this.props.medRecord.category}
-                    changeValue={this.props.changeMedRecord}
+                    changeMedRecord={this.props.changeMedRecord}
                     optionList={this.props.categoryList}
                   />
                 </GridItem>

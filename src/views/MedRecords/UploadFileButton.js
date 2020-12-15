@@ -1,4 +1,3 @@
-
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
 import PropTypes from "prop-types";
@@ -28,11 +27,11 @@ class UploadFileButton extends React.Component {
     return (
       <div className={classes.rightToolbar}>
         <input
-          id="myInput"
+          id="FileUpload"
           type="file"
-          ref={(ref) => (this.myInput = ref)}
+          ref={(ref) => (this.fileInput = ref)}
           style={{ display: "none" }}
-          onChange={this.props.uploadFile}
+          onChange={(ev) => this.props.uploadFile(this.props.category, ev)}
         />
 
         {/* Only button */}
@@ -40,7 +39,7 @@ class UploadFileButton extends React.Component {
           className={classes.fab}
           color="primary"
           aria-label="add"
-          onClick={() => this.myInput.click()}
+          onClick={() => this.fileInput.click()}
         >
           <AddIcon />
         </Fab>
