@@ -12,4 +12,10 @@ export const CommonCompsData = {
     type: "info", //info, success, warning, danger, primary
     FuncParams: "test",
   },
-};
+}; 
+
+export const DefaultCategories= [
+  { title: "Kardiologie" },
+  { title: "Dermatologie" },
+  { title: "Allergologie" },
+]

@@ -1,6 +1,7 @@
 /* eslint-disable no-use-before-define */
 import React from "react";
 import TextField from "@material-ui/core/TextField";
+import VisuComp from "components/Internal/VisuComp.js";
 import Autocomplete, {
   createFilterOptions,
 } from "@material-ui/lab/Autocomplete";
@@ -13,32 +14,25 @@ const filter = createFilterOptions();
 class AutoCompletionForm extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      value: null,
-      options:this.props.AutoCompOptions.Options
-    };
   }
-
-  addValueToOptionList = (newValue) => {
-    this.props.AutoCompOptions.Options.push({title: newValue, year:2020});
-  };
 
   render() {
     const { classes } = this.props;
 
     return (
       <Autocomplete
-        value={this.state.value}
+        value={this.props.value}
         onChange={(event, newValue) => {
           if (typeof newValue === "string") {
-            this.addValueToOptionList(newValue.inputValue);
+            // timeout to avoid instant validation of the dialog's form.
+            setTimeout(() => {
+              // wait - I don't know
+            });
           } else if (newValue && newValue.inputValue) {
-            // Create a new value from the user input
-            console.log(newValue);
-            this.addValueToOptionList(newValue.inputValue);
+            this.props.addValue(newValue.inputValue);
+            this.props.changeValue(this.props.medRecord, "category", newValue);
           } else {
-            this.addValueToOptionList(newValue.inputValue);
+            this.props.changeValue(this.props.medRecord, "category", newValue);
           }
         }}
         filterOptions={(options, params) => {
@@ -58,8 +52,9 @@ class AutoCompletionForm extends React.Component {
         clearOnBlur
         handleHomeEndKeys
         id="free-solo-with-text-demo"
-        options={this.props.AutoCompOptions.Options}
+        options={this.props.optionList}
         getOptionLabel={(option) => {
+          console.log(option);
           // Value selected with enter, right from the input
           if (typeof option === "string") {
             return option;
@@ -75,11 +70,7 @@ class AutoCompletionForm extends React.Component {
         style={{ width: 300 }}
         freeSolo
         renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Kategorie"
-            variant="outlined"
-          />
+          <TextField {...params} label="Kategorie" variant="outlined" />
         )}
       />
     );

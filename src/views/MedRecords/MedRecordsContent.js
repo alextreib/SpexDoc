@@ -11,6 +11,8 @@ import {
 
 import GetAppIcon from "@material-ui/icons/GetApp";
 import AddIcon from "@material-ui/icons/Add";
+import Button from "@material-ui/core/Button";
+
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
@@ -33,6 +35,8 @@ import Typography from "@material-ui/core/Typography";
 import { connect } from "react-redux";
 import DescriptionIcon from "@material-ui/icons/Description";
 import { withStyles } from "@material-ui/core/styles";
+import AutoCompletionForm from "components/VisuComps/AutoCompletionForm.js";
+import { DefaultCategories } from "components/Internal/DefaultData.js";
 
 const styles = (theme) => ({
   card: {
@@ -76,6 +80,7 @@ class MedRecordsContent extends React.Component {
     this.state = {
       dbName: "medRecords",
       data: [],
+      categoryList: DefaultCategories,
     };
     this.openModal = this.openModal.bind(this);
   }
@@ -94,17 +99,28 @@ class MedRecordsContent extends React.Component {
 
   // DB functions
   fetchTable = () => {
-    return readDBData(this.state.dbName, false).then((doc_data) => {
+    readDBData(this.state.dbName, false).then((doc_data) => {
       if (doc_data == null) return;
       // Cannot get data -> set default data from parent class
-      // this.setState({ data: this.props.tableOptions.data });
-      else this.setState({ data: doc_data });
+      else {
+        this.setState({ data: doc_data });
+      }
+    });
+
+    readDBData("CategoryList", false).then((doc_data) => {
+      if (doc_data == null) return;
+      // Cannot get data -> set default data from parent class
+      else {
+        this.setState({ categoryList: doc_data });
+      }
     });
   };
 
   // Is called when table is changed
   uploadTable = () => {
+    console.log(this.state.data);
     var success = writeDBData(this.state.dbName, this.state.data);
+    var success = writeDBData("CategoryList", this.state.categoryList);
   };
 
   uploadFile = (event) => {
@@ -125,6 +141,7 @@ class MedRecordsContent extends React.Component {
         date: "2011",
         doctor: "Dr. Müller",
         disease: "Hüftprobleme",
+        category: "Test",
         open: false,
       };
 
@@ -133,6 +150,20 @@ class MedRecordsContent extends React.Component {
   };
 
   // Data Table changes
+
+  addnewCategory = (newCategory) => {
+    this.setState(
+      (prevState) => {
+        const categoryList = [...prevState.categoryList];
+        categoryList.push(newCategory);
+        return { ...prevState, categoryList };
+      },
+      () => {
+        this.uploadTable();
+      }
+    );
+  };
+
   addnewMedRecord = (newMedRecord) => {
     this.setState(
       (prevState) => {
@@ -146,7 +177,7 @@ class MedRecordsContent extends React.Component {
     );
   };
 
-  changeMedRecord(medRecord, key, value) {
+  changeMedRecord = (medRecord, key, value) => {
     var newData = { ...medRecord, [key]: value };
 
     this.setState(
@@ -159,7 +190,7 @@ class MedRecordsContent extends React.Component {
         this.uploadTable();
       }
     );
-  }
+  };
 
   removeMedRecord = (MedRecordToRemove) => {
     this.setState(
@@ -175,6 +206,7 @@ class MedRecordsContent extends React.Component {
   };
 
   // UI functions
+  //todo: not save in db, only visu
   openModal = (medRecord) => {
     this.changeMedRecord(medRecord, "open", true);
   };
@@ -187,6 +219,11 @@ class MedRecordsContent extends React.Component {
     this.changeMedRecord(medRecord, property, event.target.value);
   };
 
+  addValueToOptionList = (newValue) => {
+    var newItem = { title: newValue, year: 2000 };
+    this.addnewCategory(newItem);
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -195,7 +232,6 @@ class MedRecordsContent extends React.Component {
         <GridContainer>
           {this.state.data.map((medRecord) => (
             <GridItem xs={12} sm={6} md={4}>
-              {/* Previously ShowFile */}
               <Card className={classes.card}>
                 <CardActionArea onClick={(e) => this.openModal(medRecord, e)}>
                   {medRecord.isImage ? (
@@ -325,6 +361,15 @@ class MedRecordsContent extends React.Component {
                               formControlProps={{
                                 fullWidth: true,
                               }}
+                            />
+                          </GridItem>
+                          <GridItem xs={12} sm={12} md={4}>
+                            <AutoCompletionForm
+                              addValue={this.addValueToOptionList}
+                              medRecord={medRecord}
+                              value={medRecord.category}
+                              changeValue={this.changeMedRecord}
+                              optionList={this.state.categoryList}
                             />
                           </GridItem>
                         </GridContainer>

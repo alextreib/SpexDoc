@@ -25,6 +25,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import TestComp from "components/VisuComps/TestComp.js";
 
 const useStyles = makeStyles(styles);
 class Dashboard extends VisuComp {
