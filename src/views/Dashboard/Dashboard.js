@@ -26,6 +26,7 @@ import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js"
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import TestComp from "components/VisuComps/TestComp.js";
+import { firebase, firestore, auth } from "components/Internal/Firebase.js";
 
 const useStyles = makeStyles(styles);
 class Dashboard extends VisuComp {
@@ -103,6 +104,37 @@ class Dashboard extends VisuComp {
     });
     return count;
   };
+
+  // requestpermission = () => {
+  //   messaging
+  //     .requestPermission()
+  //     .then(function (permission) {
+  //       console.log("Notification permission granted.", permission);
+  //       messaging
+  //         .getToken()
+  //         .then(function (current_token) {
+  //           if (current_token) {
+  //             //update user token
+  //             // update_token(current_token);
+  //             console.log("token", current_token);
+  //           } else {
+  //             // you don't have permission to show notifications
+  //             // detect whether they are blocked or not, then show your custom UI
+  //           }
+  //         })
+  //         .catch(function (err) {
+  //           // retrieving token failed, analyze the error
+  //           console.error("retrieving token failed, analyze the error", err);
+  //         });
+  //     })
+  //     .catch(function (err) {
+  //       console.error("Unable to get permission to notify.", err);
+  //     });
+  // };
+
+  // testfunc = () => {
+  //   console.log(window.localStorage.getItem("sentToServer"));
+  // };
 
   render() {
     const { classes } = this.props;

@@ -165,7 +165,7 @@
         if (!isTokenSentToServer()) {
           console.log("Sending token to server...");
           // TODO(developer): Send the current token to your server.
-          setTokenSentToServer(true);
+          setTokenSentToServer(currentToken);
         } else {
           console.log(
             "Token already sent to server so won't send it again " +
@@ -175,11 +175,11 @@
       }
 
       function isTokenSentToServer() {
-        return window.localStorage.getItem("sentToServer") === "1";
+        return window.localStorage.getItem("sentToServer") === "";
       }
 
-      function setTokenSentToServer(sent) {
-        window.localStorage.setItem("sentToServer", sent ? "1" : "0");
+      function setTokenSentToServer(currentToken) {
+        window.localStorage.setItem(currentToken);
       }
 
       function showHideDiv(divId, show) {
@@ -266,6 +266,7 @@
       function updateUIForPushPermissionRequired() {
         showHideDiv(tokenDivId, false);
         showHideDiv(permissionDivId, true);
+        requestPermission();
       }
 
       resetUI();

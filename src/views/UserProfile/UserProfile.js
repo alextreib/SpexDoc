@@ -163,7 +163,7 @@ class UserProfile extends VisuComp {
     loginUser()
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
-        var token = result.credential.accessToken;
+        var accessToken = result.credential.accessToken;
         // The signed-in user info.
         var user = result.user;
         // setUserLogin(true);
@@ -171,6 +171,12 @@ class UserProfile extends VisuComp {
         // dispatch(loginRedux({ user_id: user.uid }));
         console.log(this.props);
         this.props.loginRedux({ user_id: user.uid });
+
+        //Todo: Cleanup -> deviceToken should be array
+        var deviceToken = window.localStorage.getItem("sentToServer");
+        var userData = { deviceToken: deviceToken, accessToken: accessToken };
+
+        writeDBData("UserData", userData);
       })
       .catch((error) => {
         // Handle Errors here.
