@@ -12,6 +12,18 @@ import React from "react";
 import { getPublicKey } from "components/Internal/Extraction.js";
 import { getUserID } from "components/Internal/Checks.js";
 
+export const writeRequest = (message) => {
+  var user_id = getUserID();
+  if (user_id == null) return false;
+
+  firestore.collection("requests").add({
+    message: message,
+    user_id: user_id,
+  });
+
+  return true;
+};
+
 export const writeDBData = (docName, data) => {
   var user_id = getUserID();
   if (user_id == null) return false;

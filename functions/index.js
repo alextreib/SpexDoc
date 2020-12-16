@@ -72,44 +72,39 @@ admin.initializeApp();
 // // [END all]
 
 // [START makeUppercaseTrigger]
-exports.sendNotificationRequest = functions.firestore
-  .document("/requests/{user_id}")
+exports.requestHandler = functions.firestore
+  .document("/requests/{tx_id}")
   .onCreate(async (snap, context) => {
-    var user_id = context.params.user_id;
+    var tx_id = context.params.tx_id;
 
-    console.log("got new notification");
-    console.log(user_id);
+    // Should be extended to list of admins
+    var admin_user_id = "8X81AgrU6Sc3Z23OMsXw4zLNuno2";
 
-    // const userEmail = event.params.userEmail;
-    // const notificationId = event.params.notificationId;
-    var docName = "UserData";
-
-    var docRef = admin.firestore()
+    // Get the deviceTokens
+    var docRef_userData = admin
+      .firestore()
       .collection("userStorage")
       .doc("users")
-      .collection(user_id)
-      .doc(docName);
+      .collection(admin_user_id)
+      .doc("UserData");
 
-    const payload = {
-      notification: {
-        title: "You have a new follower!",
-        body: `Got a message from  ${user_id}  is now following you.`,
-      },
-    };
+    return docRef_userData.get().then(async (admin_data_doc) => {
+      const doc_data = admin_data_doc.data()["data"];
+      var deviceToken = doc_data.deviceToken;
 
-    return docRef.get().then(async (queryResult) => {
-      console.log(queryResult);
+      // Writing notification
+      const payload = {
+        notification: {
+          title: "Neue Anfrage",
+          body: `Du hast eine neue Nachricht(${tx_id}).`,
+        },
+      };
 
-      const doc_data = queryResult.data()["data"];
-      console.log(doc_data);
-      var deviceToken=doc_data.deviceToken;
-      console.log(deviceToken);
-
+      // Send to admins
       const response = await admin
         .messaging()
         .sendToDevice(deviceToken, payload);
     });
-    // store into firestore.notifcation
   });
 // [END makeUppercase]
 // [END all]

@@ -1,17 +1,15 @@
-import * as admin from "firebase-admin";
-
-import { blue, green } from "@material-ui/core/colors";
+import { checkUser } from "components/Internal/Checks.js";
+import { getUserID } from "components/Internal/Checks.js";
 import {
   readDBData,
   writeDBData,
   writeRequest,
 } from "components/Internal/DBFunctions.js";
+import VisuComp from "components/Internal/VisuComp.js";
+import PlainTable from "components/EditableTableReport/PlainTable.js";
 
-import Box from "@material-ui/core/Box";
-import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import EditableTableReport from "components/EditableTableReport/EditableTableReport.js";
@@ -20,17 +18,22 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
-import PlainTable from "components/EditableTableReport/PlainTable.js";
 import PropTypes from "prop-types";
 import Radio from "@material-ui/core/Radio";
+import CardFooter from "components/Card/CardFooter.js";
+
 import RadioGroup from "@material-ui/core/RadioGroup";
 import React from "react";
 import TextField from "@material-ui/core/TextField";
+
 import Typography from "@material-ui/core/Typography";
-import VisuComp from "components/Internal/VisuComp.js";
-import { checkUser } from "components/Internal/Checks.js";
-import { getUserID } from "components/Internal/Checks.js";
 import { withStyles } from "@material-ui/core/styles";
+import * as admin from "firebase-admin";
+
+import { green, blue } from "@material-ui/core/colors";
+import Button from "components/CustomButtons/Button.js";
+
+import Box from "@material-ui/core/Box";
 
 const GreenRadio = withStyles({
   root: {
@@ -84,6 +87,7 @@ const styles = (theme) => ({
       lineHeight: "1",
     },
   },
+  ref: "https://google.de",
 });
 
 // Source: https://www.apotheken-umschau.de/Laborwerte
