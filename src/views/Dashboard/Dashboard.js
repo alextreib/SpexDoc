@@ -1,3 +1,4 @@
+import { auth, firebase, firestore } from "components/Internal/Firebase.js";
 import { checkUser, getUserEmail } from "components/Internal/Checks.js";
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 
@@ -6,6 +7,7 @@ import Assignment from "@material-ui/icons/Assignment";
 import Button from "@material-ui/core/Button";
 import Card from "components/Card/Card.js";
 import CardFooter from "components/Card/CardFooter.js";
+import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CommonComps from "components/Internal/CommonComps.js";
@@ -18,15 +20,16 @@ import LocalOffer from "@material-ui/icons/LocalOffer";
 import React from "react";
 import SmartDocIcon from "@material-ui/icons/TabletMac";
 import Store from "@material-ui/icons/Store";
+import Table from "components/Table/Table.js";
+
+import TestComp from "components/VisuComps/TestComp.js";
+import Typography from "@material-ui/core/Typography";
 import Update from "@material-ui/icons/Update";
 import VisuComp from "components/Internal/VisuComp.js";
 import Warning from "@material-ui/icons/Warning";
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import TestComp from "components/VisuComps/TestComp.js";
-import { firebase, firestore, auth } from "components/Internal/Firebase.js";
 
 const useStyles = makeStyles(styles);
 class Dashboard extends VisuComp {
@@ -64,6 +67,7 @@ class Dashboard extends VisuComp {
       "OrganDonation",
       "Share",
       "medRecords",
+      "Appointments",
     ];
     fetchArray.forEach(async (fetchElement) => {
       this.fetchTable(fetchElement);
@@ -105,32 +109,40 @@ class Dashboard extends VisuComp {
     return count;
   };
 
-  // requestpermission = () => {
-  //   messaging
-  //     .requestPermission()
-  //     .then(function (permission) {
-  //       console.log("Notification permission granted.", permission);
-  //       messaging
-  //         .getToken()
-  //         .then(function (current_token) {
-  //           if (current_token) {
-  //             //update user token
-  //             // update_token(current_token);
-  //             console.log("token", current_token);
-  //           } else {
-  //             // you don't have permission to show notifications
-  //             // detect whether they are blocked or not, then show your custom UI
-  //           }
-  //         })
-  //         .catch(function (err) {
-  //           // retrieving token failed, analyze the error
-  //           console.error("retrieving token failed, analyze the error", err);
-  //         });
-  //     })
-  //     .catch(function (err) {
-  //       console.error("Unable to get permission to notify.", err);
-  //     });
-  // };
+  testfunc = () => {
+    console.log(this.state);
+    // var count = 0;
+    // arrayElements.forEach((arrayElement) => {
+    //   if (arrayElement != null) {
+    //     count += arrayElement.length;
+    //   }
+    // });
+    // return count;
+  };
+
+  getAppointments = () => {
+    var lastAppointmentsArray = [];
+
+    if (this.state.Appointments == undefined) {
+      return [["Blutabnahme", "12. Dez 2020", "Dr. Fischer"]];
+    }
+
+    // Last 5 Appointments
+    var lastAppointments = this.state.Appointments.slice(
+      Math.max(this.state.Appointments.length - 5, 1)
+    );
+
+    lastAppointments.forEach((appointment) => {
+      var stringDate = this.getStringDate(new Date(appointment.startDate));
+      lastAppointmentsArray.push([
+        appointment.title,
+        stringDate,
+        appointment.location,
+      ]);
+    });
+
+    return lastAppointmentsArray;
+  };
 
   // testfunc = () => {
   //   console.log(window.localStorage.getItem("sentToServer"));
@@ -266,6 +278,23 @@ class Dashboard extends VisuComp {
                   Analysiert
                 </div>
               </CardFooter>
+            </Card>
+          </GridItem>
+          <GridItem xs={12} sm={12} md={6}>
+            <Card>
+              <CardHeader color="primary">
+                <h4 className={classes.cardTitleWhite}>Arztbesuche</h4>
+                <p className={classes.cardCategoryWhite}>
+                  Verwalte deine Arztbesuche unter 'Termine'
+                </p>
+              </CardHeader>
+              <CardBody>
+                <Table
+                  tableHeaderColor="primary"
+                  tableHead={["Titel", "Datum", "Arzt"]}
+                  tableData={this.getAppointments()}
+                />
+              </CardBody>
             </Card>
           </GridItem>
         </GridContainer>

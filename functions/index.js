@@ -112,55 +112,33 @@ exports.requestHandler = functions.firestore
 // Send notification that user got notification
 exports.sendNotification = functions.firestore
   .document("userStorage/users/{user_id}/Notifications")
-  .onCreate(async (snap, context) => {
+  .onUpdate(async (snap, context) => {
     var user_id = context.params.user_id;
 
-    console.log("got new notification");
-    console.log(user_id);
-
-    // const userEmail = event.params.userEmail;
-    // const notificationId = event.params.notificationId;
-    var docName = "UserData";
-
-    var docRef = admin.firestore
+    // Get the deviceTokens
+    var docRef_userData = admin
+      .firestore()
       .collection("userStorage")
       .doc("users")
       .collection(user_id)
-      .doc(docName);
+      .doc("UserData");
 
-    return docRef.get().then((queryResult) => {
-      const deviceToken = queryResult.data().deviceToken;
-      console.log(deviceToken);
+    return docRef_userData.get().then(async (user_data_doc) => {
+      const doc_data = user_data_doc.data()["data"];
+      var deviceToken = doc_data.deviceToken;
 
-      deviceToken =
-        "eD6d-GayEtSNVTY5JrvWYE:APA91bHx0li5k9cnce5__As9KNis3dn1VskObxA0z1_vdLw26J8_uqXBBrFZMyu_tSQMlFMTQSECJQJVkMV10ZJMY0aPC6T9HPjrH0mPdfGxF2bE4m9-jwe1nXsdJ-HXabF_48lZWn9t";
-
-      // const notificationMessage = queryResult.data().notificationMessage;
-
-      // const fromUser = admin.firestore().cllection("users").doc(senderUserEmail).get();
-      // const toUser = admin.firestore().collection("users").doc(userEmail).get();
-
-      // return Promise.all([fromUser, toUser]).then(result => {
-      // const fromUserName = result[0].data().userName;
-      // const toUserName = result[1].data().userName;
-      // const tokenId = result[1].data().tokenId;
-
-      const notificationContent = {
+      // Writing notification
+      const payload = {
         notification: {
           title: "Neue Benachrichtigung",
-          body: "Du hast eine neue Benachrichtung",
+          body: `Es gibt Neuigkeiten. Überprüfe deine Nachrichten`,
         },
       };
 
-      return admin
+      // Send to admins
+      const response = await admin
         .messaging()
-        .sendToDevice(deviceToken, notificationContent)
-        .then((result) => {
-          console.log("Notification sent!");
-
-          //admin.firestore().collection("notifications").doc(userEmail).collection("userNotifications").doc(notificationId).delete();
-        });
-      // });
+        .sendToDevice(deviceToken, payload);
     });
   });
 

@@ -134,7 +134,8 @@ class Notifications extends React.Component {
   };
 
   // Is called when table is changed
-  uploadTable = () => {
+  uploadTable = async() => {
+    return await writeDBData(this.state.dbName, this.state.data);
   };
 
   // Data Table changes

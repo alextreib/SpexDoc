@@ -182,6 +182,9 @@ class SmartDoc extends VisuComp {
     console.log("submitted");
     var message = this.state.contactMessage;
     writeRequest(message);
+
+    //todo: PopUp
+    
   };
 
   contactMessageChanged = (event) => {

@@ -45,7 +45,7 @@ import Close from "@material-ui/icons/Close";
 import CalendarToday from "@material-ui/icons/CalendarToday";
 import Create from "@material-ui/icons/Create";
 
-import { appointments } from "components/VisuComps/tasks.js";
+// import { appointments } from "components/VisuComps/tasks.js";
 
 const containerStyles = (theme) => ({
   container: {
@@ -290,7 +290,7 @@ class Demo extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      data: appointments,
+      data: [],
       currentDate: Date.now(),
       confirmationVisible: false,
       editingFormVisible: false,

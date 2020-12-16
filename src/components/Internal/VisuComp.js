@@ -153,5 +153,30 @@ export default class VisuComp extends React.Component {
     return writeDBData(name, data);
   };
 
+   // Return 17.12.2020
+   getCurrentDate = (separator = ".") => {
+    let newDate = new Date();
+    let date = newDate.getDate();
+    let month = newDate.getMonth() + 1;
+    let year = newDate.getFullYear();
+
+    return `${date}${separator}${
+      month < 10 ? `0${month}` : `${month}`
+    }${separator}${year}`;
+  };
+
+   // Return 17.12.2020
+   getStringDate = (inputDate) => {
+     var separator="."
+    let date = inputDate.getDate();
+    let month = inputDate.getMonth() + 1;
+    let year = inputDate.getFullYear();
+
+    return `${date}${separator}${
+      month < 10 ? `0${month}` : `${month}`
+    }${separator}${year}`;
+  };
+
+
   // Rendering not possible in abstract class
 }

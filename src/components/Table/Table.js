@@ -12,20 +12,13 @@ import styles from "assets/jss/material-dashboard-react/components/tableStyle.js
 
 const useStyles = makeStyles(styles);
 
-
 export default function CustomTable(props) {
-
-  function   
-  editStatus(event,index){
-    console.log("edit status clicket");
-    console.log(event.target.id);
+  function editStatus(event, index) {
     // this.setState ({
     //     isStatusClicked: index
     // })
   }
-    
-  
-  
+
   const classes = useStyles();
   const { tableHead, tableData, tableHeaderColor } = props;
   return (
@@ -53,7 +46,11 @@ export default function CustomTable(props) {
               <TableRow key={key} className={classes.tableBodyRow}>
                 {prop.map((prop, key) => {
                   return (
-                    <TableCell className={classes.tableCell} key={key} onClick={editStatus}>
+                    <TableCell
+                      className={classes.tableCell}
+                      key={key}
+                      onClick={editStatus}
+                    >
                       {prop}
                     </TableCell>
                   );
@@ -68,7 +65,7 @@ export default function CustomTable(props) {
 }
 
 CustomTable.defaultProps = {
-  tableHeaderColor: "gray"
+  tableHeaderColor: "gray",
 };
 
 CustomTable.propTypes = {
@@ -79,8 +76,8 @@ CustomTable.propTypes = {
     "success",
     "info",
     "rose",
-    "gray"
+    "gray",
   ]),
   tableHead: PropTypes.arrayOf(PropTypes.string),
-  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))
+  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
 };

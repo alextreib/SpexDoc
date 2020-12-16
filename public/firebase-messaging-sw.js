@@ -2,14 +2,12 @@
 // Leave blank for now
 // When testing make sure the Strg+Up+R + cache is deleted
 
-
-
 // // Import and configure the Firebase SDK
 // // These scripts are made available when the app is served or deployed on Firebase Hosting
 // // If you do not serve/host your project using Firebase Hosting see https://firebase.google.com/docs/web/setup
-importScripts('/__/firebase/8.1.2/firebase-app.js');
-importScripts('/__/firebase/8.1.2/firebase-messaging.js');
-importScripts('/__/firebase/init.js');
+importScripts("/__/firebase/8.1.2/firebase-app.js");
+importScripts("/__/firebase/8.1.2/firebase-messaging.js");
+importScripts("/__/firebase/init.js");
 
 const messaging = firebase.messaging();
 
@@ -41,21 +39,23 @@ const messaging = firebase.messaging();
 //  // [END initialize_firebase_in_sw]
 //  **/
 
-
 // If you would like to customize notifications that are received in the
 // background (Web app is closed or not in browser focus) then you should
 // implement this optional method.
 // [START on_background_message]
-messaging.onBackgroundMessage(function(payload) {
+messaging.onBackgroundMessage(function (payload) {
   // Triggered when background is obtained
-  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+  console.log(
+    "[firebase-messaging-sw.js] Received background message ",
+    payload
+  );
   // Customize notification here
-  const notificationTitle = 'Neue Nachricht';
+  const notificationTitle = payload.notification.title;
   const notificationOptions = {
-    body: payload,
+    body: payload.notification.body,
+    icon: '/favicon.ico'
   };
 
-  self.registration.showNotification(notificationTitle,
-    notificationOptions);
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
 // [END on_background_message]

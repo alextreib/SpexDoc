@@ -18,6 +18,7 @@ import Button from "@material-ui/core/Button";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
+import VisuComp from "components/Internal/VisuComp";
 
 const styles = (theme) => ({
   cardCategoryWhite: {
@@ -49,7 +50,7 @@ const styles = (theme) => ({
   },
 });
 
-class MedRecordsContent extends React.Component {
+class MedRecordsContent extends VisuComp {
   constructor(props) {
     super(props);
 
@@ -181,18 +182,7 @@ class MedRecordsContent extends React.Component {
     );
   };
 
-  // Return 17.12.2020
-  getCurrentDate = (separator = ".") => {
-    let newDate = new Date();
-    let date = newDate.getDate();
-    let month = newDate.getMonth() + 1;
-    let year = newDate.getFullYear();
-
-    return `${date}${separator}${
-      month < 10 ? `0${month}` : `${month}`
-    }${separator}${year}`;
-  };
-
+ 
   // UI functions
   //todo: not save in db, only visu
   openModal = (medRecord) => {
