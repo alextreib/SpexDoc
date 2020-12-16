@@ -66,3 +66,85 @@ exports.makeUppercase = functions.firestore.document('/messages/{documentId}')
     });
 // [END makeUppercase]
 // [END all]
+
+
+
+/**
+ * Triggers when a user gets a new follower and sends a notification.
+ *
+ * Followers add a flag to `/followers/{followedUid}/{followerUid}`.
+ * Users save their device notification tokens to `/users/{followedUid}/notificationTokens/{notificationToken}`.
+ */
+exports.sendFollowerNotification = functions.firestore.document('/requests/{requestUid}/')
+    .onCreate(async(snap, context) => {
+
+      const requestUid = context.params.requestUid;
+      // const followedUid = context.params.followedUid;
+      // If un-follow we exit the function.
+      // if (!change.after.val()) {
+      //   return console.log('User ', requestUid, 'un-followed user', requestUid);
+      // }
+      console.log('We have a new follower UID:', requestUid, 'for user:', requestUid);
+
+      // Get the list of device notification tokens.
+      // Extend to list
+      const adminUid="8X81AgrU6Sc3Z23OMsXw4zLNuno2"
+
+      
+      const deviceToken="cemez7dto7BKRsFajs4hWj:APA91bHO5CyjkQQyeP6TlpZ0kJH62aZl0P9saDOYbm-JXLrkgJtbew0VXokT6d2WyFFFGGblLSUlMt0CmJMiwiaxzNYMBg8j1DviXDaC9MxddowGaQmsZTnA3MiUD6cBUDyM8z-9_OZe"
+
+      const getDeviceTokensPromise = admin.database()
+          .ref(`/userStorage/${adminUid}/notificationTokens`).once('value');
+
+          console.log(getDeviceTokensPromise)
+
+      // Get the follower profile.
+      const getFollowerProfilePromise = admin.auth().getUser(adminUid);
+
+      // The snapshot to the user's tokens.
+      let tokensSnapshot;
+
+      // The array containing all the user's tokens.
+      let tokens;
+
+      const results = await Promise.all([getDeviceTokensPromise, getFollowerProfilePromise]);
+      tokensSnapshot = results[0];
+      const follower = results[1];
+
+      console.log(tokensSnapshot)
+      console.log(follower)
+
+      // Check if there are any device tokens.
+      if (!tokensSnapshot.hasChildren()) {
+        return console.log('There are no notification tokens to send to.');
+      }
+      console.log('There are', tokensSnapshot.numChildren(), 'tokens to send notifications to.');
+      console.log('Fetched follower profile', follower);
+
+      // Notification details.
+      const payload = {
+        notification: {
+          title: 'You have a new follower!',
+          body: `Got a message from  ${requestUid}  is now following you.`,
+        }
+      };
+
+      // Listing all tokens as an array.
+      tokens = Object.keys(tokensSnapshot.val());
+      // Send notifications to all tokens.
+      const response = await admin.messaging().sendToDevice(deviceToken, payload);
+      // For each message check if there was an error.
+      const tokensToRemove = [];
+      response.results.forEach((result, index) => {
+        const error = result.error;
+        if (error) {
+          console.error('Failure sending notification to', tokens[index], error);
+          // Cleanup the tokens who are not registered anymore.
+          if (error.code === 'messaging/invalid-registration-token' ||
+              error.code === 'messaging/registration-token-not-registered') {
+            tokensToRemove.push(tokensSnapshot.ref.child(tokens[index]).remove());
+          }
+        }
+      });
+      return Promise.all(tokensToRemove);
+    });

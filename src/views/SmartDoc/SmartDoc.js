@@ -2,7 +2,6 @@ import { checkUser } from "components/Internal/Checks.js";
 import { getUserID } from "components/Internal/Checks.js";
 import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 import VisuComp from "components/Internal/VisuComp.js";
-import VisuComp from "components/Internal/Firebase.js";
 import PlainTable from "components/EditableTableReport/PlainTable.js";
 
 import Card from "components/Card/Card.js";
