@@ -26,62 +26,58 @@ admin.initializeApp();
 // [END import]
 
 // [START addMessage]
-// Take the text parameter passed to this HTTP endpoint and insert it into
-// Cloud Firestore under the path /messages/:documentId/original
-// [START addMessageTrigger]
-exports.addMessage = functions.https.onRequest(async (req, res) => {
-  // [END addMessageTrigger]
-  // Grab the text parameter.
-  const original = req.query.text;
-  // [START adminSdkAdd]
-  // Push the new message into Cloud Firestore using the Firebase Admin SDK.
-  const writeResult = await admin
-    .firestore()
-    .collection("messages")
-    .add({ original: original });
-  // Send back a message that we've successfully written the message
-  res.json({ result: `Message with ID: ${writeResult.id} added.` });
-  // [END adminSdkAdd]
-});
-// [END addMessage]
+// // Take the text parameter passed to this HTTP endpoint and insert it into
+// // Cloud Firestore under the path /messages/:documentId/original
+// // [START addMessageTrigger]
+// exports.addMessage = functions.https.onRequest(async (req, res) => {
+//   // [END addMessageTrigger]
+//   // Grab the text parameter.
+//   const original = req.query.text;
+//   // [START adminSdkAdd]
+//   // Push the new message into Cloud Firestore using the Firebase Admin SDK.
+//   const writeResult = await admin
+//     .firestore()
+//     .collection("messages")
+//     .add({ original: original });
+//   // Send back a message that we've successfully written the message
+//   res.json({ result: `Message with ID: ${writeResult.id} added.` });
+//   // [END adminSdkAdd]
+// });
+// // [END addMessage]
 
 // [START makeUppercase]
 // Listens for new messages added to /messages/:documentId/original and creates an
 // uppercase version of the message to /messages/:documentId/uppercase
 // [START makeUppercaseTrigger]
-exports.makeUppercase = functions.firestore
-  .document("/messages/{documentId}")
-  .onCreate((snap, context) => {
-    // [END makeUppercaseTrigger]
-    // [START makeUppercaseBody]
-    // Grab the current value of what was written to Cloud Firestore.
-    const original = snap.data().original;
+// exports.makeUppercase = functions.firestore
+//   .document("/messages/{documentId}")
+//   .onCreate((snap, context) => {
+//     // [END makeUppercaseTrigger]
+//     // [START makeUppercaseBody]
+//     // Grab the current value of what was written to Cloud Firestore.
+//     const original = snap.data().original;
 
-    // Access the parameter `{documentId}` with `context.params`
-    functions.logger.log("Uppercasing", context.params.documentId, original);
+//     // Access the parameter `{documentId}` with `context.params`
+//     functions.logger.log("Uppercasing", context.params.documentId, original);
 
-    const uppercase = original.toUpperCase();
+//     const uppercase = original.toUpperCase();
 
-    // You must return a Promise when performing asynchronous tasks inside a Functions such as
-    // writing to Cloud Firestore.
-    // Setting an 'uppercase' field in Cloud Firestore document returns a Promise.
-    return snap.ref.set({ uppercase }, { merge: true });
-    // [END makeUppercaseBody]
-  });
-// [END makeUppercase]
-// [END all]
+//     // You must return a Promise when performing asynchronous tasks inside a Functions such as
+//     // writing to Cloud Firestore.
+//     // Setting an 'uppercase' field in Cloud Firestore document returns a Promise.
+//     return snap.ref.set({ uppercase }, { merge: true });
+//     // [END makeUppercaseBody]
+//   });
+// // [END makeUppercase]
+// // [END all]
 
-// [START makeUppercase]
-// Listens for new messages added to /messages/:documentId/original and creates an
-// uppercase version of the message to /messages/:documentId/uppercase
 // [START makeUppercaseTrigger]
-exports.sendNotification = functions.firestore
+exports.sendNotificationRequest = functions.firestore
   .document("/requests/{requestUid}")
   .onCreate(async (snap, context) => {
     var requestUid = context.params.requestUid;
 
-    const deviceToken =
-      "cemez7dto7BKRsFajs4hWj:APA91bHO5CyjkQQyeP6TlpZ0kJH62aZl0P9saDOYbm-JXLrkgJtbew0VXokT6d2WyFFFGGblLSUlMt0CmJMiwiaxzNYMBg8j1DviXDaC9MxddowGaQmsZTnA3MiUD6cBUDyM8z-9_OZe";
+      const deviceToken ="eD6d-GayEtSNVTY5JrvWYE:APA91bHx0li5k9cnce5__As9KNis3dn1VskObxA0z1_vdLw26J8_uqXBBrFZMyu_tSQMlFMTQSECJQJVkMV10ZJMY0aPC6T9HPjrH0mPdfGxF2bE4m9-jwe1nXsdJ-HXabF_48lZWn9t"
 
     const payload = {
       notification: {
@@ -100,10 +96,12 @@ exports.sendNotification = functions.firestore
 // Send notification that user got notification
 exports.sendNotification = functions.firestore
   .document("userStorage/users/{user_id}/Notifications")
-  .onWrite((event) => {
+  .onCreate( async (snap,context) => {
     var user_id = context.params.user_id;
 
     console.log("got new notification");
+    console.log(user_id);
+
     // const userEmail = event.params.userEmail;
     // const notificationId = event.params.notificationId;
     var docName = "UserData";
@@ -114,21 +112,13 @@ exports.sendNotification = functions.firestore
       .collection(user_id)
       .doc(docName);
 
-    // docRef
-    //     .get()
-    //     .then((doc) => {
-    //       if (doc.exists) {
-    //         return doc.data();
-    //       }
-    //     })
-    //     .then((doc_data) => {
-    //       if (doc_data != null) resolve(doc_data["data"]);
-    //       else resolve(null);
-    //     });
-    // });
 
     return docRef.get().then((queryResult) => {
       const deviceToken = queryResult.data().deviceToken;
+      console.log(deviceToken);
+
+      deviceToken ="eD6d-GayEtSNVTY5JrvWYE:APA91bHx0li5k9cnce5__As9KNis3dn1VskObxA0z1_vdLw26J8_uqXBBrFZMyu_tSQMlFMTQSECJQJVkMV10ZJMY0aPC6T9HPjrH0mPdfGxF2bE4m9-jwe1nXsdJ-HXabF_48lZWn9t"
+
       // const notificationMessage = queryResult.data().notificationMessage;
 
       // const fromUser = admin.firestore().cllection("users").doc(senderUserEmail).get();
@@ -143,8 +133,6 @@ exports.sendNotification = functions.firestore
         notification: {
           title: "Neue Benachrichtigung",
           body: "Du hast eine neue Benachrichtung",
-          icon: "default",
-          sound: "default",
         },
       };
 

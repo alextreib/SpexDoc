@@ -162,24 +162,27 @@
       // - send messages back to this app
       // - subscribe/unsubscribe the token from topics
       function sendTokenToServer(currentToken) {
-        if (!isTokenSentToServer()) {
-          console.log("Sending token to server...");
-          // TODO(developer): Send the current token to your server.
-          setTokenSentToServer(currentToken);
-        } else {
-          console.log(
-            "Token already sent to server so won't send it again " +
-              "unless it changes"
-          );
-        }
+        console.log("Sending token in window...");
+        setTokenSentToServer(currentToken);
+
+        // if (!isTokenSentToServer()) {
+        //   // TODO(developer): Send the current token to your server.
+        //   setTokenSentToServer(currentToken);
+        // } else {
+        //   console.log(
+        //     "Token already sent to server so won't send it again " +
+        //       "unless it changes"
+        //   );
+        // }
       }
 
-      function isTokenSentToServer() {
-        return window.localStorage.getItem("sentToServer") === "";
-      }
+      // function isTokenSentToServer() {
+      //   // 1 is default value
+      //   return window.localStorage.getItem("sentToServer") != null;
+      // }
 
       function setTokenSentToServer(currentToken) {
-        window.localStorage.setItem(currentToken);
+        window.localStorage.setItem("sentToServer",currentToken);
       }
 
       function showHideDiv(divId, show) {

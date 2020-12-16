@@ -7,11 +7,11 @@
 // // Import and configure the Firebase SDK
 // // These scripts are made available when the app is served or deployed on Firebase Hosting
 // // If you do not serve/host your project using Firebase Hosting see https://firebase.google.com/docs/web/setup
-// // importScripts('/__/firebase/8.1.2/firebase-app.js');
-// // importScripts('/__/firebase/8.1.2/firebase-messaging.js');
-// // importScripts('/__/firebase/init.js');
+importScripts('/__/firebase/8.1.2/firebase-app.js');
+importScripts('/__/firebase/8.1.2/firebase-messaging.js');
+importScripts('/__/firebase/init.js');
 
-// const messaging = firebase.messaging();
+const messaging = firebase.messaging();
 
 // /**
 //  * Here is is the code snippet to initialize Firebase Messaging in the Service
@@ -42,21 +42,20 @@
 //  **/
 
 
-// // If you would like to customize notifications that are received in the
-// // background (Web app is closed or not in browser focus) then you should
-// // implement this optional method.
-// // [START on_background_message]
-// messaging.onBackgroundMessage(function(payload) {
-//   // Triggered when background is obtained
-//   console.log('[firebase-messaging-sw.js] Received background message ', payload);
-//   // Customize notification here
-//   const notificationTitle = 'Background Message Title';
-//   const notificationOptions = {
-//     body: 'Background Message body.',
-//     icon: '/firebase-logo.png'
-//   };
+// If you would like to customize notifications that are received in the
+// background (Web app is closed or not in browser focus) then you should
+// implement this optional method.
+// [START on_background_message]
+messaging.onBackgroundMessage(function(payload) {
+  // Triggered when background is obtained
+  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+  // Customize notification here
+  const notificationTitle = 'Background Message Title';
+  const notificationOptions = {
+    body: 'Background Message body.',
+  };
 
-//   self.registration.showNotification(notificationTitle,
-//     notificationOptions);
-// });
-// // [END on_background_message]
+  self.registration.showNotification(notificationTitle,
+    notificationOptions);
+});
+// [END on_background_message]
