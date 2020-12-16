@@ -73,21 +73,42 @@ admin.initializeApp();
 
 // [START makeUppercaseTrigger]
 exports.sendNotificationRequest = functions.firestore
-  .document("/requests/{requestUid}")
+  .document("/requests/{user_id}")
   .onCreate(async (snap, context) => {
-    var requestUid = context.params.requestUid;
+    var user_id = context.params.user_id;
 
-      const deviceToken ="eD6d-GayEtSNVTY5JrvWYE:APA91bHx0li5k9cnce5__As9KNis3dn1VskObxA0z1_vdLw26J8_uqXBBrFZMyu_tSQMlFMTQSECJQJVkMV10ZJMY0aPC6T9HPjrH0mPdfGxF2bE4m9-jwe1nXsdJ-HXabF_48lZWn9t"
+    console.log("got new notification");
+    console.log(user_id);
+
+    // const userEmail = event.params.userEmail;
+    // const notificationId = event.params.notificationId;
+    var docName = "UserData";
+
+    var docRef = admin.firestore()
+      .collection("userStorage")
+      .doc("users")
+      .collection(user_id)
+      .doc(docName);
 
     const payload = {
       notification: {
         title: "You have a new follower!",
-        body: `Got a message from  ${requestUid}  is now following you.`,
+        body: `Got a message from  ${user_id}  is now following you.`,
       },
     };
 
-    const response = await admin.messaging().sendToDevice(deviceToken, payload);
+    return docRef.get().then(async (queryResult) => {
+      console.log(queryResult);
 
+      const doc_data = queryResult.data()["data"];
+      console.log(doc_data);
+      var deviceToken=doc_data.deviceToken;
+      console.log(deviceToken);
+
+      const response = await admin
+        .messaging()
+        .sendToDevice(deviceToken, payload);
+    });
     // store into firestore.notifcation
   });
 // [END makeUppercase]
@@ -96,7 +117,7 @@ exports.sendNotificationRequest = functions.firestore
 // Send notification that user got notification
 exports.sendNotification = functions.firestore
   .document("userStorage/users/{user_id}/Notifications")
-  .onCreate( async (snap,context) => {
+  .onCreate(async (snap, context) => {
     var user_id = context.params.user_id;
 
     console.log("got new notification");
@@ -112,12 +133,12 @@ exports.sendNotification = functions.firestore
       .collection(user_id)
       .doc(docName);
 
-
     return docRef.get().then((queryResult) => {
       const deviceToken = queryResult.data().deviceToken;
       console.log(deviceToken);
 
-      deviceToken ="eD6d-GayEtSNVTY5JrvWYE:APA91bHx0li5k9cnce5__As9KNis3dn1VskObxA0z1_vdLw26J8_uqXBBrFZMyu_tSQMlFMTQSECJQJVkMV10ZJMY0aPC6T9HPjrH0mPdfGxF2bE4m9-jwe1nXsdJ-HXabF_48lZWn9t"
+      deviceToken =
+        "eD6d-GayEtSNVTY5JrvWYE:APA91bHx0li5k9cnce5__As9KNis3dn1VskObxA0z1_vdLw26J8_uqXBBrFZMyu_tSQMlFMTQSECJQJVkMV10ZJMY0aPC6T9HPjrH0mPdfGxF2bE4m9-jwe1nXsdJ-HXabF_48lZWn9t";
 
       // const notificationMessage = queryResult.data().notificationMessage;
 
