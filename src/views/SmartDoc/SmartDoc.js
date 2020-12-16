@@ -19,9 +19,10 @@ import Typography from "@material-ui/core/Typography";
 import VisuComp from "components/Internal/VisuComp.js";
 import { checkUser } from "components/Internal/Checks.js";
 import { withStyles } from "@material-ui/core/styles";
-import {
-  writeRequest,
-} from "components/Internal/DBFunctions.js";
+import { writeRequest } from "components/Internal/DBFunctions.js";
+import { CommonCompsData } from "components/Internal/DefaultData.js";
+import CommonComps from "components/Internal/CommonComps.js";
+
 
 const styles = (theme) => ({
   margin: {
@@ -64,6 +65,8 @@ class SmartDoc extends VisuComp {
     super(props);
 
     this.state = {
+      commonProps: { ...CommonCompsData, updateComp: this.updateComp },
+
       bloodValueTable: {
         //todo: capsulate and parameterize
         name: "bloodValueTable",
@@ -181,10 +184,13 @@ class SmartDoc extends VisuComp {
   submitContactForm = () => {
     console.log("submitted");
     var message = this.state.contactMessage;
-    writeRequest(message);
+    writeRequest(message).then(() => {
+      this.setState({
+        contactMessage: "",
+      });
+    });
 
-    //todo: PopUp
-    
+    this.displayPopUp("Anfrage erfolgreich versendet")
   };
 
   contactMessageChanged = (event) => {
@@ -198,6 +204,9 @@ class SmartDoc extends VisuComp {
     const { classes } = this.props;
 
     return (
+      <div>
+        <CommonComps commonProps={this.state.commonProps} />
+
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
@@ -228,7 +237,6 @@ class SmartDoc extends VisuComp {
             </CardHeader>
             <CardBody>
               <GridContainer>
-                
                 <GridItem xs={12} sm={12} md={12}>
                   <TextField
                     id="outlined-multiline-static"
@@ -258,6 +266,7 @@ class SmartDoc extends VisuComp {
           </Card>
         </GridItem>
       </GridContainer>
+      </div>
     );
   }
 }

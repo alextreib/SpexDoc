@@ -13,16 +13,20 @@ import { getPublicKey } from "components/Internal/Extraction.js";
 import { getUserID } from "components/Internal/Checks.js";
 
 export const writeRequest = (message) => {
-  var user_id = getUserID();
-  if (user_id == null) return false;
+  return new Promise((resolve, reject) => {
+    var user_id = getUserID();
+    if (user_id == null) return false;
 
-  firestore.collection("requests").add({
-    message: message,
-    user_id: user_id,
+    firestore.collection("requests").add({
+      message: message,
+      user_id: user_id,
+    });
+
+    // return true;
+    resolve(true);
   });
-
-  return true;
 };
+
 
 export const writeDBData = (docName, data) => {
   var user_id = getUserID();

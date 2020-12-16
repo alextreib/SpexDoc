@@ -172,11 +172,25 @@ class UserProfile extends VisuComp {
         console.log(this.props);
         this.props.loginRedux({ user_id: user.uid });
 
-        //Todo: Cleanup -> deviceToken should be array
         var deviceToken = window.localStorage.getItem("sentToServer");
-        var userData = { deviceToken: deviceToken, accessToken: accessToken };
+        // First read the data and then append list
+        readDBData("UserData", false).then((doc_data) => {
+          console.log(doc_data);
+          var deviceTokenList = [];
+          if (doc_data != null) {
+            deviceTokenList = doc_data.deviceTokenList;
+          }
+          if (!deviceTokenList.includes(deviceToken)) {
+            deviceTokenList.push(deviceToken);
+          }
 
-        writeDBData("UserData", userData);
+          var userData = {
+            deviceTokenList: deviceTokenList,
+            accessToken: accessToken,
+          };
+
+          writeDBData("UserData", userData);
+        });
       })
       .catch((error) => {
         // Handle Errors here.

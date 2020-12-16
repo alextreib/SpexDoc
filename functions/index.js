@@ -90,20 +90,20 @@ exports.requestHandler = functions.firestore
 
     return docRef_userData.get().then(async (admin_data_doc) => {
       const doc_data = admin_data_doc.data()["data"];
-      var deviceToken = doc_data.deviceToken;
+      var deviceTokenList = doc_data.deviceTokenList;
 
-      // Writing notification
-      const payload = {
-        notification: {
-          title: "Neue Anfrage",
-          body: `Du hast eine neue Nachricht(${tx_id}).`,
-        },
-      };
+      deviceTokenList.forEach(async (deviceToken) => {
+        // Writing notification
+        const payload = {
+          notification: {
+            title: "Neue Anfrage",
+            body: `Du hast eine neue Nachricht(${tx_id}).`,
+          },
+        };
 
-      // Send to admins
-      const response = await admin
-        .messaging()
-        .sendToDevice(deviceToken, payload);
+        // Send to admins
+        await admin.messaging().sendToDevice(deviceToken, payload);
+      });
     });
   });
 // [END makeUppercase]
@@ -112,34 +112,43 @@ exports.requestHandler = functions.firestore
 // Send notification that user got notification
 exports.sendNotification = functions.firestore
   .document("userStorage/users/{user_id}/Notifications")
-  .onUpdate(async (snap, context) => {
-    var user_id = context.params.user_id;
+  .onUpdate(async (change, context) => {
+    const previousValue = change.before.data();
+    const newValue = change.after.data();
 
-    // Get the deviceTokens
-    var docRef_userData = admin
-      .firestore()
-      .collection("userStorage")
-      .doc("users")
-      .collection(user_id)
-      .doc("UserData");
+    console.log(previousValue["data"].length);
+    console.log(newValue["data"].length);
+    // newValue must contain a larger array than the old one (notification added)
+    if (previousValue["data"].length < newValue["data"].length) {
+      var user_id = context.params.user_id;
 
-    return docRef_userData.get().then(async (user_data_doc) => {
-      const doc_data = user_data_doc.data()["data"];
-      var deviceToken = doc_data.deviceToken;
+      // Get the deviceTokens
+      var docRef_userData = admin
+        .firestore()
+        .collection("userStorage")
+        .doc("users")
+        .collection(user_id)
+        .doc("UserData");
 
-      // Writing notification
-      const payload = {
-        notification: {
-          title: "Neue Benachrichtigung",
-          body: `Es gibt Neuigkeiten. Überprüfe deine Nachrichten`,
-        },
-      };
+      return docRef_userData.get().then(async (user_data_doc) => {
+        const doc_data = user_data_doc.data()["data"];
+        var deviceTokenList = doc_data.deviceTokenList;
 
-      // Send to admins
-      const response = await admin
-        .messaging()
-        .sendToDevice(deviceToken, payload);
-    });
+        deviceTokenList.forEach(async (deviceToken) => {
+          // Writing notification
+          const payload = {
+            notification: {
+              title: "Neue Benachrichtigung",
+              body: `Es gibt Neuigkeiten. Überprüfe deine Nachrichten`,
+            },
+          };
+
+          // Send to admins
+          await admin.messaging().sendToDevice(deviceToken, payload);
+        });
+      });
+    }
+    return true;
   });
 
 /**
