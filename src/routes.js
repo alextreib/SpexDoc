@@ -15,8 +15,11 @@ import SmartDoc from "views/SmartDoc/SmartDoc.js";
 import SmartDocIcon from "@material-ui/icons/TabletMac";
 import TodayIcon from '@material-ui/icons/Today';
 import UserProfile from "views/UserProfile/UserProfile.js";
+import Supervisor from "views/Supervisor/Supervisor.js";
+
 import Vaccination from "views/Vaccination/Vaccination.js";
 import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 // npm install --save-dev @iconify/react @iconify-icons/fa-solid
 import { Icon, InlineIcon } from '@iconify/react';
 // import syringeIcon from '@iconify-icons/fa-solid/syringe';
@@ -117,6 +120,14 @@ const dashboardRoutes = [
     icon: SmartDocIcon,
     component: SmartDoc,
     layout: "/admin"
+  },
+  {
+    path: "/Supervisor",
+    name: "Supervisor",
+    rtlName: "إخطارات",
+    icon: SupervisorAccountIcon,
+    component: Supervisor,
+    layout: "/Supervisor"
   },
 ];
 

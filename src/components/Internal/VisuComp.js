@@ -138,13 +138,18 @@ export default class VisuComp extends React.Component {
 
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
+  //todo: data? -> should be removed
   TableFetch = (TableName) => {
-    readDBData(TableName, TableName == "Emergency").then((doc_data) => {
-      if (doc_data != null)
-        this.setState({
-          [TableName]: { ...this.state[TableName], data: doc_data },
-        });
-      return;
+  return new Promise((resolve, reject) => {
+      readDBData(TableName, TableName == "Emergency").then((doc_data) => {
+        if (doc_data != null)
+          this.setState({
+            // todo:remove data
+            [TableName]: { ...this.state[TableName], data: doc_data },
+          });
+       
+      });
+      resolve(true);
     });
   };
 
@@ -153,30 +158,12 @@ export default class VisuComp extends React.Component {
     return writeDBData(name, data);
   };
 
-   // Return 17.12.2020
-   getCurrentDate = (separator = ".") => {
-    let newDate = new Date();
-    let date = newDate.getDate();
-    let month = newDate.getMonth() + 1;
-    let year = newDate.getFullYear();
-
-    return `${date}${separator}${
-      month < 10 ? `0${month}` : `${month}`
-    }${separator}${year}`;
+  handlePropertyChange = (propertyName, event) => {
+    var changedValue = event.target.value;
+    this.setState({
+      [propertyName]: changedValue,
+    });
   };
-
-   // Return 17.12.2020
-   getStringDate = (inputDate) => {
-     var separator="."
-    let date = inputDate.getDate();
-    let month = inputDate.getMonth() + 1;
-    let year = inputDate.getFullYear();
-
-    return `${date}${separator}${
-      month < 10 ? `0${month}` : `${month}`
-    }${separator}${year}`;
-  };
-
 
   // Rendering not possible in abstract class
 }

@@ -13,6 +13,7 @@ import UploadFileButton from "views/MedRecords/UploadFileButton.js";
 import MedRecordCard from "views/MedRecords/MedRecordCard.js";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
+import {getStringDate,getCurrentDate} from "components/Internal/VisuElements.js";
 import Button from "@material-ui/core/Button";
 
 import Card from "components/Card/Card.js";
@@ -115,7 +116,7 @@ class MedRecordsContent extends VisuComp {
       var newMedRecord = {
         link: fileLink,
         isImage: isImage,
-        date: this.getCurrentDate(),
+        date: getCurrentDate(),
         doctor: "Dr. Schneider",
         disease: "Erkältung",
         category: category,

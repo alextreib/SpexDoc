@@ -17,6 +17,10 @@ const firestore = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();
 
+// todo: Maybe add this to access offline pwa
+// https://stackoverflow.com/questions/57234932/how-to-use-firebase-auth-and-cloud-firestore-from-different-components-as-a-sing
+// https://firebase.google.com/docs/projects/pwa
 firestore.enablePersistence();
+
 
 export { firestore, auth, firebase, storage };

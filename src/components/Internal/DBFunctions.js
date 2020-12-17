@@ -11,6 +11,10 @@ import MaterialTable from "material-table";
 import React from "react";
 import { getPublicKey } from "components/Internal/Extraction.js";
 import { getUserID } from "components/Internal/Checks.js";
+import {
+  getStringDate,
+  getCurrentDate,
+} from "components/Internal/VisuElements.js";
 
 export const writeRequest = (message) => {
   return new Promise((resolve, reject) => {
@@ -20,6 +24,7 @@ export const writeRequest = (message) => {
     firestore.collection("requests").add({
       message: message,
       user_id: user_id,
+      answered: false,
     });
 
     // return true;
@@ -27,11 +32,74 @@ export const writeRequest = (message) => {
   });
 };
 
+export const getRequests = () => {
+  return new Promise((resolve, reject) => {
+    var docRef = firestore.collection("requests");
+
+    var requestArray = [];
+    docRef
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          // doc.data() is never undefined for query doc snapshots
+          requestArray.push({ id: doc.id, data: doc.data() });
+          // console.log(doc.id, " => ", doc.data());
+        });
+        resolve(requestArray);
+      })
+      .catch(function (error) {
+        console.log("Error getting documents: ", error);
+      });
+  });
+};
+
+export const newNotification = (message, sender) => {
+  return new Promise(async (resolve, reject) => {
+    var newNotification = {
+      favoriteActive: false,
+      message: message,
+      sender: sender,
+      date: await getCurrentDate(),
+      title: "Neue Nachricht",
+    };
+    resolve(newNotification);
+  });
+};
+
+export const writeNotification = (message, sender, recipient_uid) => {
+  return new Promise(async (resolve, reject) => {
+    // First read the data and then append list
+    readDBDataWithUid("Notifications", recipient_uid).then(async (doc_data) => {
+      var notificationList = [];
+      if (doc_data != null) {
+        notificationList = doc_data;
+      }
+
+      var newNotificationMsg = await newNotification(message, sender);
+      notificationList.push(newNotificationMsg);
+
+      writeDBDataWithUid("Notifications", notificationList, recipient_uid);
+      resolve(true);
+    });
+  });
+};
 
 export const writeDBData = (docName, data) => {
   var user_id = getUserID();
   if (user_id == null) return false;
 
+  firestore
+    .collection("userStorage")
+    .doc("users")
+    .collection(user_id)
+    .doc(docName)
+    .set({
+      data: data, // Required because array cannot be pushed
+    });
+  return true;
+};
+
+export const writeDBDataWithUid = (docName, data, user_id) => {
   firestore
     .collection("userStorage")
     .doc("users")
@@ -59,6 +127,28 @@ export const readDBData = (docName, allowPublicKey) => {
       }
     }
 
+    var docRef = firestore
+      .collection("userStorage")
+      .doc("users")
+      .collection(user_id)
+      .doc(docName);
+
+    docRef
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          return doc.data();
+        }
+      })
+      .then((doc_data) => {
+        if (doc_data != null) resolve(doc_data["data"]);
+        else resolve(null);
+      });
+  });
+};
+
+export const readDBDataWithUid = (docName, user_id) => {
+  return new Promise((resolve, reject) => {
     var docRef = firestore
       .collection("userStorage")
       .doc("users")

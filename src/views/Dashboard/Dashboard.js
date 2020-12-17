@@ -26,6 +26,7 @@ import TestComp from "components/VisuComps/TestComp.js";
 import Typography from "@material-ui/core/Typography";
 import Update from "@material-ui/icons/Update";
 import VisuComp from "components/Internal/VisuComp.js";
+import {getStringDate,getCurrentDate} from "components/Internal/VisuElements.js";
 import Warning from "@material-ui/icons/Warning";
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
@@ -133,7 +134,7 @@ class Dashboard extends VisuComp {
     );
 
     lastAppointments.forEach((appointment) => {
-      var stringDate = this.getStringDate(new Date(appointment.startDate));
+      var stringDate = getStringDate(new Date(appointment.startDate));
       lastAppointmentsArray.push([
         appointment.title,
         stringDate,
