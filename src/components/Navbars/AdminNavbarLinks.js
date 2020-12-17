@@ -6,6 +6,7 @@ import Button from "components/CustomButtons/Button.js";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import CommonComps from "components/Internal/CommonComps.js";
 import { CommonCompsData } from "components/Internal/DefaultData.js";
+import VisuComp from "components/Internal/VisuComp.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Dashboard from "@material-ui/icons/Dashboard";
 import Divider from "@material-ui/core/Divider";
@@ -30,13 +31,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import styles from "assets/jss/material-dashboard-react/components/headerLinksStyle.js";
 import { withStyles } from "@material-ui/core/styles";
 
-class AdminNavbarLinks extends React.Component {
+class AdminNavbarLinks extends VisuComp {
   constructor(props) {
     super(props);
 
     this.state = {
       openNotification: null,
-      notificationList: [],
+      Notifications: [],
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
     };
 
@@ -57,16 +58,7 @@ class AdminNavbarLinks extends React.Component {
 
   // Required from CommonProps
   updateComp = () => {
-    this.fetchTable();
-  };
-
-  fetchTable = () => {
-    return readDBData("Notifications", false).then((doc_data) => {
-      if (doc_data == null) this.setState({ notificationList: [] });
-      // Cannot get data -> set default data from parent class
-      // this.setState({ data: this.props.tableOptions.data });
-      else this.setState({ notificationList: doc_data });
-    });
+    this.TableFetch("Notifications");
   };
 
   handleClickNotification = (event) => {
@@ -131,7 +123,7 @@ class AdminNavbarLinks extends React.Component {
             <div className={classes.manager}>
               <Link className={classes.LinkNotification} to="/notifications">
                 <Badge
-                  badgeContent={this.state.notificationList.length}
+                  badgeContent={this.state.Notifications.length}
                   color="secondary"
                 >
                   <NotificationIcon />
@@ -169,7 +161,7 @@ class AdminNavbarLinks extends React.Component {
                           to="/notifications"
                         >
                           <MenuList role="menu">
-                            {this.state.notificationList.map(
+                            {this.state.Notifications.map(
                               (notificationItem) => (
                                 <Link
                                   style={{ textDecoration: "none" }}

@@ -13,13 +13,19 @@ import UploadFileButton from "views/MedRecords/UploadFileButton.js";
 import MedRecordCard from "views/MedRecords/MedRecordCard.js";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
-import {getStringDate,getCurrentDate} from "components/Internal/VisuElements.js";
+import {
+  getStringDate,
+  getCurrentDate,
+} from "components/Internal/VisuElements.js";
 import Button from "@material-ui/core/Button";
 
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 import VisuComp from "components/Internal/VisuComp";
+import IconButton from "@material-ui/core/IconButton";
+
+import DeleteIcon from "@material-ui/icons/Delete";
 
 const styles = (theme) => ({
   cardCategoryWhite: {
@@ -33,6 +39,12 @@ const styles = (theme) => ({
     "& a,& a:hover,& a:focus": {
       color: "#FFFFFF",
     },
+  },
+  deleteButton: {
+    position: "absolute",
+    bottom: 15,
+    right: 15,
+    color: "white",
   },
   cardTitleWhite: {
     color: "#FFFFFF",
@@ -142,6 +154,19 @@ class MedRecordsContent extends VisuComp {
     );
   };
 
+  removeCategory = (CategoryToRemove) => {
+    this.setState(
+      (prevState) => {
+        const categoryList = [...prevState.categoryList];
+        categoryList.splice(categoryList.indexOf(CategoryToRemove), 1);
+        return { ...prevState, categoryList };
+      },
+      () => {
+        this.uploadTable();
+      }
+    );
+  };
+
   addnewMedRecord = (newMedRecord) => {
     this.setState(
       (prevState) => {
@@ -183,7 +208,6 @@ class MedRecordsContent extends VisuComp {
     );
   };
 
- 
   // UI functions
   //todo: not save in db, only visu
   openModal = (medRecord) => {
@@ -229,6 +253,13 @@ class MedRecordsContent extends VisuComp {
                   <p className={classes.cardCategoryWhite}>
                     Verwalte und teile deine Befunde
                   </p>
+
+                  <IconButton
+                    className={classes.deleteButton}
+                    onClick={(e) => this.removeCategory(category, e)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </CardHeader>
                 <CardBody>
                   <GridContainer>

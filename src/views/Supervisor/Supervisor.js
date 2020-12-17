@@ -79,9 +79,8 @@ class Supervisor extends VisuComp {
 
     this.state = {
       selectedRequest: "",
-      commonProps: { ...CommonCompsData, updateComp: this.updateComp },
-      SupervisorName: "",
       answerMessage: "",
+      commonProps: { ...CommonCompsData, updateComp: this.updateComp },
     };
   }
 
@@ -94,7 +93,7 @@ class Supervisor extends VisuComp {
       // No change from above (currently nothing else is needed)
       return;
     } else {
-      // this.TableFetch("Notifications");
+      // this.TableFetch("Requests");
       this.fetchData();
 
       // Only required for visu, not loading
@@ -112,7 +111,7 @@ class Supervisor extends VisuComp {
     var result = await getRequests();
 
     this.setState({
-      Notifications: result,
+      Requests: result,
     });
   };
 
@@ -122,9 +121,10 @@ class Supervisor extends VisuComp {
   SupervisorName = () => {
     if (this.state.UserProfile != null) {
       return (
-        this.state.UserProfile.data.firstName +
+        //todo fix data bug
+        this.state.UserProfile.firstName +
         " " +
-        this.state.UserProfile.data.lastName
+        this.state.UserProfile.lastName
       );
     } else {
       return "";
@@ -132,11 +132,7 @@ class Supervisor extends VisuComp {
   };
 
   submitAnswer = () => {
-    console.log("submitted");
-    console.log(this.state.answerMessage);
-    // Set Request to anwered
-
-    // write to notifications of user
+    // write to Requests of user
     var recipient_uid = this.getRequestData().user_id;
     // Get UserProfile
     writeNotification(
@@ -156,7 +152,7 @@ class Supervisor extends VisuComp {
 
   getRequestData = () => {
     var returnData = "";
-    this.state.Notifications.forEach((request) => {
+    this.state.Requests.forEach((request) => {
       if (request.id == this.state.selectedRequest) {
         returnData = request.data;
       }
@@ -188,7 +184,7 @@ class Supervisor extends VisuComp {
               <CardBody>
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
-                    {this.state.Notifications ? (
+                    {this.state.Requests ? (
                       <div>
                         <FormControl className={classes.formControl}>
                           <Select
@@ -197,9 +193,9 @@ class Supervisor extends VisuComp {
                               this.handlePropertyChange("selectedRequest", ev)
                             }
                           >
-                            {this.state.Notifications.map((notification) => (
-                              <MenuItem value={notification.id}>
-                                {notification.id}
+                            {this.state.Requests.map((request) => (
+                              <MenuItem value={request.id}>
+                                {request.id}
                               </MenuItem>
                             ))}
                           </Select>

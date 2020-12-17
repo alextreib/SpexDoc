@@ -139,15 +139,20 @@ export default class VisuComp extends React.Component {
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
   //todo: data? -> should be removed
-  TableFetch = (TableName) => {
-  return new Promise((resolve, reject) => {
+  TableFetch = (TableName, writeinData = false) => {
+    return new Promise((resolve, reject) => {
       readDBData(TableName, TableName == "Emergency").then((doc_data) => {
         if (doc_data != null)
-          this.setState({
-            // todo:remove data
-            [TableName]: { ...this.state[TableName], data: doc_data },
-          });
-       
+          if (writeinData) {
+            this.setState({
+              [TableName]: { ...this.state[TableName], data: doc_data },
+            });
+          } else {
+            // Overwriting
+            this.setState({
+              [TableName]: doc_data,
+            });
+          }
       });
       resolve(true);
     });

@@ -133,7 +133,7 @@ class SmartDoc extends VisuComp {
   }
 
   componentDidMount() {
-    this.TableFetch("bloodValueTable");
+    this.TableFetch("bloodValueTable",true);
   }
 
   componentDidUpdate(prevProps) {
@@ -141,7 +141,7 @@ class SmartDoc extends VisuComp {
       // No change from above (currently nothing else is needed)
       return;
     } else {
-      this.TableFetch("bloodValueTable");
+      this.TableFetch("bloodValueTable",true);
 
       // Only required for visu, not loading
       this.setState({
