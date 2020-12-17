@@ -3,10 +3,11 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import PropTypes from "prop-types";
 import { loginUser, logoutUser } from "components/Internal/LoginFunctions.js";
-import { checkUser } from "components/Internal/Checks.js";
+import { checkUser, getUserID } from "components/Internal/Checks.js";
 import { connect } from "react-redux";
 import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
 import PopUp from "components/PopUp/PopUp.js";
+import VisuComp from "components/Internal/VisuComp.js";
 
 import { openLoginAlert } from "components/Internal/VisuElements.js";
 import LoginAlert from "components/LoginAlert/LoginAlert";
@@ -35,7 +36,7 @@ const styles = () => ({
 
 // Component that extends each view component. Aka common component
 // Should also be includable in each component (subcomponent like EditabletableReport)
-class CommonComps extends React.Component {
+class CommonComps extends VisuComp {
   constructor(props) {
     super(props);
 
@@ -46,14 +47,19 @@ class CommonComps extends React.Component {
   }
 
   componentDidMount() {
-    this.props.commonProps.loginState = checkUser();
+    // Weird flex -> needs timeout to load login
+    this.timeout(1000).then(() => {
+      if (getUserID() != null) {
+        this.props.loginRedux({ user_id: getUserID() });
+      }
+    });
+
+    this.props.commonProps.updateComp();
   }
 
   // Listens to own and assigned parent state
   componentDidUpdate(prevProps) {
-    this.props.commonProps.loginState = checkUser();
-
-    // Call function in parent
+    // // Call function in parent
     this.props.commonProps.updateComp();
   }
 

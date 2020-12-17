@@ -8,6 +8,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { getPublicKey } from "components/Internal/Extraction.js";
 import { CommonCompsData } from "components/Internal/DefaultData.js";
+import { checkUser } from "components/Internal/Checks.js";
 
 class EditableTableReport extends React.Component {
   constructor(props) {

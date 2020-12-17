@@ -5,6 +5,8 @@ import EditableTableReport from "components/EditableTableReport/EditableTableRep
 import GridContainer from "components/Grid/GridContainer.js";
 // core components
 import GridItem from "components/Grid/GridItem.js";
+import Button from "@material-ui/core/Button";
+import VisuComp from "components/Internal/VisuComp";
 import PropTypes from "prop-types";
 import React from "react";
 import Table from "components/Table/Table.js";
@@ -44,7 +46,7 @@ const styles = {
 };
 
 
-class Vaccination extends React.Component {
+class Vaccination extends VisuComp {
   constructor(props) {
     super(props);
 
