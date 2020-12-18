@@ -26,7 +26,7 @@ export const getChart = (pointList) => {
         tension: 0,
       }),
       low: 0,
-      high: getMaxValueofArray(pointList), // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+      high: getMaxValueofArray(pointList), // we recommend you to set the high sa the biggest value + something for a better look
       chartPadding: {
         top: 0,
         right: 0,

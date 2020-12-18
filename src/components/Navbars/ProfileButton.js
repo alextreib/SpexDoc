@@ -39,6 +39,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { grey, red } from "@material-ui/core/colors";
 import { CommonCompsData } from "components/Internal/DefaultData.js";
 import CommonComps from "components/Internal/CommonComps.js";
+import VisuComp from "components/Internal/VisuComp";
 
 const styles = (theme) => ({
   avatar: {
@@ -52,16 +53,14 @@ const styles = (theme) => ({
   },
 });
 
-class ProfileButton extends React.Component {
+class ProfileButton extends VisuComp {
   constructor(props) {
     super(props);
 
     this.state = {
       // List of additional rendered components (several concurrently)
-      additionalComp: [],
       anchorEl: null,
       mobileMoreAnchorEl: null,
-      userProfile: null,
       isMenuOpen: null,
       isMobileMenuOpen: null,
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
@@ -88,17 +87,7 @@ class ProfileButton extends React.Component {
 
   // Required from CommonProps
   updateComp = () => {
-    this.fetchTable();
-  };
-
-  fetchTable = () => {
-    readDBData("UserProfile", false).then((doc_data) => {
-      if (doc_data == null) {
-        return;
-      } else {
-        this.setState({ userProfile: doc_data });
-      }
-    });
+    this.TableFetch("UserProfile");
   };
 
   // Currently all functions are silent because component is only navlink
@@ -194,9 +183,9 @@ class ProfileButton extends React.Component {
             color="inherit"
             className={classes.buttonLink}
           >
-            {this.state.userProfile != null ? (
+            {this.state.UserProfile != null ? (
               <Avatar aria-label="recipe" className={classes.avatar}>
-                {this.state.userProfile.firstName.charAt(0)}
+                {this.state.UserProfile.firstName.charAt(0)}
               </Avatar>
             ) : (
               <AccountCircle />
@@ -216,9 +205,9 @@ class ProfileButton extends React.Component {
             className={classes.buttonLink}
           >
             {this.state.commonProps.loginState != false &&
-            this.state.userProfile != null ? (
+            this.state.UserProfile != null ? (
               <Avatar aria-label="recipe" className={classes.avatar}>
-                {this.state.userProfile.firstName.charAt(0)}
+                {this.state.UserProfile.firstName.charAt(0)}
               </Avatar>
             ) : (
               <Person className={classes.icons} />

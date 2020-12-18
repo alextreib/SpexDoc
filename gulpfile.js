@@ -1,8 +1,7 @@
 const gulp = require("gulp");
 const gap = require("gulp-append-prepend");
 
-gulp.task("licenses", async function() {
-  // this is to add Creative Tim licenses in the production mode for the minified js
+gulp.task("licenses", async function () {
   gulp
     .src("build/static/js/*chunk.js", { base: "./" })
     .pipe(
@@ -11,11 +10,9 @@ gulp.task("licenses", async function() {
 =========================================================
 * Material Dashboard React - v1.9.0
 =========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2020 Creative Tim (http://www.creative-tim.com)
-
-* Coded by Creative Tim
+* Product Page: https://spexdoc.net
+* Copyright 2020 SpexDoc (https://spexdoc.net)
+* Licensed under MIT (https://github.com/hashtag32/spexdocapp/blob/master/LICENSE.md)
 
 =========================================================
 
@@ -25,7 +22,6 @@ gulp.task("licenses", async function() {
     )
     .pipe(gulp.dest("./", { overwrite: true }));
 
-  // this is to add Creative Tim licenses in the production mode for the minified html
   gulp
     .src("build/index.html", { base: "./" })
     .pipe(
@@ -34,11 +30,9 @@ gulp.task("licenses", async function() {
 =========================================================
 * Material Dashboard React - v1.9.0
 =========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2020 Creative Tim (http://www.creative-tim.com)
-
-* Coded by Creative Tim
+* Product Page: https://spexdoc.net
+* Copyright 2020 SpexDoc (https://spexdoc.net)
+* Licensed under MIT (https://github.com/hashtag32/spexdocapp/blob/master/LICENSE.md)
 
 =========================================================
 
@@ -48,7 +42,6 @@ gulp.task("licenses", async function() {
     )
     .pipe(gulp.dest("./", { overwrite: true }));
 
-  // this is to add Creative Tim licenses in the production mode for the minified css
   gulp
     .src("build/static/css/*chunk.css", { base: "./" })
     .pipe(
@@ -58,10 +51,9 @@ gulp.task("licenses", async function() {
 * Material Dashboard React - v1.9.0
 =========================================================
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2020 Creative Tim (http://www.creative-tim.com)
-
-* Coded by Creative Tim
+* Product Page: https://spexdoc.net
+* Copyright 2020 SpexDoc (https://spexdoc.net)
+* Licensed under MIT (https://github.com/hashtag32/spexdocapp/blob/master/LICENSE.md)
 
 =========================================================
 

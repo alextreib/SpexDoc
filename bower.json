@@ -1,10 +1,10 @@
 {
-  "name": "material-dashboard-react",
-  "homepage": "https://github.com/creativetimofficial/material-dashboard-react",
+  "name": "SpexDoc Dashboard",
+  "homepage": "https://spexdoc.net",
   "authors": [
-    "creative-tim"
+    "SpexDoc"
   ],
-  "description": "A Badass Material-UI Kit based on Material Design",
+  "description": "Digital health assistant",
   "main": "public/index.html",
   "keywords": [
     "material",
@@ -15,7 +15,7 @@
     "google",
     "twitter"
   ],
-  "license": "Creative TIM License",
+  "license": "SpexDoc",
   "ignore": [
     "**/.*",
     "node_modules",

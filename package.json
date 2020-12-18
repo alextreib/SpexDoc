@@ -1,7 +1,7 @@
 {
-  "name": "material-dashboard-react",
+  "name": "spexdoc",
   "version": "1.9.0",
-  "description": "Material Dashboard React. Coded by Creative Tim",
+  "description": "Digital health assistant",
   "private": false,
   "main": "dist/index.js",
   "dependencies": {
@@ -63,13 +63,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/creativetimofficial/material-dashboard-react.git"
+    "url": "git+https://github.com/hashtag32/spexdocapp.git"
   },
   "keywords": [],
-  "author": "Creative Tim <hello@creative-tim.com> (https://www.creative-tim.com/)",
+  "author": "SpexDoc <info@spexdoc.net> (https://www.spexdoc.net/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/creativetimofficial/material-dashboard-react/issues"
+    "url": "https://github.com/hashtag32/spexdocapp/issues"
   },
   "optionalDependencies": {
     "@types/googlemaps": "3.39.6",

@@ -293,14 +293,12 @@ export default function RTLPage() {
                 يدويا من قبل أصدقائنا من{" "}
                 <a
                   target="_blank"
-                  href="https://material-ui-next.com/?ref=creativetime"
                 >
                   واجهة المستخدم المادية
                 </a>{" "}
                 ونصب من قبل{" "}
                 <a
                   target="_blank"
-                  href="https://www.creative-tim.com/?ref=mdr-rtl-page"
                 >
                   الإبداعية تيم
                 </a>
