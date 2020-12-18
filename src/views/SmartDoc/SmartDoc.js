@@ -23,7 +23,6 @@ import { writeRequest } from "components/Internal/DBFunctions.js";
 import { CommonCompsData } from "components/Internal/DefaultData.js";
 import CommonComps from "components/Internal/CommonComps.js";
 
-
 const styles = (theme) => ({
   margin: {
     margin: "0",
@@ -133,7 +132,7 @@ class SmartDoc extends VisuComp {
   }
 
   componentDidMount() {
-    this.TableFetch("bloodValueTable",true);
+    this.updateComp();
   }
 
   componentDidUpdate(prevProps) {
@@ -141,14 +140,14 @@ class SmartDoc extends VisuComp {
       // No change from above (currently nothing else is needed)
       return;
     } else {
-      this.TableFetch("bloodValueTable",true);
-
-      // Only required for visu, not loading
-      this.setState({
-        commonProps: { ...this.state.commonProps, loginState: checkUser() },
-      });
+      this.updateComp();
     }
   }
+
+  // Required from CommonProps
+  updateComp = () => {
+    this.TableFetch("bloodValueTable", true);
+  };
 
   bloodEvaluation = () => {
     var returnText = "";
@@ -174,29 +173,18 @@ class SmartDoc extends VisuComp {
     return returnText;
   };
 
-  // Required from CommonProps
-  updateComp = () => {};
-
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
-  fetchTable = () => {};
-
   submitContactForm = () => {
-    console.log("submitted");
-    var message = this.state.contactMessage;
-    writeRequest(message).then(() => {
+    if (!this.checkLoginAndDisplay()) {
+      return;
+    }
+
+    writeRequest(this.state.contactMessage).then(() => {
       this.setState({
         contactMessage: "",
       });
-    });
-
-    this.displayPopUp("Anfrage erfolgreich versendet")
-  };
-
-  contactMessageChanged = (event) => {
-    var changedValue = event.target.value;
-    this.setState({
-      contactMessage: changedValue,
+      this.displayPopUp("Anfrage erfolgreich versendet");
     });
   };
 
@@ -207,65 +195,69 @@ class SmartDoc extends VisuComp {
       <div>
         <CommonComps commonProps={this.state.commonProps} />
 
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Blutwert Analyse</h4>
-              <p className={classes.cardCategoryWhite}>
-                Gehe deinen Blutwerten auf den Grund
-              </p>
-            </CardHeader>
-            <CardBody>
-              <PlainTable tableOptions={this.state.bloodValueTable} />
-              <br />
-              <Typography variant="h4">Auswertung</Typography>
-              <br />
-              <Typography variant="body1">{this.bloodEvaluation()}</Typography>
-            </CardBody>
-          </Card>
-        </GridItem>
+        <GridContainer>
+          <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              <CardHeader color="primary">
+                <h4 className={classes.cardTitleWhite}>Blutwert Analyse</h4>
+                <p className={classes.cardCategoryWhite}>
+                  Gehe deinen Blutwerten auf den Grund
+                </p>
+              </CardHeader>
+              <CardBody>
+                <PlainTable tableOptions={this.state.bloodValueTable} />
+                <br />
+                <Typography variant="h4">Auswertung</Typography>
+                <br />
+                <Typography variant="body1">
+                  {this.bloodEvaluation()}
+                </Typography>
+              </CardBody>
+            </Card>
+          </GridItem>
 
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="warning">
-              <h4 className={classes.cardTitleWhite}>Frag den Arzt</h4>
+          <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              <CardHeader color="warning">
+                <h4 className={classes.cardTitleWhite}>Frag den Arzt</h4>
 
-              <p className={classes.cardCategoryWhite}>
-                Deine Daten werden anonym übermittelt und vertraulich behandelt.
-              </p>
-            </CardHeader>
-            <CardBody>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                  <TextField
-                    id="outlined-multiline-static"
-                    label="Deine Frage"
-                    multiline
-                    fullWidth="true"
-                    rows={8}
-                    defaultValue="Default Value"
-                    variant="outlined"
-                    inputProps={{
-                      value: this.state.contactMessage,
-                      onChange: (e) => this.contactMessageChanged(e),
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-            </CardBody>
-            <CardFooter>
-              <Button
-                className={classes.submitButton}
-                color="primary"
-                onClick={this.submitContactForm}
-              >
-                Absenden
-              </Button>
-            </CardFooter>
-          </Card>
-        </GridItem>
-      </GridContainer>
+                <p className={classes.cardCategoryWhite}>
+                  Deine Daten werden anonym übermittelt und vertraulich
+                  behandelt.
+                </p>
+              </CardHeader>
+              <CardBody>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <TextField
+                      id="outlined-multiline-static"
+                      label="Deine Frage"
+                      multiline
+                      fullWidth="true"
+                      rows={8}
+                      defaultValue="Default Value"
+                      variant="outlined"
+                      inputProps={{
+                        value: this.state.contactMessage,
+                        onChange: (e) =>
+                          this.handlePropertyChange("contactMessage", e),
+                      }}
+                    />
+                  </GridItem>
+                </GridContainer>
+              </CardBody>
+              <CardFooter>
+                <Button
+                  className={classes.submitButton}
+                  color="primary"
+                  onClick={this.submitContactForm}
+                >
+                  Absenden
+                </Button>
+              </CardFooter>
+            </Card>
+          </GridItem>
+        </GridContainer>
       </div>
     );
   }

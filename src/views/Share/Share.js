@@ -17,7 +17,6 @@ import { getUserID } from "components/Internal/Checks";
 import { withStyles } from "@material-ui/core/styles";
 import VisuComp from "components/Internal/VisuComp";
 
-
 const styles = {
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -48,27 +47,27 @@ const styles = {
   },
 };
 
+const defaultData = {
+  emergency: {
+    QRCodeactive: false,
+    Switchactive: false,
+    shortLink: "",
+  },
+  medRecords: {
+    QRCodeactive: false,
+    Switchactive: false,
+    shortLink: "",
+  },
+};
+
 // Display Login Screen here -> Login from Profile NavBar should also point here
 class Share extends VisuComp {
   constructor(props) {
     super(props);
     this.state = {
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
-
-      data: {
-        emergency: {
-          QRCodeactive: false,
-          Switchactive: false,
-          shortLink: "",
-        },
-        medRecords: {
-          QRCodeactive: false,
-          Switchactive: false,
-          shortLink: "",
-        },
-      },
+      data: defaultData,
     };
-
   }
 
   // For redux and others
@@ -87,7 +86,7 @@ class Share extends VisuComp {
 
   // Required from CommonProps
   updateComp = async () => {
-    this.TableFetch("Share",true)
+    this.TableFetch("Share", true, defaultData);
   };
 
   handleSwitchChange = async (property, event) => {
@@ -110,7 +109,7 @@ class Share extends VisuComp {
       },
     });
 
-    this.TableChanged("Share", this.state.data)
+    this.TableChanged("Share", this.state.data);
   };
 
   render() {

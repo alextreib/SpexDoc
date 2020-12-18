@@ -44,6 +44,10 @@ class AdminNavbarLinks extends VisuComp {
     this.handleClickNotification = this.handleClickNotification.bind(this);
   }
 
+  componentDidMount() {
+    this.updateComp();
+  }
+
   componentDidUpdate(prevProps) {
     if (prevProps == this.props) {
       // No change from above (currently nothing else is needed)
@@ -52,13 +56,9 @@ class AdminNavbarLinks extends VisuComp {
     this.updateComp();
   }
 
-  componentDidMount() {
-    this.updateComp();
-  }
-
   // Required from CommonProps
   updateComp = () => {
-    this.TableFetch("Notifications");
+    this.TableFetch("Notifications", false, []);
   };
 
   handleClickNotification = (event) => {

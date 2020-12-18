@@ -52,6 +52,9 @@ class CommonComps extends VisuComp {
       if (getUserID() != null) {
         this.props.loginRedux({ user_id: getUserID() });
       }
+      else{
+        this.props.logoutRedux();
+      }
     });
 
     this.props.commonProps.updateComp();
