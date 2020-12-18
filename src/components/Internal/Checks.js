@@ -7,13 +7,8 @@ const bitly = new BitlyClient("10f3147740e04fd0ea4c68788a84147cc6034dfa");
 
 // Get user_id -> checkUser -> LoginAlert
 export const checkUser = () => {
-  if (auth.currentUser == null) {
-    console.log("user not logged in");
-    // Display LoginAlert
-    return false;
-  } else {
-    return true;
-  }
+  return auth.currentUser !=null;
+
 };
 
 

@@ -42,26 +42,22 @@ const styles = {
       lineHeight: "1",
     },
   },
-  ref: "https://google.de",
 };
-
 
 class Vaccination extends VisuComp {
   constructor(props) {
     super(props);
 
     this.state = {
-      displayLogin: false,
-      showFiles: [],
-      external:{
-        tableOptions:{
+      external: {
+        tableOptions: {
           name: "Vaccination",
-          columns:[
+          columns: [
             { title: "Impfung", field: "vaccination" },
             { title: "Jahr", field: "year" },
             { title: "Arzt", field: "doctor" },
           ],
-          data:  [
+          data: [
             {
               vaccination: "Beispiel Impfung",
               year: "2010",
@@ -72,12 +68,11 @@ class Vaccination extends VisuComp {
               year: "2012",
               doctor: "Dr. Müller",
             },
-          ]
-        }
-      }
+          ],
+        },
+      },
     };
 
-    //Bindings
   }
 
   render() {
@@ -87,12 +82,15 @@ class Vaccination extends VisuComp {
         <GridItem xs={12} sm={12} md={12}>
           <Card>
             <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Übersicht</h4>
-              <p className={classes.cardCategoryWhite}>Alle Impfungen auf einen Blick</p>
+              <h4 className={classes.cardTitleWhite}>Übersicht</h4>
+              <p className={classes.cardCategoryWhite}>
+                Alle Impfungen auf einen Blick
+              </p>
             </CardHeader>
             <CardBody>
-              <EditableTableReport tableOptions={this.state.external.tableOptions} />
-
+              <EditableTableReport
+                tableOptions={this.state.external.tableOptions}
+              />
             </CardBody>
           </Card>
         </GridItem>
@@ -100,16 +98,18 @@ class Vaccination extends VisuComp {
           <Card>
             <CardHeader color="primary">
               <h4 className={classes.cardTitleWhite}>Intervalle</h4>
-              <p className={classes.cardCategoryWhite}>Zeiträume für bestimmte Impfungen</p>
+              <p className={classes.cardCategoryWhite}>
+                Zeiträume für bestimmte Impfungen
+              </p>
             </CardHeader>
             <CardBody>
               <Table
                 tableHeaderColor="primary"
                 tableHead={["Impfung", "Zeitraum", "Impfempfehlung"]}
                 tableData={[
-                  ["Polio", "Alle 10 Jahre", "Dringend empfohlen" ],
-                  ["Tetanus", "Alle 5 Jahre","Dringend empfohlen"],
-                  ["FMSE", "Alle 15 Jahre","Optional"],
+                  ["Polio", "Alle 10 Jahre", "Dringend empfohlen"],
+                  ["Tetanus", "Alle 5 Jahre", "Dringend empfohlen"],
+                  ["FMSE", "Alle 15 Jahre", "Optional"],
                 ]}
               />
             </CardBody>

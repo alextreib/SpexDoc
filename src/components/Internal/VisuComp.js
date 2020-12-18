@@ -37,6 +37,13 @@ export default class VisuComp extends React.Component {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  checkLoginAndDisplay = () => {
+    if (!checkUser()) {
+      this.displayLogin();
+    }
+    return checkUser();
+  };
+
   // Combining the function in a way to display it everywhere the same
   displayLogin = () => {
     console.log("displaylogin");
@@ -145,7 +152,7 @@ export default class VisuComp extends React.Component {
         if (doc_data != null)
           if (writeinData) {
             this.setState({
-              [TableName]: { ...this.state[TableName], data: doc_data },
+              data: doc_data,
             });
           } else {
             // Overwriting

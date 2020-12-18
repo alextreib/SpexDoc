@@ -39,11 +39,14 @@ import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 
 import { TodayButton } from "@devexpress/dx-react-scheduler-material-ui";
 
+import { CommonCompsData } from "components/Internal/DefaultData";
+import CommonComps from "components/Internal/CommonComps";
 import { DateNavigator } from "@devexpress/dx-react-scheduler-material-ui";
 
 import Close from "@material-ui/icons/Close";
 import CalendarToday from "@material-ui/icons/CalendarToday";
 import Create from "@material-ui/icons/Create";
+import VisuComp from "components/Internal/VisuComp";
 
 // import { appointments } from "components/VisuComps/tasks.js";
 
@@ -286,7 +289,7 @@ const styles = (theme) => ({
 });
 
 /* eslint-disable-next-line react/no-multi-comp */
-class Demo extends React.PureComponent {
+class Demo extends VisuComp {
   constructor(props) {
     super(props);
     this.state = {
@@ -301,6 +304,7 @@ class Demo extends React.PureComponent {
       startDayHour: 9,
       endDayHour: 19,
       isNewAppointment: false,
+      commonProps: { ...CommonCompsData, updateComp: this.updateComp },
     };
 
     this.toggleConfirmationVisible = this.toggleConfirmationVisible.bind(this);
@@ -356,6 +360,9 @@ class Demo extends React.PureComponent {
   componentDidMount() {
     this.fetchTable();
   }
+
+  updateComp = () => {};
+
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
   fetchTable = () => {
@@ -371,9 +378,7 @@ class Demo extends React.PureComponent {
 
   // Is called when table is changed
   tableChanged = () => {
-    console.log("tableChanged")
-    var success = writeDBData("Appointments", this.state.data);
-    // if (success == false) this.displayLogin();
+    this.TableChanged("Appointments", this.state.data);
   };
 
   onEditingAppointmentChange(editingAppointment) {
@@ -465,6 +470,8 @@ class Demo extends React.PureComponent {
 
     return (
       <Paper>
+        <CommonComps commonProps={this.state.commonProps} />
+
         <Scheduler data={data} height={660}>
           <ViewState defaultCurrentDate={currentDate} />
           <EditingState
@@ -488,7 +495,7 @@ class Demo extends React.PureComponent {
             visible={editingFormVisible}
             onVisibilityChange={this.toggleEditingFormVisibility}
           />
-         {/* Currently not working with data update */}
+          {/* Currently not working with data update */}
           {/* <DragDropProvider /> */}
         </Scheduler>
 
@@ -521,6 +528,10 @@ class Demo extends React.PureComponent {
           color="secondary"
           className={classes.addButton}
           onClick={() => {
+            if (!this.checkLoginAndDisplay()) {
+              return;
+            }
+
             this.setState({ editingFormVisible: true });
             this.onEditingAppointmentChange(undefined);
             this.onAddedAppointmentChange({

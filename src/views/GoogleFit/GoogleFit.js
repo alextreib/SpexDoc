@@ -140,6 +140,10 @@ class GoogleFit extends VisuComp {
   };
 
   enableGoogleFit = () => {
+    if (!this.checkLoginAndDisplay()) {
+      return;
+    }
+
     loginUser(true)
       .then((result) => {
         var token = result.credential.accessToken;

@@ -15,6 +15,7 @@ import { connect } from "react-redux";
 import { getShortLink } from "components/Internal/Checks";
 import { getUserID } from "components/Internal/Checks";
 import { withStyles } from "@material-ui/core/styles";
+import VisuComp from "components/Internal/VisuComp";
 
 
 const styles = {
@@ -48,7 +49,7 @@ const styles = {
 };
 
 // Display Login Screen here -> Login from Profile NavBar should also point here
-class Share extends React.Component {
+class Share extends VisuComp {
   constructor(props) {
     super(props);
     this.state = {
@@ -68,8 +69,6 @@ class Share extends React.Component {
       },
     };
 
-    //Bindings
-    this.handleSwitchChange = this.handleSwitchChange.bind(this);
   }
 
   // For redux and others
@@ -88,35 +87,15 @@ class Share extends React.Component {
 
   // Required from CommonProps
   updateComp = async () => {
-    this.fetchTable();
-  };
-
-  // Fetch the table from Firebase (Original data)
-  fetchTable = () => {
-    return readDBData("Share", false).then((doc_data) => {
-      if (doc_data != null) this.setState({ data: doc_data });
-    });
-  };
-
-  upload = () => {
-    var user_id = getUserID();
-    if (user_id == null) {
-      this.displayLogin();
-      return false;
-    }
-    var success = writeDBData("Share", this.state.data);
-    if (success == false) this.displayLogin();
+    this.TableFetch("Share",true)
   };
 
   handleSwitchChange = async (property, event) => {
-    console.log("handleSwitch");
-    var checked = event.target.checked;
-
-    var user_id = getUserID();
-    if (user_id == null) {
-      this.displayLogin();
-      return false;
+    if (!this.checkLoginAndDisplay()) {
+      return;
     }
+
+    var checked = event.target.checked;
 
     var shortLink = await getShortLink(property);
 
@@ -131,18 +110,7 @@ class Share extends React.Component {
       },
     });
 
-    // Upload
-    this.upload();
-  };
-
-  // todo: Find a way to cluster/extract it to a common place
-  displayLogin = () => {
-    // This is how a function in CommonProps is called
-    this.setState({
-      commonProps: {
-        LoginAlertProps: { openLoginRequired: true, FuncParams: "test" },
-      },
-    });
+    this.TableChanged("Share", this.state.data)
   };
 
   render() {

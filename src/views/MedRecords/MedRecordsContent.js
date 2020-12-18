@@ -26,6 +26,8 @@ import VisuComp from "components/Internal/VisuComp";
 import IconButton from "@material-ui/core/IconButton";
 
 import DeleteIcon from "@material-ui/icons/Delete";
+import { CommonCompsData } from "components/Internal/DefaultData";
+import  CommonComps  from "components/Internal/CommonComps";
 
 const styles = (theme) => ({
   cardCategoryWhite: {
@@ -71,6 +73,7 @@ class MedRecordsContent extends VisuComp {
       dbName: "medRecords",
       data: [],
       categoryList: DefaultCategories,
+      commonProps: { ...CommonCompsData, updateComp: this.updateComp },
     };
     this.openModal = this.openModal.bind(this);
   }
@@ -87,6 +90,9 @@ class MedRecordsContent extends VisuComp {
     // this.fetchTable();
   }
 
+  updateComp=()=>{
+    
+  }
   // DB functions
   fetchTable = () => {
     readDBData(this.state.dbName, false).then((doc_data) => {
@@ -114,6 +120,10 @@ class MedRecordsContent extends VisuComp {
   };
 
   uploadFile = (category, event) => {
+    if (!this.checkLoginAndDisplay()) {
+      return;
+    }
+    
     event.preventDefault();
 
     var fileToUpload = event.target.files[0];
@@ -155,6 +165,9 @@ class MedRecordsContent extends VisuComp {
   };
 
   removeCategory = (CategoryToRemove) => {
+    if (!this.checkLoginAndDisplay()) {
+      return;
+    }
     this.setState(
       (prevState) => {
         const categoryList = [...prevState.categoryList];
@@ -243,6 +256,8 @@ class MedRecordsContent extends VisuComp {
 
     return (
       <div>
+        <CommonComps commonProps={this.state.commonProps} />
+
         <GridContainer>
           {this.state.categoryList.map((category) => (
             // this.getMedRecord(category).length>0 ?(

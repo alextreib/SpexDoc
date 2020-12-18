@@ -9,8 +9,9 @@ import { connect } from "react-redux";
 import { getPublicKey } from "components/Internal/Extraction.js";
 import { CommonCompsData } from "components/Internal/DefaultData.js";
 import { checkUser } from "components/Internal/Checks.js";
+import VisuComp from "components/Internal/VisuComp";
 
-class EditableTableReport extends React.Component {
+class EditableTableReport extends VisuComp {
   constructor(props) {
     super(props);
 
@@ -19,17 +20,16 @@ class EditableTableReport extends React.Component {
       data: this.props.tableOptions.data,
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
     };
-
     this.tableChanged = this.tableChanged.bind(this);
-    this.fetchTable = this.fetchTable.bind(this);
   }
 
   componentDidMount() {
-    this.fetchTable();
+    this.updateComp();
   }
 
   // Will trigger update from e.g. Emergency->linkAccess that will be triggered after componentdidmount
   componentDidUpdate(prevProps) {
+    console.log("update");
     if (prevProps == this.props) {
       // No change from above (currently nothing else is needed)
       return;
@@ -40,43 +40,19 @@ class EditableTableReport extends React.Component {
 
   // Required from CommonProps
   updateComp = () => {
-    this.fetchTable();
-   
-  };
-
-  // Fetch the table from Firebase (Original data)
-  // Is called when table is changed
-  fetchTable = () => {
-    return readDBData(
-      this.props.tableOptions.name,
-      this.props.tableOptions.name == "Emergency"
-    ).then((doc_data) => {
-      if (doc_data == null)
-        // Cannot get data -> set default data from parent class
-        this.setState({ data: this.props.tableOptions.data });
-      else this.setState({ data: doc_data });
-    });
+    this.TableFetch(this.props.tableOptions.name, true);
   };
 
   // Is called when table is changed
   tableChanged = () => {
-    var success = writeDBData(this.props.tableOptions.name, this.state.data);
-    if (success == false) this.displayLogin();
-    console.log("update")
+    if (!this.checkLoginAndDisplay()) {
+      return;
+    }
+    this.TableChanged(this.props.tableOptions.name, this.state.data);
 
     if (this.props.tableOptions.updateComp != null) {
       this.props.tableOptions.updateComp();
     }
-  };
-
-  // todo: Find a way to cluster/extract it to a common place
-  displayLogin = () => {
-    // This is how a function in CommonProps is called
-    this.setState({
-      commonProps: {
-        LoginAlertProps: { openLoginRequired: true, FuncParams: "test" },
-      },
-    });
   };
 
   render() {
