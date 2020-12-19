@@ -96,10 +96,9 @@ const headerLinksStyle = theme => ({
     }
   },
   manager: {
-    [theme.breakpoints.down("sm")]: {
-      width: "100%"
-    },
-    display: "inline-block"
+    padding:20,
+    display: "inline-block",
+    color:"inherit"
   },
   searchWrapper: {
     [theme.breakpoints.down("sm")]: {

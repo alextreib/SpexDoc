@@ -44,8 +44,11 @@ import VisuComp from "components/Internal/VisuComp";
 const styles = (theme) => ({
   avatar: {
     backgroundColor: red[500],
+  },
+  avatarMobile: {
     height: 30,
     width: 30,
+    backgroundColor: red[500],
   },
   buttonLink: {
     height: 30,
@@ -180,11 +183,10 @@ class ProfileButton extends VisuComp {
             aria-controls="primary-search-account-menu"
             aria-haspopup="true"
             onClick={this.handleProfileMenuOpen}
-            color="inherit"
             className={classes.buttonLink}
           >
             {this.state.UserProfile != null ? (
-              <Avatar aria-label="recipe" className={classes.avatar}>
+              <Avatar aria-label="recipe" className={classes.avatarMobile}>
                 {this.state.UserProfile.firstName.charAt(0)}
               </Avatar>
             ) : (
@@ -195,24 +197,15 @@ class ProfileButton extends VisuComp {
 
         <Hidden smDown implementation="css">
           {/* Desktop Version */}
-          <Button
-            color={window.innerWidth > 959 ? "transparent" : "white"}
-            justIcon={window.innerWidth > 959}
-            simple={!(window.innerWidth > 959)}
-            aria-owns="profile-menu-list-grow"
-            aria-haspopup="true"
-            onClick={this.handleProfileMenuOpen}
-            className={classes.buttonLink}
-          >
-            {this.state.commonProps.loginState != false &&
-            this.state.UserProfile != null ? (
-              <Avatar aria-label="recipe" className={classes.avatar}>
-                {this.state.UserProfile.firstName.charAt(0)}
-              </Avatar>
-            ) : (
-              <Person className={classes.icons} />
-            )}
-          </Button>
+
+          {this.state.commonProps.loginState != false &&
+          this.state.UserProfile != null ? (
+            <Avatar className={classes.avatar}>
+              {this.state.UserProfile.firstName.charAt(0)}
+            </Avatar>
+          ) : (
+            <Person fontSize="large" />
+          )}
         </Hidden>
 
         <Popper

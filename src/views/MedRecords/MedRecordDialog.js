@@ -190,6 +190,50 @@ class MedRecordDialog extends React.Component {
               <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
                   <CustomInput
+                    labelText="Symptome"
+                    id="moreInfo"
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    inputProps={{
+                      value: this.props.medRecord.symptoms,
+                      onChange: (e) =>
+                        this.props.tableChanges(
+                          this.props.medRecord,
+                          "symptoms",
+                          e
+                        ),
+                      multiline: true,
+                      rows: 5,
+                    }}
+                  />
+                </GridItem>
+              </GridContainer>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={12}>
+                  <CustomInput
+                    labelText="Diagnose"
+                    id="moreInfo"
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                    inputProps={{
+                      value: this.props.medRecord.diagnosis,
+                      onChange: (e) =>
+                        this.props.tableChanges(
+                          this.props.medRecord,
+                          "diagnosis",
+                          e
+                        ),
+                      multiline: true,
+                      rows: 5,
+                    }}
+                  />
+                </GridItem>
+              </GridContainer>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={12}>
+                  <CustomInput
                     labelText="Weiteres"
                     id="moreInfo"
                     formControlProps={{

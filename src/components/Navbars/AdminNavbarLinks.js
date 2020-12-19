@@ -106,29 +106,22 @@ class AdminNavbarLinks extends VisuComp {
               <Search />
             </Button>
           </div> */}
+            <div className={classes.manager}>
+              <Link className={classes.LinkNotification} to="/dashboard">
+                <Dashboard fontSize="large" />
+              </Link>
+            </div>
 
-            <Link to="/dashboard" style={{ color: "inherit" }}>
-              <Button
-                color={window.innerWidth > 959 ? "transparent" : "white"}
-                justIcon={window.innerWidth > 959}
-                simple={!(window.innerWidth > 959)}
-                aria-label="Dashboard"
-              >
-                <Dashboard style={{ color: grey[700] }} />
-                <Hidden mdUp implementation="css">
-                  <p className={classes.linkText}>Dashboard</p>
-                </Hidden>
-              </Button>
-            </Link>
             <div className={classes.manager}>
               <Link className={classes.LinkNotification} to="/notifications">
                 <Badge
                   badgeContent={this.state.Notifications.length}
                   color="secondary"
                 >
-                  <NotificationIcon />
+                  <NotificationIcon fontSize="large" />
                 </Badge>
               </Link>
+              </div>
 
               <Popper
                 open={Boolean(this.state.openNotification)}
@@ -183,9 +176,9 @@ class AdminNavbarLinks extends VisuComp {
                   </Grow>
                 )}
               </Popper>
-            </div>
+
             <div className={classes.manager}>
-              <Link style={{ color: "inherit" }} to="/user">
+              <Link className={classes.LinkNotification} to="/user">
                 <ProfileButton />
               </Link>
             </div>

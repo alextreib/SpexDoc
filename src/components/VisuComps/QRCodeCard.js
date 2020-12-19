@@ -32,9 +32,8 @@ class QRCodeCard extends React.Component {
   constructor(props) {
     super(props);
 
-    // Integrate script
     this.state = {
-      link: "test",
+      link: this.props.link,
     };
   }
 
@@ -42,10 +41,6 @@ class QRCodeCard extends React.Component {
     if (this.props == prevProps) {
       return;
     }
-  }
-
-  componentDidMount() {
-    this.setState({ link: this.props.link });
   }
 
   shareLink = () => {
@@ -68,7 +63,7 @@ class QRCodeCard extends React.Component {
               alignItems: "center",
             }}
           >
-            <a href="#" onClick={this.shareLink}>
+            <a href={this.state.link} onClick={this.shareLink}>
               {this.state.link}
             </a>
             {/* Oder einfach nur auf den Link klicken */}
