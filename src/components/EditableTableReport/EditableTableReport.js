@@ -45,9 +45,6 @@ class EditableTableReport extends VisuComp {
 
   // Is called when table is changed
   tableChanged = () => {
-    if (!this.checkLoginAndDisplay()) {
-      return;
-    }
     this.TableChanged(this.props.tableOptions.name, this.state.data);
 
     if (this.props.tableOptions.updateComp != null) {

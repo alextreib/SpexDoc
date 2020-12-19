@@ -21,6 +21,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { green, blue } from "@material-ui/core/colors";
 
 import Box from "@material-ui/core/Box";
+import VisuComp from "components/Internal/VisuComp";
 
 const GreenRadio = withStyles({
   root: {
@@ -71,18 +72,19 @@ const styles = {
       lineHeight: "1",
     },
   },
-  organsection:{
-    color:"black",
-    paddingTop:20,
-    paddingBottom:20,
-  }
+  organsection: {
+    color: "black",
+    paddingTop: 20,
+    paddingBottom: 20,
+  },
 };
 
-class Emergency extends React.Component {
+class Emergency extends VisuComp {
   constructor(props) {
     super(props);
 
     this.state = {
+      dbName: "OrganDonationData",
       OrganDonationData: {
         RadioSelection: "Nein",
         TextBoxJAAusnahme: "",
@@ -136,8 +138,7 @@ class Emergency extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props);
-    this.fetchTable();
+    this.updateComp();
   }
 
   componentDidUpdate(prevProps) {
@@ -145,35 +146,16 @@ class Emergency extends React.Component {
       // No change from above (currently nothing else is needed)
       return;
     } else {
-      this.fetchTable();
-      // Only required for visu, not loading
-      this.setState({
-        commonProps: { ...this.state.commonProps, loginState: checkUser() },
-      });
+      this.updateComp();
     }
   }
 
-  // Fetch the table from Firebase (Original data)
-  // Is called when table is changed
-  fetchTable = () => {
-    // todo: default parameter
-    return readDBData("OrganDonationData", false).then((doc_data) => {
-      if (doc_data != null) this.setState({ OrganDonationData: doc_data });
-    });
+  updateComp = () => {
+    this.TableFetch(this.state.dbName);
   };
 
   uploadProfile = () => {
-    console.log("update");
-    var user_id = getUserID();
-    if (user_id == null) {
-      this.displayLogin();
-      return false;
-    }
-    var success = writeDBData(
-      "OrganDonationData",
-      this.state.OrganDonationData
-    );
-    if (success == false) this.displayLogin();
+    this.TableChanged(this.state.dbName, this.state.OrganDonationData);
   };
 
   // Nice function: Sets states automatically
@@ -277,11 +259,11 @@ class Emergency extends React.Component {
                       control={<GreenRadio />}
                       className={classes.organsection}
                       label={
-                          <Typography variant="body2">
-                            JA, ich gestatte, dass nach der ärztlichen
-                            Festellung meines Todes meinem Körper Organe und
-                            Gewebe entnommen werden.
-                          </Typography>
+                        <Typography variant="body2">
+                          JA, ich gestatte, dass nach der ärztlichen Festellung
+                          meines Todes meinem Körper Organe und Gewebe entnommen
+                          werden.
+                        </Typography>
                       }
                     />
                     <FormControlLabel
@@ -341,10 +323,10 @@ class Emergency extends React.Component {
                       className={classes.organsection}
                       label={
                         <Typography variant="body2">
-                        NEIN, ich widerspreche einer Entnahme von Organen oder Geweben.
-                      </Typography>
+                          NEIN, ich widerspreche einer Entnahme von Organen oder
+                          Geweben.
+                        </Typography>
                       }
-
                     />
                     <FormControlLabel
                       value="NeinNachlass"

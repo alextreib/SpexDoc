@@ -8,6 +8,7 @@ import { readDBData, writeDBData } from "components/Internal/DBFunctions.js";
 import { checkUser, getUserEmail } from "components/Internal/Checks.js";
 import { loginRedux, logoutRedux } from "components/Internal/Redux.js";
 import { connect } from "react-redux";
+import { EmergencyData } from "./DefaultData";
 
 // Is more or less an abstract class that clusters
 // Expect commonProps
@@ -147,7 +148,7 @@ export default class VisuComp extends React.Component {
   // Is called when table is changed
   TableFetch = (TableName, writeinData = false, defaultData = null) => {
     return new Promise((resolve, reject) => {
-      readDBData(TableName, TableName == "Emergency").then((doc_data) => {
+      readDBData(TableName, EmergencyData.includes(TableName)).then((doc_data) => {
         var data_to_write;
         if (doc_data != null) {
           data_to_write = doc_data;
@@ -171,6 +172,9 @@ export default class VisuComp extends React.Component {
 
   // Is called when table is changed
   TableChanged = (name, data) => {
+    if (!this.checkLoginAndDisplay()) {
+      return;
+    }
     return writeDBData(name, data);
   };
 
