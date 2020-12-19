@@ -27,7 +27,7 @@ import IconButton from "@material-ui/core/IconButton";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 import { CommonCompsData } from "components/Internal/DefaultData";
-import  CommonComps  from "components/Internal/CommonComps";
+import CommonComps from "components/Internal/CommonComps";
 
 const styles = (theme) => ({
   cardCategoryWhite: {
@@ -79,7 +79,7 @@ class MedRecordsContent extends VisuComp {
   }
 
   componentDidMount() {
-    this.fetchTable();
+    this.updateComp();
   }
 
   componentDidUpdate(prevProps) {
@@ -87,12 +87,13 @@ class MedRecordsContent extends VisuComp {
       // No change from above (currently nothing else is needed)
       return;
     }
-    // this.fetchTable();
+    this.updateComp();
   }
 
-  updateComp=()=>{
-    
-  }
+  updateComp = () => {
+    this.fetchTable();
+  };
+
   // DB functions
   fetchTable = () => {
     readDBData(this.state.dbName, false).then((doc_data) => {
@@ -120,32 +121,27 @@ class MedRecordsContent extends VisuComp {
   };
 
   uploadFile = (category, event) => {
+    event.preventDefault();
     if (!this.checkLoginAndDisplay()) {
       return;
     }
-    
-    event.preventDefault();
 
-    var fileToUpload = event.target.files[0];
+    Array.from(event.target.files).forEach(async (fileToUpload) => {
+      var isImage = fileToUpload.type.includes("image");
+      //todo: cleaner error catching
+      await uploadFile(fileToUpload).then((fileLink) => {
+        var newMedRecord = {
+          link: fileLink,
+          isImage: isImage,
+          date: getCurrentDate(),
+          doctor: "Dr. Schneider",
+          disease: "Erkältung",
+          category: category,
+          open: false,
+        };
 
-    var isImage = fileToUpload.type.includes("image");
-    //todo: cleaner error catching
-    return uploadFile(fileToUpload).then((fileLink) => {
-      if (fileLink == null) {
-        // displayLogin
-      }
-
-      var newMedRecord = {
-        link: fileLink,
-        isImage: isImage,
-        date: getCurrentDate(),
-        doctor: "Dr. Schneider",
-        disease: "Erkältung",
-        category: category,
-        open: false,
-      };
-
-      this.addnewMedRecord(newMedRecord);
+        this.addnewMedRecord(newMedRecord);
+      });
     });
   };
 

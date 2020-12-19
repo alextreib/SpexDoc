@@ -31,6 +31,7 @@ class UploadFileButton extends React.Component {
           type="file"
           ref={(ref) => (this.fileInput = ref)}
           style={{ display: "none" }}
+          multiple
           onChange={(ev) => this.props.uploadFile(this.props.category, ev)}
         />
 

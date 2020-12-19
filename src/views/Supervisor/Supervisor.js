@@ -171,6 +171,85 @@ class Supervisor extends VisuComp {
       <div>
         <CommonComps commonProps={this.state.commonProps} />
         <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+            <Card>
+              <CardHeader color="warning">
+                <h4 className={classes.cardTitleWhite}>Befund schreiben</h4>
+
+                <p className={classes.cardCategoryWhite}>
+                  Legen Sie direkt einen Befund an.
+                </p>
+              </CardHeader>
+              <CardBody>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    {this.state.Requests ? (
+                      <div>
+                        <FormControl className={classes.formControl}>
+                          <Select
+                            value={this.state.selectedUser}
+                            onChange={(ev) =>
+                              this.handlePropertyChange("selectedUser", ev)
+                            }
+                          >
+                            {this.state.Requests.map((request) => (
+                              <MenuItem value={request.id}>
+                                {request.id}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <br />
+                        <Typography variant="body1">
+                          User:
+                          {this.getRequestData().message}
+                        </Typography>
+                        <br />
+                        {this.getRequestData().answered ? (
+                          <Typography variant="body1">
+                            UserName:
+                            {this.getRequestData().answered.toString()}
+                          </Typography>
+                        ) : null}
+                        <br />
+                      </div>
+                    ) : null}
+
+                    <br />
+                    <Typography variant="body1">
+                      Sie antworten als {this.SupervisorName()}
+                    </Typography>
+                    <br />
+
+                    <TextField
+                      id="outlined-multiline-static"
+                      label="Deine Antwort"
+                      multiline
+                      fullWidth="true"
+                      rows={8}
+                      defaultValue="Default Value"
+                      variant="outlined"
+                      inputProps={{
+                        value: this.state.answerMessage,
+                        onChange: (ev) =>
+                          this.handlePropertyChange("answerMessage", ev),
+                      }}
+                    />
+                  </GridItem>
+                </GridContainer>
+              </CardBody>
+              <CardFooter>
+                <Button
+                  className={classes.submitButton}
+                  color="primary"
+                  onClick={this.submitAnswer}
+                >
+                  Absenden
+                </Button>
+              </CardFooter>
+            </Card>
+        </GridItem>
+        
           <GridItem xs={12} sm={12} md={12}>
             <Card>
               <CardHeader color="warning">
