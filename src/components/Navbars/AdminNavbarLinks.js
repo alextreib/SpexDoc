@@ -17,6 +17,8 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MenuList from "@material-ui/core/MenuList";
 import NotificationData from "components/NotificationData/NotificationData.js";
 import NotificationIcon from "@material-ui/icons/Notifications";
+import IconButton from "@material-ui/core/IconButton";
+
 import Paper from "@material-ui/core/Paper";
 import Person from "@material-ui/icons/Person";
 import Popper from "@material-ui/core/Popper";
@@ -108,78 +110,82 @@ class AdminNavbarLinks extends VisuComp {
           </div> */}
             <div className={classes.manager}>
               <Link className={classes.LinkNotification} to="/dashboard">
-                <Dashboard fontSize="large" />
+                <IconButton color="inherit">
+                  <Dashboard fontSize="large" />
+                </IconButton>
               </Link>
             </div>
 
             <div className={classes.manager}>
               <Link className={classes.LinkNotification} to="/notifications">
-                <Badge
-                  badgeContent={this.state.Notifications.length}
-                  color="secondary"
-                >
-                  <NotificationIcon fontSize="large" />
-                </Badge>
-              </Link>
-              </div>
-
-              <Popper
-                open={Boolean(this.state.openNotification)}
-                anchorEl={this.state.openNotification}
-                transition
-                disablePortal
-                className={
-                  classNames({
-                    [classes.popperClose]: !this.state.openNotification,
-                  }) +
-                  " " +
-                  classes.popperNav
-                }
-              >
-                {({ TransitionProps, placement }) => (
-                  <Grow
-                    {...TransitionProps}
-                    id="notification-menu-list-grow"
-                    style={{
-                      transformOrigin:
-                        placement === "bottom" ? "center top" : "center bottom",
-                    }}
+                <IconButton color="inherit">
+                  <Badge
+                    badgeContent={this.state.Notifications.length}
+                    color="secondary"
                   >
-                    <Paper>
-                      <ClickAwayListener
-                        onClickAway={this.handleCloseNotification}
+                    <NotificationIcon fontSize="large" />
+                  </Badge>
+                </IconButton>
+              </Link>
+            </div>
+
+            <Popper
+              open={Boolean(this.state.openNotification)}
+              anchorEl={this.state.openNotification}
+              transition
+              disablePortal
+              className={
+                classNames({
+                  [classes.popperClose]: !this.state.openNotification,
+                }) +
+                " " +
+                classes.popperNav
+              }
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  id="notification-menu-list-grow"
+                  style={{
+                    transformOrigin:
+                      placement === "bottom" ? "center top" : "center bottom",
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener
+                      onClickAway={this.handleCloseNotification}
+                    >
+                      <Link
+                        style={{ textDecoration: "none" }}
+                        to="/notifications"
                       >
-                        <Link
-                          style={{ textDecoration: "none" }}
-                          to="/notifications"
-                        >
-                          <MenuList role="menu">
-                            {this.state.Notifications.map(
-                              (notificationItem) => (
-                                <Link
-                                  style={{ textDecoration: "none" }}
-                                  to="/notifications"
-                                >
-                                  <MenuItem
-                                    //todo add link
-                                    className={classes.dropdownItem}
-                                  >
-                                    {notificationItem}
-                                  </MenuItem>
-                                </Link>
-                              )
-                            )}
-                          </MenuList>
-                        </Link>
-                      </ClickAwayListener>
-                    </Paper>
-                  </Grow>
-                )}
-              </Popper>
+                        <MenuList role="menu">
+                          {this.state.Notifications.map((notificationItem) => (
+                            <Link
+                              style={{ textDecoration: "none" }}
+                              to="/notifications"
+                            >
+                              <MenuItem
+                                //todo add link
+                                className={classes.dropdownItem}
+                              >
+                                {notificationItem}
+                              </MenuItem>
+                            </Link>
+                          ))}
+                        </MenuList>
+                      </Link>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
 
             <div className={classes.manager}>
               <Link className={classes.LinkNotification} to="/user">
-                <ProfileButton />
+                <IconButton color="inherit">
+                  <ProfileButton />
+                </IconButton>
               </Link>
             </div>
           </div>

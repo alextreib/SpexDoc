@@ -140,7 +140,7 @@ class BottomAppBarMobile extends React.Component {
             className={classes.root}
           >
             <BottomNavigationAction
-              label="Notification"
+              label="Dashboard"
               icon={
                 <Link className={classes.Home} to="/dashboard">
                   <HomeIcon />
@@ -149,7 +149,7 @@ class BottomAppBarMobile extends React.Component {
             />
 
             <BottomNavigationAction
-              label="Recents"
+              label="Nachrichten"
               icon={
                 <Link className={classes.LinkNotification} to="/notifications">
                   <Badge
@@ -163,7 +163,7 @@ class BottomAppBarMobile extends React.Component {
             />
 
             <BottomNavigationAction
-              label="Profile"
+              label="Profil"
               icon={
                 <Link className={classes.Profile} to="/user">
                   <ProfileButton />

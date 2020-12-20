@@ -148,10 +148,6 @@ class Dashboard extends VisuComp {
     return lastAppointmentsArray;
   };
 
-  // testfunc = () => {
-  //   console.log(window.localStorage.getItem("sentToServer"));
-  // };
-
   render() {
     const { classes } = this.props;
     return (

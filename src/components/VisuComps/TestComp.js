@@ -1,88 +1,77 @@
-/* eslint-disable no-use-before-define */
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import AppBar from '@material-ui/core/AppBar';
+import Badge from "@material-ui/core/Badge";
+import Dashboard from "@material-ui/icons/Dashboard";
+import IconButton from '@material-ui/core/IconButton';
+import InputBase from '@material-ui/core/InputBase';
+import { Link } from "react-router-dom";
+import MailIcon from "@material-ui/icons/Mail";
+import Menu from '@material-ui/core/Menu';
+import MenuIcon from '@material-ui/icons/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import MoreIcon from '@material-ui/icons/MoreVert';
+import NotificationIcon from "@material-ui/icons/Notifications";
+import NotificationsIcon from '@material-ui/icons/Notifications';
 import React from "react";
-import TextField from "@material-ui/core/TextField";
-import Autocomplete, {
-  createFilterOptions,
-} from "@material-ui/lab/Autocomplete";
+import SearchIcon from '@material-ui/icons/Search';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from "@material-ui/core/styles";
 
-import { withStyles } from "@material-ui/core/styles";
-import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+const useStyles = makeStyles((theme) => ({
+  root: {
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+  },
+  sectionDesktop: {
+  },
+}));
 
-const filter = createFilterOptions();
+export default function TestComp() {
+  const classes = useStyles();
 
-class AutoCompletionForm extends React.Component {
-  constructor(props) {
-    super(props);
+  return (
+    <div className={classes.root}>
+      <Badge badgeContent={4} color="primary">
+        <MailIcon />
+      </Badge>
+      <MailIcon />
 
-    this.state = {
-      value: null,
-      options:this.props.AutoCompOptions.Options
-    };
-  }
+      <Badge badgeContent="" color="transparent">
+        <Dashboard fontSize="large" />
+      </Badge>
+      <Dashboard fontSize="large" />
 
-  addValueToOptionList = (newValue) => {
-    this.props.AutoCompOptions.Options.push({title: newValue, year:2020});
-  };
+      <Link className={classes.LinkNotification} to="/notifications">
+        <Badge badgeContent="2" color="secondary">
+          <NotificationIcon fontSize="large" />
+        </Badge>
+      </Link>
+      <NotificationIcon fontSize="large" />
 
-  render() {
-    const { classes } = this.props;
+      <Dashboard fontSize="large" />
 
-    return (
-      <Autocomplete
-        value={this.state.value}
-        onChange={(event, newValue) => {
-          if (typeof newValue === "string") {
-            this.addValueToOptionList(newValue.inputValue);
-          } else if (newValue && newValue.inputValue) {
-            // Create a new value from the user input
-            console.log(newValue);
-            this.addValueToOptionList(newValue.inputValue);
-          } else {
-            this.addValueToOptionList(newValue.inputValue);
-          }
-        }}
-        filterOptions={(options, params) => {
-          const filtered = filter(options, params);
-
-          // Suggest the creation of a new value
-          if (params.inputValue !== "") {
-            filtered.push({
-              inputValue: params.inputValue,
-              title: `"${params.inputValue}" hinzufügen`,
-            });
-          }
-
-          return filtered;
-        }}
-        selectOnFocus
-        clearOnBlur
-        handleHomeEndKeys
-        id="free-solo-with-text-demo"
-        options={this.props.AutoCompOptions.Options}
-        getOptionLabel={(option) => {
-          // Value selected with enter, right from the input
-          if (typeof option === "string") {
-            return option;
-          }
-          // Add "xxx" option created dynamically
-          if (option.inputValue) {
-            return option.inputValue;
-          }
-          // Regular option
-          return option.title;
-        }}
-        renderOption={(option) => option.title}
-        style={{ width: 300 }}
-        freeSolo
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Kategorie"
-            variant="outlined"
-          />
-        )}
-      />
-    );
-  }
+      <div className={classes.sectionDesktop}>
+        <IconButton aria-label="show 4 new mails" color="inherit">
+          <Badge badgeContent={4} color="secondary">
+            <MailIcon />
+          </Badge>
+        </IconButton>
+        <IconButton aria-label="show 17 new notifications" color="inherit">
+          <Badge badgeContent={17} color="secondary">
+            <NotificationsIcon />
+          </Badge>
+        </IconButton>
+        <IconButton
+          edge="end"
+          aria-label="account of current user"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <AccountCircle />
+        </IconButton>
+      </div>
+    </div>
+  );
 }
-export default withStyles(styles)(AutoCompletionForm);
