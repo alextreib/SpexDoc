@@ -70,7 +70,7 @@ class Dashboard extends VisuComp {
       "EmergencyContacts",
       "OrganDonation",
       "Share",
-      "medRecords",
+      "MedRecords",
       "Appointments",
     ];
     fetchArray.forEach(async (fetchElement) => {
@@ -111,17 +111,6 @@ class Dashboard extends VisuComp {
       }
     });
     return count;
-  };
-
-  testfunc = () => {
-    console.log(this.state);
-    // var count = 0;
-    // arrayElements.forEach((arrayElement) => {
-    //   if (arrayElement != null) {
-    //     count += arrayElement.length;
-    //   }
-    // });
-    // return count;
   };
 
   getAppointments = () => {
@@ -167,7 +156,7 @@ class Dashboard extends VisuComp {
                 </CardIcon>
                 <p className={classes.cardCategory}>Befunde</p>
                 <h3 className={classes.cardTitle}>
-                  {this.state.medRecords ? this.state.medRecords.length : 0}
+                  {this.state.MedRecords ? this.state.MedRecords.length : 0}
                 </h3>
               </CardHeader>
               <CardFooter stats>

@@ -183,7 +183,7 @@ class MedRecordDialog extends React.Component {
                     medRecord={this.props.medRecord}
                     value={this.props.medRecord.category}
                     changeMedRecord={this.props.changeMedRecord}
-                    optionList={this.props.categoryList}
+                    optionList={this.props.CategoryList}
                   />
                 </GridItem>
               </GridContainer>

@@ -12,13 +12,19 @@ export const CommonCompsData = {
     type: "info", //info, success, warning, danger, primary
     FuncParams: "test",
   },
-}; 
+};
 
-export const DefaultCategories= [
+export const DefaultCategories = [
   { title: "Kardiologie" },
   { title: "Dermatologie" },
   { title: "Allergologie" },
-]
+];
 
-
-export const EmergencyData= ["EmergencyPredisposition","EmergencyMedication","EmergencyContacts", "OrganDonationData"]
+export const EmergencyData = [
+  "EmergencyPredisposition",
+  "EmergencyMedication",
+  "EmergencyContacts",
+  "OrganDonationData",
+  "MedRecords",
+  "CategoryList",
+];

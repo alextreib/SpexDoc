@@ -70,9 +70,10 @@ class MedRecordsContent extends VisuComp {
     super(props);
 
     this.state = {
-      dbName: "medRecords",
-      data: [],
-      categoryList: DefaultCategories,
+      dbNameMedRecords: "MedRecords",
+      dbNameCategories: "CategoryList",
+      MedRecords: [],
+      CategoryList: DefaultCategories,
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
     };
     this.openModal = this.openModal.bind(this);
@@ -96,28 +97,14 @@ class MedRecordsContent extends VisuComp {
 
   // DB functions
   fetchTable = () => {
-    readDBData(this.state.dbName, false).then((doc_data) => {
-      if (doc_data == null) return;
-      // Cannot get data -> set default data from parent class
-      else {
-        this.setState({ data: doc_data });
-      }
-    });
-
-    readDBData("CategoryList", false).then((doc_data) => {
-      if (doc_data == null) return;
-      // Cannot get data -> set default data from parent class
-      else {
-        this.setState({ categoryList: doc_data });
-      }
-    });
+    this.TableFetch(this.state.dbNameMedRecords);
+    this.TableFetch(this.state.dbNameCategories);
   };
 
   // Is called when table is changed
   uploadTable = () => {
-    console.log(this.state.data);
-    var success = writeDBData(this.state.dbName, this.state.data);
-    success &= writeDBData("CategoryList", this.state.categoryList);
+    this.TableChanged(this.state.dbNameMedRecords, this.state.MedRecords);
+    this.TableChanged(this.state.dbNameCategories, this.state.CategoryList);
   };
 
   uploadFile = (category, event) => {
@@ -150,9 +137,9 @@ class MedRecordsContent extends VisuComp {
   addnewCategory = (newCategory) => {
     this.setState(
       (prevState) => {
-        const categoryList = [...prevState.categoryList];
-        categoryList.push(newCategory);
-        return { ...prevState, categoryList };
+        const CategoryList = [...prevState.CategoryList];
+        CategoryList.push(newCategory);
+        return { ...prevState, CategoryList };
       },
       () => {
         this.uploadTable();
@@ -166,9 +153,9 @@ class MedRecordsContent extends VisuComp {
     }
     this.setState(
       (prevState) => {
-        const categoryList = [...prevState.categoryList];
-        categoryList.splice(categoryList.indexOf(CategoryToRemove), 1);
-        return { ...prevState, categoryList };
+        const CategoryList = [...prevState.CategoryList];
+        CategoryList.splice(CategoryList.indexOf(CategoryToRemove), 1);
+        return { ...prevState, CategoryList };
       },
       () => {
         this.uploadTable();
@@ -179,9 +166,9 @@ class MedRecordsContent extends VisuComp {
   addnewMedRecord = (newMedRecord) => {
     this.setState(
       (prevState) => {
-        const data = [...prevState.data];
-        data.push(newMedRecord);
-        return { ...prevState, data };
+        const MedRecords = [...prevState.MedRecords];
+        MedRecords.push(newMedRecord);
+        return { ...prevState, MedRecords };
       },
       () => {
         this.uploadTable();
@@ -194,9 +181,9 @@ class MedRecordsContent extends VisuComp {
 
     this.setState(
       (prevState) => {
-        const data = [...prevState.data];
-        data[data.indexOf(medRecord)] = newData;
-        return { ...prevState, data };
+        const MedRecords = [...prevState.MedRecords];
+        MedRecords[MedRecords.indexOf(medRecord)] = newData;
+        return { ...prevState, MedRecords };
       },
       () => {
         this.uploadTable();
@@ -207,9 +194,9 @@ class MedRecordsContent extends VisuComp {
   removeMedRecord = (MedRecordToRemove) => {
     this.setState(
       (prevState) => {
-        const data = [...prevState.data];
-        data.splice(data.indexOf(MedRecordToRemove), 1);
-        return { ...prevState, data };
+        const MedRecords = [...prevState.MedRecords];
+        MedRecords.splice(MedRecords.indexOf(MedRecordToRemove), 1);
+        return { ...prevState, MedRecords };
       },
       () => {
         this.uploadTable();
@@ -238,7 +225,7 @@ class MedRecordsContent extends VisuComp {
   // Rendering functions
   getMedRecord = (category) => {
     var MedRecordList = [];
-    this.state.data.forEach((medRecord) => {
+    this.state.MedRecords.forEach((medRecord) => {
       if (medRecord.category == category.title) {
         MedRecordList.push(medRecord);
       }
@@ -255,7 +242,7 @@ class MedRecordsContent extends VisuComp {
         <CommonComps commonProps={this.state.commonProps} />
 
         <GridContainer>
-          {this.state.categoryList.map((category) => (
+          {this.state.CategoryList.map((category) => (
             // this.getMedRecord(category).length>0 ?(
             <GridItem xs={12} sm={12} md={12}>
               <Card>
@@ -284,7 +271,7 @@ class MedRecordsContent extends VisuComp {
                             addValueToOptionList={this.addValueToOptionList}
                             removeMedRecord={this.removeMedRecord}
                             openModal={this.openModal}
-                            categoryList={this.state.categoryList}
+                            CategoryList={this.state.CategoryList}
                             medRecord={medRecord}
                           />
                         </GridItem>
