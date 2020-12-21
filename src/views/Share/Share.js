@@ -58,6 +58,11 @@ const defaultData = {
     Switchactive: false,
     shortLink: "",
   },
+  vaccination: {
+    QRCodeactive: false,
+    Switchactive: false,
+    shortLink: "",
+  },
 };
 
 // Display Login Screen here -> Login from Profile NavBar should also point here
@@ -186,6 +191,36 @@ class Share extends VisuComp {
                     <div>
                       <QRCodeCard link={this.state.data.medRecords.shortLink} />
                     </div>
+                  ) : null}
+                </CardBody>
+              </Card>
+            </GridItem>
+            <GridItem xs={12} sm={6} md={4}>
+              <Card>
+                <CardHeader color="info">
+                  <h4 className={classes.cardTitleWhite}>Impfpass</h4>
+                </CardHeader>
+                <CardBody>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Switch
+                      checked={this.state.data.vaccination.Switchactive}
+                      onChange={(ev) =>
+                        this.handleSwitchChange("vaccination", ev)
+                      }
+                      color="primary"
+                      name="Vaccination_switch"
+                      inputProps={{ "aria-label": "secondary checkbox" }}
+                    />
+                  </div>
+                  {/* todo: Layout without br and maybe one component */}
+                  {this.state.data.vaccination.QRCodeactive ? (
+                    <QRCodeCard link={this.state.data.vaccination.shortLink} />
                   ) : null}
                 </CardBody>
               </Card>

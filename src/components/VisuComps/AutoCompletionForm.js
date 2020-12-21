@@ -65,7 +65,6 @@ class AutoCompletionForm extends React.Component {
         id="free-solo-with-text-demo"
         options={this.props.optionList}
         getOptionLabel={(option) => {
-          console.log(option);
           // Value selected with enter, right from the input
           if (typeof option === "string") {
             return option;

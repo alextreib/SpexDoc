@@ -1,33 +1,31 @@
 import {
+  getCurrentDate,
+  getStringDate,
+} from "components/Internal/VisuElements.js";
+import {
   readDBData,
   uploadFile,
   writeDBData,
 } from "components/Internal/DBFunctions.js";
 
-import { DefaultCategories } from "components/Internal/DefaultData.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import GridItem from "components/Grid/GridItem.js";
-import PropTypes from "prop-types";
-import React from "react";
-import UploadFileButton from "views/MedRecords/UploadFileButton.js";
-import MedRecordCard from "views/MedRecords/MedRecordCard.js";
-import { connect } from "react-redux";
-import { withStyles } from "@material-ui/core/styles";
-import {
-  getStringDate,
-  getCurrentDate,
-} from "components/Internal/VisuElements.js";
+import AddButton from "components/VisuComps/AddButton.js";
 import Button from "@material-ui/core/Button";
-
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
-import VisuComp from "components/Internal/VisuComp";
-import IconButton from "@material-ui/core/IconButton";
-
-import DeleteIcon from "@material-ui/icons/Delete";
-import { CommonCompsData } from "components/Internal/DefaultData";
 import CommonComps from "components/Internal/CommonComps";
+import { CommonCompsData } from "components/Internal/DefaultData";
+import { DefaultCategories } from "components/Internal/DefaultData.js";
+import DeleteIcon from "@material-ui/icons/Delete";
+import GridContainer from "components/Grid/GridContainer.js";
+import GridItem from "components/Grid/GridItem.js";
+import IconButton from "@material-ui/core/IconButton";
+import MedRecordCard from "views/MedRecords/MedRecordCard.js";
+import PropTypes from "prop-types";
+import React from "react";
+import VisuComp from "components/Internal/VisuComp";
+import { connect } from "react-redux";
+import { withStyles } from "@material-ui/core/styles";
 
 const styles = (theme) => ({
   cardCategoryWhite: {
@@ -133,7 +131,6 @@ class MedRecordsContent extends VisuComp {
   };
 
   // Data Table changes
-
   addnewCategory = (newCategory) => {
     this.setState(
       (prevState) => {
@@ -163,7 +160,19 @@ class MedRecordsContent extends VisuComp {
     );
   };
 
-  addnewMedRecord = (newMedRecord) => {
+  addnewMedRecord = (category) => {
+    console.log("called addNewMedRecord");
+
+    var newMedRecord = {
+      link: "",
+      isImage: "",
+      date: getCurrentDate(),
+      doctor: "Dr. Mustermann",
+      disease: "Neuer Befund",
+      category: category,
+      open: false,
+    };
+
     this.setState(
       (prevState) => {
         const MedRecords = [...prevState.MedRecords];
@@ -234,12 +243,48 @@ class MedRecordsContent extends VisuComp {
     return MedRecordList;
   };
 
+  testfunc = () => {
+    // Console log
+    // this.fileInput2.click();
+    this.fileInput.click();
+  };
+
+  uploadImageAction = (medRecord, event) => {
+    console.log("now", medRecord);
+    event.preventDefault();
+    if (!this.checkLoginAndDisplay()) {
+      return;
+    }
+
+    // Create new medRecord here and overwrite all (also list of fileLinks)
+
+    Array.from(event.target.files).forEach(async (fileToUpload) => {
+      var isImage = fileToUpload.type.includes("image");
+      //todo: cleaner error catching
+      await uploadFile(fileToUpload).then((fileLink) => {
+        // var newMedRecord = {
+        //   link: fileLink,
+        //   isImage: isImage,
+        //   date: getCurrentDate(),
+        //   doctor: "Dr. Schneider",
+        //   disease: "Erkältung",
+        //   category: category,
+        //   open: false,
+        // };
+
+        this.changeMedRecord(medRecord, "link", fileLink);
+        this.changeMedRecord(medRecord, "isImage", fileLink);
+      });
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
     return (
       <div>
         <CommonComps commonProps={this.state.commonProps} />
+        <Button onClick={this.testfunc}>testfunc</Button>
 
         <GridContainer>
           {this.state.CategoryList.map((category) => (
@@ -273,14 +318,15 @@ class MedRecordsContent extends VisuComp {
                             openModal={this.openModal}
                             CategoryList={this.state.CategoryList}
                             medRecord={medRecord}
+                            uploadImageAction={this.uploadImageAction}
                           />
                         </GridItem>
                       ) : null
                     )}
                   </GridContainer>
-                  <UploadFileButton
-                    category={category.title}
-                    uploadFile={this.uploadFile}
+                  <AddButton
+                    param={category.title}
+                    addAction={this.addnewMedRecord}
                   />
                 </CardBody>
               </Card>

@@ -9,10 +9,9 @@ import {
   writeDBData,
 } from "components/Internal/DBFunctions.js";
 
-import GetAppIcon from "@material-ui/icons/GetApp";
 import AddIcon from "@material-ui/icons/Add";
+import AutoCompletionForm from "components/VisuComps/AutoCompletionForm.js";
 import Button from "@material-ui/core/Button";
-
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
@@ -21,10 +20,14 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "components/Card/CardHeader.js";
 import CardMedia from "@material-ui/core/CardMedia";
 import CustomButton from "components/CustomButtons/Button.js";
+import UploadImage from "components/VisuComps/UploadImage.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
+import { DefaultCategories } from "components/Internal/DefaultData.js";
 import DeleteIcon from "@material-ui/icons/Delete";
+import DescriptionIcon from "@material-ui/icons/Description";
 import Dialog from "@material-ui/core/Dialog";
 import Fab from "@material-ui/core/Fab";
+import GetAppIcon from "@material-ui/icons/GetApp";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import IconButton from "@material-ui/core/IconButton";
@@ -33,10 +36,7 @@ import React from "react";
 import ShareIcon from "@material-ui/icons/Share";
 import Typography from "@material-ui/core/Typography";
 import { connect } from "react-redux";
-import DescriptionIcon from "@material-ui/icons/Description";
 import { withStyles } from "@material-ui/core/styles";
-import AutoCompletionForm from "components/VisuComps/AutoCompletionForm.js";
-import { DefaultCategories } from "components/Internal/DefaultData.js";
 
 const styles = (theme) => ({
   card: {
@@ -114,6 +114,7 @@ class MedRecordDialog extends React.Component {
                   <GetAppIcon className={classes.downloadButton} />
                 </a>
               )}
+              <UploadImage {...this.props}/>
             </CardBody>
           </Card>
 

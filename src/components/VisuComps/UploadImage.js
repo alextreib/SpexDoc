@@ -16,7 +16,7 @@ const styles = () => ({
   },
 });
 
-class UploadFileButton extends React.Component {
+class UploadImage extends React.Component {
   constructor(props) {
     super(props);
   }
@@ -25,32 +25,34 @@ class UploadFileButton extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.rightToolbar}>
+      <div>
         <input
-          id="FileUpload"
-          type="file"
-          ref={(ref) => (this.fileInput = ref)}
           style={{ display: "none" }}
-          multiple
-          onChange={(ev) => this.props.uploadFile(this.props.category, ev)}
-        />
+          id="upload-photo"
+          ref={(ref) => (this.fileInput = ref)}
+          name="upload-photo"
+          type="file"
+          onChange={(ev) => this.props.uploadImageAction(this.props.medRecord,ev)}
 
-        {/* Only button */}
+        />
         <Fab
           className={classes.fab}
-          color="primary"
+          color="secondary"
+          size="small"
+          component="span"
           aria-label="add"
-          onClick={() => this.fileInput.click()}
+          variant="extended"
+          onClick={() => this.fileInput.click() }
         >
-          <AddIcon />
+          <AddIcon /> Upload Photo
         </Fab>
       </div>
     );
   }
 }
 
-UploadFileButton.propTypes = {
+UploadImage.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(UploadFileButton);
+export default withStyles(styles)(UploadImage);
