@@ -1,28 +1,31 @@
-import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
-// creates a beautiful scrollbar
-import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-// core components
+
+import { Redirect, Route, Switch } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+import BottomAppBarMobile from "components/Navbars/BottomAppBarMobile.js";
+import Button from "@material-ui/core/Button";
+import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
+import Footer from "components/Footer/Footer.js";
+import Hidden from "@material-ui/core/Hidden";
+import LoginFirst from "views/LoginFirst/LoginFirst.js";
 import Navbar from "components/Navbars/Navbar.js";
 import NavbarMobile from "components/Navbars/NavbarMobile.js";
-
-import Footer from "components/Footer/Footer.js";
+import PerfectScrollbar from "perfect-scrollbar";
+import React from "react";
 import Sidebar from "components/Sidebar/Sidebar.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
-
+import bgImage from "assets/img/doctor_stock_1.jpg";
+import { checkUser } from "components/Internal/Checks.js";
+import logo from "assets/img/SpexDoc_logo_png.png";
+import { makeStyles } from "@material-ui/core/styles";
 import routes from "routes.js";
-
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
-import bgImage from "assets/img/doctor_stock_1.jpg";
-import Hidden from "@material-ui/core/Hidden";
+// creates a beautiful scrollbar
 
-import logo from "assets/img/SpexDoc_logo_png.png";
-import BottomAppBarMobile from "components/Navbars/BottomAppBarMobile.js";
-import LoginFirst from "views/LoginFirst/LoginFirst.js";
+// @material-ui/core components
+
+// core components
 
 let ps;
 
@@ -49,6 +52,10 @@ export default function Admin({ ...rest }) {
   // If mobile open the sidebar
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [loginClicked, setLoginClicked] = React.useState(false);
+  // Needed because will trigger update
+  const loginStateRedux = useSelector((state) => state.loginState);
+  const dispatch = useDispatch();
+
   const handleImageClick = (image) => {
     setImage(image);
   };
@@ -76,6 +83,7 @@ export default function Admin({ ...rest }) {
       setMobileOpen(false);
     }
   };
+
   // initialize and destroy the PerfectScrollbar plugin
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -109,7 +117,7 @@ export default function Admin({ ...rest }) {
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         {/* Navbar contains only Search, Dropdown, etc. */}
-        {loginClicked ? (
+        {checkUser() || loginClicked ? (
           <div>
             <Hidden mdUp implementation="css">
               {/* Mobile Version */}
@@ -143,9 +151,12 @@ export default function Admin({ ...rest }) {
                           path={prop.path}
                           key={key}
                           render={(props) => (
-                            <prop.component {...props} loginClicked={loginClicked} setLoginClicked={setLoginClicked} />
+                            <prop.component
+                              {...props}
+                              loginClicked={loginClicked}
+                              setLoginClicked={setLoginClicked}
+                            />
                           )}
-                        
                         />
                       );
                     })}

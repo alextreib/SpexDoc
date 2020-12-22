@@ -109,7 +109,6 @@ class UserProfile extends VisuComp {
 
   // Required from CommonProps
   updateComp = () => {
-    console.log("update")
     this.TableFetch(this.state.dbNameUserProfile);
 
     //todo: Cleanup
@@ -223,7 +222,7 @@ class UserProfile extends VisuComp {
                 <h4 className={classes.cardTitleWhite}>Profil</h4>
                 <p className={classes.cardCategoryWhite}></p>
               </CardHeader>
-              {this.props.loginState==null ? (
+              {this.props.loginState == null ? (
                 <CardBody>
                   <FormControl>
                     <FormLabel component="h2"></FormLabel>
@@ -469,10 +468,15 @@ class UserProfile extends VisuComp {
               </CardAvatar>
               <CardBody profile>
                 <h6 className={classes.cardCategory}>Patient</h6>
-                <Button color="primary" onClick={this.submitSupervisorRequest}>
-                  <SyncAltIcon />
-                  Ich bin Arzt
-                </Button>
+                {this.state.UserProfile.status == "patient" ? (
+                  <Button
+                    color="primary"
+                    onClick={this.submitSupervisorRequest}
+                  >
+                    <SyncAltIcon />
+                    Ich bin Arzt
+                  </Button>
+                ) : null}
                 <h4 className={classes.cardTitle}>
                   {this.state.UserProfile.firstName}{" "}
                   {this.state.UserProfile.lastName}

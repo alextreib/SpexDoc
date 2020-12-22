@@ -284,7 +284,6 @@ class MedRecordsContent extends VisuComp {
     return (
       <div>
         <CommonComps commonProps={this.state.commonProps} />
-        <Button onClick={this.testfunc}>testfunc</Button>
 
         <GridContainer>
           {this.state.CategoryList.map((category) => (
