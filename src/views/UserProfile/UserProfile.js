@@ -39,6 +39,7 @@ import VisuComp from "components/Internal/VisuComp.js";
 import avatar from "assets/img/faces/profile_white.png";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
+import { writeRequest } from "components/Internal/DBFunctions";
 
 const styles = (theme) => ({
   cardCategoryWhite: {
@@ -206,8 +207,10 @@ class UserProfile extends VisuComp {
   };
 
   submitSupervisorRequest = () => {
-    console.log("request to be supervisor");
-    // WriteRequest
+    var message = "Ich bin ein Arzt";
+    writeRequest(message).then(() => {
+      this.displayPopUp("Anfrage erfolgreich versendet");
+    });
   };
 
   render() {
@@ -468,7 +471,7 @@ class UserProfile extends VisuComp {
               </CardAvatar>
               <CardBody profile>
                 <h6 className={classes.cardCategory}>Patient</h6>
-                {this.state.UserProfile.status == "patient" ? (
+                {this.state.UserProfile.status != "supervisor" ? (
                   <Button
                     color="primary"
                     onClick={this.submitSupervisorRequest}
