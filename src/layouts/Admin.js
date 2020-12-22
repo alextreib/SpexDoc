@@ -22,14 +22,14 @@ import Hidden from "@material-ui/core/Hidden";
 
 import logo from "assets/img/SpexDoc_logo_png.png";
 import BottomAppBarMobile from "components/Navbars/BottomAppBarMobile.js";
+import LoginFirst from "views/LoginFirst/LoginFirst.js";
 
 let ps;
 
 const switchRoutes = (
   <Switch>
     {routes.map((prop, key) => {
-        return <Route path={prop.path} component={prop.component} key={key} />;
-      return null;
+      return <Route path={prop.path} component={prop.component} key={key} />;
     })}
     <Redirect from="/" to="/dashboard" />
   </Switch>
@@ -48,6 +48,7 @@ export default function Admin({ ...rest }) {
   const [fixedClasses, setFixedClasses] = React.useState("dropdown show");
   // If mobile open the sidebar
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [loginClicked, setLoginClicked] = React.useState(false);
   const handleImageClick = (image) => {
     setImage(image);
   };
@@ -108,36 +109,58 @@ export default function Admin({ ...rest }) {
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         {/* Navbar contains only Search, Dropdown, etc. */}
-        <Hidden mdUp implementation="css">
-          {/* Mobile Version */}
-          <NavbarMobile
-            routes={routes}
-            handleDrawerToggle={handleDrawerToggle}
-            //  Not used yet
-            closeSidebar={closeSidebar}
-            {...rest}
-          />
-          <BottomAppBarMobile />
-        </Hidden>
-        <Hidden smDown implementation="css">
-          <Navbar
-            routes={routes}
-            handleDrawerToggle={handleDrawerToggle}
-            //  Not used yet
-            closeSidebar={closeSidebar}
-            {...rest}
-          />
-        </Hidden>
+        {loginClicked ? (
+          <div>
+            <Hidden mdUp implementation="css">
+              {/* Mobile Version */}
+              <NavbarMobile
+                routes={routes}
+                handleDrawerToggle={handleDrawerToggle}
+                //  Not used yet
+                closeSidebar={closeSidebar}
+                {...rest}
+              />
+              <BottomAppBarMobile />
+            </Hidden>
+            <Hidden smDown implementation="css">
+              <Navbar
+                routes={routes}
+                handleDrawerToggle={handleDrawerToggle}
+                //  Not used yet
+                closeSidebar={closeSidebar}
+                {...rest}
+              />
+            </Hidden>
 
-        {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
-        {getRoute() ? (
-          <div className={classes.content}>
-            <div className={classes.container}>{switchRoutes}</div>
+            {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
+            {getRoute() ? (
+              <div className={classes.content}>
+                <div className={classes.container}>
+                  <Switch>
+                    {routes.map((prop, key) => {
+                      return (
+                        <Route
+                          path={prop.path}
+                          key={key}
+                          render={(props) => (
+                            <prop.component {...props} loginClicked={loginClicked} setLoginClicked={setLoginClicked} />
+                          )}
+                        
+                        />
+                      );
+                    })}
+                    <Redirect from="/" to="/dashboard" />
+                  </Switch>
+                </div>
+              </div>
+            ) : (
+              <div className={classes.map}>{switchRoutes}</div>
+            )}
+            {getRoute() ? <Footer /> : null}
           </div>
         ) : (
-          <div className={classes.map}>{switchRoutes}</div>
+          <LoginFirst setLoginClicked={setLoginClicked} />
         )}
-        {getRoute() ? <Footer /> : null}
       </div>
     </div>
   );

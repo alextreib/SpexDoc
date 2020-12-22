@@ -18,6 +18,7 @@ import SecurityIcon from "@material-ui/icons/Security";
 import SwipeableViews from "react-swipeable-views";
 import Typography from "@material-ui/core/Typography";
 import { autoPlay } from "react-swipeable-views-utils";
+import { Link } from "react-router-dom";
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
@@ -44,18 +45,18 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     margin: 20,
   },
-  loginButton:{
+  loginButton: {
     marginTop: 20,
     left: "50%",
     top: "50%",
     transform: "translate(-50%, -50%)",
-    fontSize:20,
-    paddingLeft:50,
-    paddingRight:50,
-  }
+    fontSize: 20,
+    paddingLeft: 50,
+    paddingRight: 50,
+  },
 }));
 
-function SwipeableTextMobileStepper() {
+function LoginFirst(props) {
   const classes = useStyles();
   const theme = useTheme();
   const [activeStep, setActiveStep] = React.useState(0);
@@ -71,6 +72,12 @@ function SwipeableTextMobileStepper() {
 
   const handleStepChange = (step) => {
     setActiveStep(step);
+  };
+
+  const buttonClick = () => {
+    // Direct not possible 
+    // Known bug: Can access all even clicked on login, but it is on purpose left that way
+    props.setLoginClicked(true);
   };
 
   return (
@@ -149,17 +156,20 @@ function SwipeableTextMobileStepper() {
             }
           />
 
-          <CustomButton
-            size="large"
-            color="primary"
-            className={classes.loginButton}
-          >
-            Einloggen
-          </CustomButton>
+          <Link style={{ textDecoration: "none" }} to="/user">
+            <CustomButton
+              size="large"
+              color="primary"
+              className={classes.loginButton}
+              onClick={buttonClick}
+            >
+              Einloggen
+            </CustomButton>
+          </Link>
         </CardBody>
       </Card>
     </div>
   );
 }
 
-export default SwipeableTextMobileStepper;
+export default LoginFirst;

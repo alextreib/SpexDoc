@@ -19,7 +19,7 @@ export const loginState = (state = {}, action) => {
     case "LOGIN":
       return action.loginState;
     case "LOGOUT":
-      return {};
+      return null;
     default:
       return state;
   }

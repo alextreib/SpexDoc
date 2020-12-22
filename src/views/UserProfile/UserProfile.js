@@ -18,12 +18,12 @@ import CardHeader from "components/Card/CardHeader.js";
 import CommonComps from "components/Internal/CommonComps.js";
 import { CommonCompsData } from "components/Internal/DefaultData.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
+import EditableSwitch from "components/EditableTableReport/EditableSwitch";
+import Fab from "@material-ui/core/Fab";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormHelperText from "@material-ui/core/FormHelperText";
-import EditableSwitch from "components/EditableTableReport/EditableSwitch";
-
 import FormLabel from "@material-ui/core/FormLabel";
 import GridContainer from "components/Grid/GridContainer.js";
 // @material-ui/core components
@@ -33,6 +33,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import React from "react";
 import Switch from "@material-ui/core/Switch";
+import SyncAltIcon from "@material-ui/icons/SyncAlt";
 import Typography from "@material-ui/core/Typography";
 import VisuComp from "components/Internal/VisuComp.js";
 import avatar from "assets/img/faces/profile_white.png";
@@ -66,8 +67,9 @@ class UserProfile extends VisuComp {
   constructor(props) {
     super(props);
     this.state = {
+      dbNameUserProfile: "UserProfile",
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
-      userProfile: {
+      UserProfile: {
         email: "",
         firstName: "",
         lastName: "",
@@ -93,7 +95,6 @@ class UserProfile extends VisuComp {
   }
 
   componentDidMount() {
-    console.log(this.props);
     this.updateComp();
   }
 
@@ -103,46 +104,18 @@ class UserProfile extends VisuComp {
       return;
     } else {
       this.updateComp();
-      // Only required for visu, not loading
-      //todo: Cleanup
-      this.setState({
-        commonProps: { ...this.state.commonProps, loginState: checkUser() },
-      });
     }
   }
 
   // Required from CommonProps
   updateComp = () => {
-    this.fetchTable();
+    console.log("update")
+    this.TableFetch(this.state.dbNameUserProfile);
 
     //todo: Cleanup
     this.setState({
-      userProfile: { ...this.state.userProfile, email: getUserEmail() },
+      UserProfile: { ...this.state.UserProfile, email: getUserEmail() },
     });
-  };
-
-  // Fetch the table from Firebase (Original data)
-  // Is called when table is changed
-  fetchTable = () => {
-    // todo: default parameter
-    readDBData("UserProfile", false).then((doc_data) => {
-      if (doc_data != null) this.setState({ userProfile: doc_data });
-      // Cannot get data -> set default data from parent class
-      // this.setState({ userProfile: this.state.user });
-      // else ;
-    });
-  };
-
-  // Is called when table is changed
-  uploadData = () => {
-    console.log("upload");
-    var user_id = getUserID();
-    if (user_id == null) {
-      this.displayLogin();
-      return false;
-    }
-    var success = writeDBData("UserProfile", this.state.userProfile);
-    if (success == false) this.displayLogin();
   };
 
   // Nice function: Sets states automatically
@@ -150,10 +123,10 @@ class UserProfile extends VisuComp {
     var changedValue = event.target.value;
     this.setState(
       {
-        userProfile: { ...this.state.userProfile, [property]: changedValue },
+        UserProfile: { ...this.state.UserProfile, [property]: changedValue },
       },
       () => {
-        this.uploadData();
+        writeDBData(this.state.dbNameUserProfile, this.state.UserProfile);
       }
     );
   };
@@ -164,18 +137,16 @@ class UserProfile extends VisuComp {
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         var accessToken = result.credential.accessToken;
-        // The signed-in user info.
         var user = result.user;
-        // setUserLogin(true);
         console.log("User successfully logged in ");
-        // dispatch(loginRedux({ user_id: user.uid }));
-        console.log(this.props);
         this.props.loginRedux({ user_id: user.uid });
 
+        // Get the token from the window because index is not avaiable here
         var deviceToken = window.localStorage.getItem("sentToServer");
+
         // First read the data and then append list
+        //todo: common function
         readDBData("UserData", false).then((doc_data) => {
-          console.log(doc_data);
           var deviceTokenList = [];
           if (doc_data != null) {
             deviceTokenList = doc_data.deviceTokenList;
@@ -203,7 +174,6 @@ class UserProfile extends VisuComp {
         console.log("error: " + errorCode + ":" + errorMessage);
         // ...
       });
-    // handleMenuClose();
   };
 
   handleLogoutProfile = () => {
@@ -214,16 +184,15 @@ class UserProfile extends VisuComp {
         // todo: PopUp
         // Sign-out successful.
         this.props.logoutRedux();
+        this.displayPopUp("Logout");
       })
       .catch((error) => {
         console.log("error while logging out");
         // An error happened.
       });
-    // handleMenuClose();
   };
 
   handleSwitchChange = async (property, event) => {
-    // console.log("handleSwitch");
     var checked = event.target.checked;
 
     this.setState({
@@ -237,17 +206,9 @@ class UserProfile extends VisuComp {
     });
   };
 
-  testfunc = () => {
-    // console.log("testfunc");
-    // console.log(this.state);
-    // // this.displayLogin();
-    // var test =
-    //   this.state.legal.checked &&
-    //   this.state.DSGVO.checked &&
-    //   this.state.acceptConditions.checked;
-    // console.log(test);
-    console.log(this.state);
-    // console.log(this.props);
+  submitSupervisorRequest = () => {
+    console.log("request to be supervisor");
+    // WriteRequest
   };
 
   render() {
@@ -262,7 +223,7 @@ class UserProfile extends VisuComp {
                 <h4 className={classes.cardTitleWhite}>Profil</h4>
                 <p className={classes.cardCategoryWhite}></p>
               </CardHeader>
-              {!this.state.commonProps.loginState ? (
+              {this.props.loginState==null ? (
                 <CardBody>
                   <FormControl>
                     <FormLabel component="h2"></FormLabel>
@@ -366,7 +327,7 @@ class UserProfile extends VisuComp {
                           labelText="Email"
                           id="email"
                           inputProps={{
-                            value: this.state.userProfile.email,
+                            value: this.state.UserProfile.email,
                             onChange: (e) => this.profileChange("email", e),
                           }}
                           formControlProps={{
@@ -379,7 +340,7 @@ class UserProfile extends VisuComp {
                           labelText="Vorname"
                           id="firstName"
                           inputProps={{
-                            value: this.state.userProfile.firstName,
+                            value: this.state.UserProfile.firstName,
                             onChange: (e) => this.profileChange("firstName", e),
                           }}
                           formControlProps={{
@@ -392,7 +353,7 @@ class UserProfile extends VisuComp {
                           labelText="Nachname"
                           id="lastName"
                           inputProps={{
-                            value: this.state.userProfile.lastName,
+                            value: this.state.UserProfile.lastName,
                             onChange: (e) => this.profileChange("lastName", e),
                           }}
                           formControlProps={{
@@ -407,7 +368,7 @@ class UserProfile extends VisuComp {
                           labelText="Postleitzahl"
                           id="plz"
                           inputProps={{
-                            value: this.state.userProfile.plz,
+                            value: this.state.UserProfile.plz,
                             onChange: (e) => this.profileChange("plz", e),
                           }}
                           formControlProps={{
@@ -420,7 +381,7 @@ class UserProfile extends VisuComp {
                           labelText="Wohnort"
                           id="city"
                           inputProps={{
-                            value: this.state.userProfile.city,
+                            value: this.state.UserProfile.city,
                             onChange: (e) => this.profileChange("city", e),
                           }}
                           formControlProps={{
@@ -433,7 +394,7 @@ class UserProfile extends VisuComp {
                           labelText="Straße"
                           id="street"
                           inputProps={{
-                            value: this.state.userProfile.street,
+                            value: this.state.UserProfile.street,
                             onChange: (e) => this.profileChange("street", e),
                           }}
                           formControlProps={{
@@ -448,7 +409,7 @@ class UserProfile extends VisuComp {
                           labelText="Geburtstag"
                           id="birthDate"
                           inputProps={{
-                            value: this.state.userProfile.birthDate,
+                            value: this.state.UserProfile.birthDate,
                             onChange: (e) => this.profileChange("birthDate", e),
                           }}
                           formControlProps={{
@@ -461,7 +422,7 @@ class UserProfile extends VisuComp {
                           labelText="Krankenkasse"
                           id="insurance"
                           inputProps={{
-                            value: this.state.userProfile.insurance,
+                            value: this.state.UserProfile.insurance,
                             onChange: (e) => this.profileChange("insurance", e),
                           }}
                           formControlProps={{
@@ -479,7 +440,7 @@ class UserProfile extends VisuComp {
                             fullWidth: true,
                           }}
                           inputProps={{
-                            value: this.state.userProfile.aboutMe,
+                            value: this.state.UserProfile.aboutMe,
                             onChange: (e) => this.profileChange("aboutMe", e),
                             multiline: true,
                             rows: 5,
@@ -508,15 +469,19 @@ class UserProfile extends VisuComp {
               </CardAvatar>
               <CardBody profile>
                 <h6 className={classes.cardCategory}>Patient</h6>
+                <Button color="primary" onClick={this.submitSupervisorRequest}>
+                  <SyncAltIcon />
+                  Ich bin Arzt
+                </Button>
                 <h4 className={classes.cardTitle}>
-                  {this.state.userProfile.firstName}{" "}
-                  {this.state.userProfile.lastName}
+                  {this.state.UserProfile.firstName}{" "}
+                  {this.state.UserProfile.lastName}
                 </h4>
                 <h4 className={classes.cardTitle}>
-                  {this.state.userProfile.city}
+                  {this.state.UserProfile.city}
                 </h4>
                 <p className={classes.description}>
-                  {this.state.userProfile.aboutMe}
+                  {this.state.UserProfile.aboutMe}
                 </p>
                 {/* <Button color="primary" onClick={this.shareProfile} round>
                   Share

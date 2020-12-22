@@ -22,6 +22,8 @@ import SmartDocIcon from "@material-ui/icons/TabletMac";
 import Store from "@material-ui/icons/Store";
 import Table from "components/Table/Table.js";
 
+import LoginFirst from "views/LoginFirst/LoginFirst.js";
+
 import TestComp from "components/VisuComps/TestComp.js";
 import Typography from "@material-ui/core/Typography";
 import Update from "@material-ui/icons/Update";
@@ -40,6 +42,7 @@ class Dashboard extends VisuComp {
   constructor(props) {
     super(props);
 
+    console.log(props)
     this.state = {
       // List of additional rendered components (several concurrently)
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
@@ -142,151 +145,155 @@ class Dashboard extends VisuComp {
     return (
       <div>
         <CommonComps commonProps={this.state.commonProps} />
-        <Typography variant="h3">
-          Hallo{" "}
-          {this.state.UserProfile ? this.state.UserProfile.firstName : null}{" "}
-          {this.state.UserProfile ? this.state.UserProfile.lastName : null}
-        </Typography>
-        <GridContainer>
-          <GridItem xs={12} sm={6} md={3}>
-            <Card>
-              <CardHeader color="warning" stats icon>
-                <CardIcon color="warning">
-                  <Icon>content_copy</Icon>
-                </CardIcon>
-                <p className={classes.cardCategory}>Befunde</p>
-                <h3 className={classes.cardTitle}>
-                  {this.state.MedRecords ? this.state.MedRecords.length : 0}
-                </h3>
-              </CardHeader>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  <Assignment>
-                    <Warning />
-                  </Assignment>
-                  Archiviert
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={6} md={3}>
-            <Card>
-              <CardHeader color="success" stats icon>
-                <CardIcon color="success">
-                  <Store />
-                </CardIcon>
-                <p className={classes.cardCategory}>Krankenkasse</p>
-                <h3 className={classes.cardTitle}>
-                  {" "}
-                  {this.state.UserProfile
-                    ? this.state.UserProfile.insurance
-                    : ""}
-                </h3>
-              </CardHeader>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  <DateRange />
-                  Noch nicht verknüpft
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={6} md={3}>
-            <Card>
-              <CardHeader color="danger" stats icon>
-                <CardIcon color="danger">
-                  <Icon>info_outline</Icon>
-                </CardIcon>
-                <p className={classes.cardCategory}>Notfalldaten</p>
-                <h3 className={classes.cardTitle}>
-                  {this.state.emergencyDataCount}
-                </h3>
-              </CardHeader>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  <LocalOffer />
-                  Nur für Notärzte verfügbar
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={6} md={3}>
-            <Card>
-              <CardHeader color="info" stats icon>
-                <CardIcon color="info">
-                  <Accessibility />
-                </CardIcon>
-                <p className={classes.cardCategory}>Freigaben</p>
-                <h3 className={classes.cardTitle}>
-                  {this.state.sharingDataCount} aktiv
-                </h3>
-              </CardHeader>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  <Update />
-                  In the letzten 6 Monaten
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={6} md={3}>
-            <Card>
-              <CardHeader color="info" stats icon>
-                <CardIcon color="info">
-                  <Accessibility />
-                  {/* Syringe Icon */}
-                </CardIcon>
-                <p className={classes.cardCategory}>Impfungen</p>
-                <h3 className={classes.cardTitle}>
-                  {this.state.Vaccination ? this.state.Vaccination.length : 0}{" "}
-                  aktiv
-                </h3>
-              </CardHeader>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  <Update />
-                  Insgesamt
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={6} md={3}>
-            <Card>
-              <CardHeader color="warning" stats icon>
-                <CardIcon color="warning">
-                  <SmartDocIcon />
-                </CardIcon>
-                <p className={classes.cardCategory}>Nutzung Smart Doc</p>
-                <h3 className={classes.cardTitle}>3</h3>
-              </CardHeader>
-              <CardFooter stats>
-                <div className={classes.stats}>
-                  <Assignment>
-                    <Warning />
-                  </Assignment>
-                  Analysiert
-                </div>
-              </CardFooter>
-            </Card>
-          </GridItem>
-          <GridItem xs={12} sm={12} md={6}>
-            <Card>
-              <CardHeader color="primary">
-                <h4 className={classes.cardTitleWhite}>Arztbesuche</h4>
-                <p className={classes.cardCategoryWhite}>
-                  Verwalte deine Arztbesuche unter 'Termine'
-                </p>
-              </CardHeader>
-              <CardBody>
-                <Table
-                  tableHeaderColor="primary"
-                  tableHead={["Titel", "Datum", "Arzt"]}
-                  tableData={this.getAppointments()}
-                />
-              </CardBody>
-            </Card>
-          </GridItem>
-        </GridContainer>
+          <div>
+            <Typography variant="h3">
+              Hallo{" "}
+              {this.state.UserProfile ? this.state.UserProfile.firstName : null}{" "}
+              {this.state.UserProfile ? this.state.UserProfile.lastName : null}
+            </Typography>
+            <GridContainer>
+              <GridItem xs={12} sm={6} md={3}>
+                <Card>
+                  <CardHeader color="warning" stats icon>
+                    <CardIcon color="warning">
+                      <Icon>content_copy</Icon>
+                    </CardIcon>
+                    <p className={classes.cardCategory}>Befunde</p>
+                    <h3 className={classes.cardTitle}>
+                      {this.state.MedRecords ? this.state.MedRecords.length : 0}
+                    </h3>
+                  </CardHeader>
+                  <CardFooter stats>
+                    <div className={classes.stats}>
+                      <Assignment>
+                        <Warning />
+                      </Assignment>
+                      Archiviert
+                    </div>
+                  </CardFooter>
+                </Card>
+              </GridItem>
+              <GridItem xs={12} sm={6} md={3}>
+                <Card>
+                  <CardHeader color="success" stats icon>
+                    <CardIcon color="success">
+                      <Store />
+                    </CardIcon>
+                    <p className={classes.cardCategory}>Krankenkasse</p>
+                    <h3 className={classes.cardTitle}>
+                      {" "}
+                      {this.state.UserProfile
+                        ? this.state.UserProfile.insurance
+                        : ""}
+                    </h3>
+                  </CardHeader>
+                  <CardFooter stats>
+                    <div className={classes.stats}>
+                      <DateRange />
+                      Noch nicht verknüpft
+                    </div>
+                  </CardFooter>
+                </Card>
+              </GridItem>
+              <GridItem xs={12} sm={6} md={3}>
+                <Card>
+                  <CardHeader color="danger" stats icon>
+                    <CardIcon color="danger">
+                      <Icon>info_outline</Icon>
+                    </CardIcon>
+                    <p className={classes.cardCategory}>Notfalldaten</p>
+                    <h3 className={classes.cardTitle}>
+                      {this.state.emergencyDataCount}
+                    </h3>
+                  </CardHeader>
+                  <CardFooter stats>
+                    <div className={classes.stats}>
+                      <LocalOffer />
+                      Nur für Notärzte verfügbar
+                    </div>
+                  </CardFooter>
+                </Card>
+              </GridItem>
+              <GridItem xs={12} sm={6} md={3}>
+                <Card>
+                  <CardHeader color="info" stats icon>
+                    <CardIcon color="info">
+                      <Accessibility />
+                    </CardIcon>
+                    <p className={classes.cardCategory}>Freigaben</p>
+                    <h3 className={classes.cardTitle}>
+                      {this.state.sharingDataCount} aktiv
+                    </h3>
+                  </CardHeader>
+                  <CardFooter stats>
+                    <div className={classes.stats}>
+                      <Update />
+                      In the letzten 6 Monaten
+                    </div>
+                  </CardFooter>
+                </Card>
+              </GridItem>
+              <GridItem xs={12} sm={6} md={3}>
+                <Card>
+                  <CardHeader color="info" stats icon>
+                    <CardIcon color="info">
+                      <Accessibility />
+                      {/* Syringe Icon */}
+                    </CardIcon>
+                    <p className={classes.cardCategory}>Impfungen</p>
+                    <h3 className={classes.cardTitle}>
+                      {this.state.Vaccination
+                        ? this.state.Vaccination.length
+                        : 0}{" "}
+                      aktiv
+                    </h3>
+                  </CardHeader>
+                  <CardFooter stats>
+                    <div className={classes.stats}>
+                      <Update />
+                      Insgesamt
+                    </div>
+                  </CardFooter>
+                </Card>
+              </GridItem>
+              <GridItem xs={12} sm={6} md={3}>
+                <Card>
+                  <CardHeader color="warning" stats icon>
+                    <CardIcon color="warning">
+                      <SmartDocIcon />
+                    </CardIcon>
+                    <p className={classes.cardCategory}>Nutzung Smart Doc</p>
+                    <h3 className={classes.cardTitle}>3</h3>
+                  </CardHeader>
+                  <CardFooter stats>
+                    <div className={classes.stats}>
+                      <Assignment>
+                        <Warning />
+                      </Assignment>
+                      Analysiert
+                    </div>
+                  </CardFooter>
+                </Card>
+              </GridItem>
+              <GridItem xs={12} sm={12} md={6}>
+                <Card>
+                  <CardHeader color="primary">
+                    <h4 className={classes.cardTitleWhite}>Arztbesuche</h4>
+                    <p className={classes.cardCategoryWhite}>
+                      Verwalte deine Arztbesuche unter 'Termine'
+                    </p>
+                  </CardHeader>
+                  <CardBody>
+                    <Table
+                      tableHeaderColor="primary"
+                      tableHead={["Titel", "Datum", "Arzt"]}
+                      tableData={this.getAppointments()}
+                    />
+                  </CardBody>
+                </Card>
+              </GridItem>
+            </GridContainer>
+          </div>
       </div>
     );
   }
