@@ -25,7 +25,8 @@ class UploadImage extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div>
+      <div className={classes.rightToolbar}>
+
         <input
           style={{ display: "none" }}
           id="upload-photo"
@@ -37,14 +38,13 @@ class UploadImage extends React.Component {
         />
         <Fab
           className={classes.fab}
-          color="secondary"
-          size="small"
-          component="span"
+          color="primary"
           aria-label="add"
           variant="extended"
+
           onClick={() => this.fileInput.click() }
         >
-          <AddIcon /> Upload Photo
+          <AddIcon /> Upload
         </Fab>
       </div>
     );

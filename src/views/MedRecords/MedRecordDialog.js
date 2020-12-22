@@ -12,7 +12,7 @@ import {
 import AddIcon from "@material-ui/icons/Add";
 import AutoCompletionForm from "components/VisuComps/AutoCompletionForm.js";
 import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
+import Card from "components/Card/Card.js";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardBody from "components/Card/CardBody.js";
@@ -20,13 +20,11 @@ import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "components/Card/CardHeader.js";
 import CardMedia from "@material-ui/core/CardMedia";
 import CustomButton from "components/CustomButtons/Button.js";
-import UploadImage from "components/VisuComps/UploadImage.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import { DefaultCategories } from "components/Internal/DefaultData.js";
 import DeleteIcon from "@material-ui/icons/Delete";
 import DescriptionIcon from "@material-ui/icons/Description";
 import Dialog from "@material-ui/core/Dialog";
-import Fab from "@material-ui/core/Fab";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
@@ -35,34 +33,55 @@ import PropTypes from "prop-types";
 import React from "react";
 import ShareIcon from "@material-ui/icons/Share";
 import Typography from "@material-ui/core/Typography";
+import UploadImage from "components/VisuComps/UploadImage.js";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 
-const styles = (theme) => ({
-  card: {
-    maxWidth: 345,
-    marginBottom: 100,
-    paddingBottom: theme.spacing(1),
+// import Card from "@material-ui/core/Card";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const styles = {
+  dialogCard: {
+    marginTop: 30,
+    marginBottom: 30,
+    display: "flex",
+    position: "relative",
+    flexDirection: "column",
+  },
+  cardHeader: {
+    padding: 15,
+    marginTop: -20,
   },
   media: {
     height: 140,
   },
   dialogtitle: {
-    margin: 0,
-    padding: theme.spacing(2),
-  },
-  rightToolbar: {
-    position: "relative",
-    minHeight: 100,
-  },
-  menuButton: {
-    marginRight: 16,
-    marginLeft: -12,
-  },
-  fab: {
-    position: "absolute",
-    bottom: 15,
-    right: 15,
+    margin: 25,
+    // padding: theme.spacing(2),
   },
   downloadButton: {
     position: "relative",
@@ -71,7 +90,41 @@ const styles = (theme) => ({
     width: 150,
     color: "grey",
   },
-});
+
+  cardCategoryWhite: {
+    "&,& a,& a:hover,& a:focus": {
+      color: "rgba(255,255,255,.62)",
+      margin: "0",
+      fontSize: "14px",
+      marginTop: "0",
+      marginBottom: "0",
+    },
+    "& a,& a:hover,& a:focus": {
+      color: "#FFFFFF",
+    },
+  },
+  submitButton: {
+    // marginRight: theme.spacing(2),
+  },
+  gridItem: {
+    margin: 15,
+  },
+  cardTitleWhite: {
+    color: "#FFFFFF",
+    marginTop: "0px",
+    minHeight: "auto",
+    fontWeight: "300",
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    marginBottom: "3px",
+    textDecoration: "none",
+    "& small": {
+      color: "#777",
+      fontSize: "65%",
+      fontWeight: "400",
+      lineHeight: "1",
+    },
+  },
+};
 
 class MedRecordDialog extends React.Component {
   constructor(props) {
@@ -96,167 +149,192 @@ class MedRecordDialog extends React.Component {
           Befund
         </DialogTitle>
         <DialogContent dividers>
-          <Card>
-            <CardBody>
-              {this.props.medRecord.isImage ? (
-                <div>
-                  <CardMedia
-                    component="img"
-                    image={this.props.medRecord.link}
-                    title="Befund"
-                  />
-                  <a href={this.props.medRecord.link} download>
-                    Expandieren
-                  </a>
-                </div>
-              ) : (
-                <a href={this.props.medRecord.link} download>
-                  <GetAppIcon className={classes.downloadButton} />
-                </a>
-              )}
-              <UploadImage {...this.props}/>
-            </CardBody>
-          </Card>
-
-          <Card>
-            <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Details</h4>
-            </CardHeader>
-            <CardBody>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Datum"
-                    id="date"
-                    inputProps={{
-                      value: this.props.medRecord.date,
-                      onChange: (e) =>
-                        this.props.tableChanges(
-                          this.props.medRecord,
-                          "date",
-                          e
-                        ),
-                    }}
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Arzt"
-                    id="doctor"
-                    inputProps={{
-                      value: this.props.medRecord.doctor,
-                      onChange: (e) =>
-                        this.props.tableChanges(
-                          this.props.medRecord,
-                          "doctor",
-                          e
-                        ),
-                    }}
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
-                    labelText="Krankheit"
-                    id="disease"
-                    inputProps={{
-                      value: this.props.medRecord.disease,
-                      onChange: (e) =>
-                        this.props.tableChanges(
-                          this.props.medRecord,
-                          "disease",
-                          e
-                        ),
-                    }}
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                  />
-                </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
-                  <AutoCompletionForm
-                    addValueToOptionList={this.props.addValueToOptionList}
-                    medRecord={this.props.medRecord}
-                    value={this.props.medRecord.category}
-                    changeMedRecord={this.props.changeMedRecord}
-                    optionList={this.props.CategoryList}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                  <CustomInput
-                    labelText="Symptome"
-                    id="moreInfo"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    inputProps={{
-                      value: this.props.medRecord.symptoms,
-                      onChange: (e) =>
-                        this.props.tableChanges(
-                          this.props.medRecord,
-                          "symptoms",
-                          e
-                        ),
-                      multiline: true,
-                      rows: 5,
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                  <CustomInput
-                    labelText="Diagnose"
-                    id="moreInfo"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    inputProps={{
-                      value: this.props.medRecord.diagnosis,
-                      onChange: (e) =>
-                        this.props.tableChanges(
-                          this.props.medRecord,
-                          "diagnosis",
-                          e
-                        ),
-                      multiline: true,
-                      rows: 5,
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-              <GridContainer>
-                <GridItem xs={12} sm={12} md={12}>
-                  <CustomInput
-                    labelText="Weiteres"
-                    id="moreInfo"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    inputProps={{
-                      value: this.props.medRecord.moreInfo,
-                      onChange: (e) =>
-                        this.props.tableChanges(
-                          this.props.medRecord,
-                          "moreInfo",
-                          e
-                        ),
-                      multiline: true,
-                      rows: 5,
-                    }}
-                  />
-                </GridItem>
-              </GridContainer>
-            </CardBody>
-          </Card>
-          {/* todo: Add QR Code to share */}
+          <GridContainer>
+            <GridItem xs={12} sm={12} md={12}>
+              <Card>
+                <CardHeader color="primary">
+                  <h4 className={classes.cardTitleWhite}>Anhänge</h4>
+                  <p className={classes.cardCategoryWhite}>
+                    Alle Befunde digital
+                  </p>
+                </CardHeader>
+                <CardBody>
+                  <GridContainer>
+                    {this.props.medRecord.fileLinks.map((fileLink) => (
+                      <GridItem xs={12} sm={12} md={12}>
+                        <Card>
+                          <CardBody>
+                            test
+                            {this.props.medRecord.isImage ? (
+                              <div>
+                                <CardMedia
+                                  className={classes.media}
+                                  component="img"
+                                  image={fileLink}
+                                  title="Befund"
+                                />
+                                <a href={fileLink} download>
+                                  Expandieren
+                                </a>
+                              </div>
+                            ) : (
+                              <a href={fileLink} download>
+                                <GetAppIcon
+                                  className={classes.downloadButton}
+                                />
+                              </a>
+                            )}
+                          </CardBody>
+                        </Card>
+                      </GridItem>
+                    ))}
+                  </GridContainer>
+                  <UploadImage {...this.props} />
+                </CardBody>
+              </Card>
+            </GridItem>
+            <GridItem xs={12} sm={12} md={12}>
+              <Card>
+                <CardHeader color="primary">
+                  <h4 className={classes.cardTitleWhite}>Befunddaten</h4>
+                </CardHeader>
+                <CardBody>
+                  <GridContainer>
+                    <GridItem xs={12} sm={12} md={4}>
+                      <CustomInput
+                        labelText="Datum"
+                        id="date"
+                        inputProps={{
+                          value: this.props.medRecord.date,
+                          onChange: (e) =>
+                            this.props.tableChanges(
+                              this.props.medRecord,
+                              "date",
+                              e
+                            ),
+                        }}
+                        formControlProps={{
+                          fullWidth: true,
+                        }}
+                      />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={4}>
+                      <CustomInput
+                        labelText="Arzt"
+                        id="doctor"
+                        inputProps={{
+                          value: this.props.medRecord.doctor,
+                          onChange: (e) =>
+                            this.props.tableChanges(
+                              this.props.medRecord,
+                              "doctor",
+                              e
+                            ),
+                        }}
+                        formControlProps={{
+                          fullWidth: true,
+                        }}
+                      />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={4}>
+                      <CustomInput
+                        labelText="Krankheit"
+                        id="disease"
+                        inputProps={{
+                          value: this.props.medRecord.disease,
+                          onChange: (e) =>
+                            this.props.tableChanges(
+                              this.props.medRecord,
+                              "disease",
+                              e
+                            ),
+                        }}
+                        formControlProps={{
+                          fullWidth: true,
+                        }}
+                      />
+                    </GridItem>
+                    <GridItem xs={12} sm={12} md={4}>
+                      <AutoCompletionForm
+                        addValueToOptionList={this.props.addValueToOptionList}
+                        medRecord={this.props.medRecord}
+                        value={this.props.medRecord.category}
+                        changeMedRecord={this.props.changeMedRecord}
+                        optionList={this.props.CategoryList}
+                      />
+                    </GridItem>
+                  </GridContainer>
+                  <GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                      <CustomInput
+                        labelText="Symptome"
+                        id="moreInfo"
+                        formControlProps={{
+                          fullWidth: true,
+                        }}
+                        inputProps={{
+                          value: this.props.medRecord.symptoms,
+                          onChange: (e) =>
+                            this.props.tableChanges(
+                              this.props.medRecord,
+                              "symptoms",
+                              e
+                            ),
+                          multiline: true,
+                          rows: 5,
+                        }}
+                      />
+                    </GridItem>
+                  </GridContainer>
+                  <GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                      <CustomInput
+                        labelText="Diagnose"
+                        id="moreInfo"
+                        formControlProps={{
+                          fullWidth: true,
+                        }}
+                        inputProps={{
+                          value: this.props.medRecord.diagnosis,
+                          onChange: (e) =>
+                            this.props.tableChanges(
+                              this.props.medRecord,
+                              "diagnosis",
+                              e
+                            ),
+                          multiline: true,
+                          rows: 5,
+                        }}
+                      />
+                    </GridItem>
+                  </GridContainer>
+                  <GridContainer>
+                    <GridItem xs={12} sm={12} md={12}>
+                      <CustomInput
+                        labelText="Weiteres"
+                        id="moreInfo"
+                        formControlProps={{
+                          fullWidth: true,
+                        }}
+                        inputProps={{
+                          value: this.props.medRecord.moreInfo,
+                          onChange: (e) =>
+                            this.props.tableChanges(
+                              this.props.medRecord,
+                              "moreInfo",
+                              e
+                            ),
+                          multiline: true,
+                          rows: 5,
+                        }}
+                      />
+                    </GridItem>
+                  </GridContainer>
+                </CardBody>
+              </Card>
+              {/* todo: Add QR Code to share */}
+            </GridItem>
+          </GridContainer>
         </DialogContent>
         <DialogActions>
           <CustomButton
@@ -264,7 +342,7 @@ class MedRecordDialog extends React.Component {
             onClick={(e) => this.props.handleClose(this.props.medRecord, e)}
             color="primary"
           >
-            Close
+            Schließen
           </CustomButton>
         </DialogActions>
       </Dialog>

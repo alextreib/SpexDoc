@@ -105,30 +105,31 @@ class MedRecordsContent extends VisuComp {
     this.TableChanged(this.state.dbNameCategories, this.state.CategoryList);
   };
 
-  uploadFile = (category, event) => {
-    event.preventDefault();
-    if (!this.checkLoginAndDisplay()) {
-      return;
-    }
+  // uploadFile = (category, event) => {
+  //   event.preventDefault();
+  //   if (!this.checkLoginAndDisplay()) {
+  //     return;
+  //   }
 
-    Array.from(event.target.files).forEach(async (fileToUpload) => {
-      var isImage = fileToUpload.type.includes("image");
-      //todo: cleaner error catching
-      await uploadFile(fileToUpload).then((fileLink) => {
-        var newMedRecord = {
-          link: fileLink,
-          isImage: isImage,
-          date: getCurrentDate(),
-          doctor: "Dr. Schneider",
-          disease: "Erkältung",
-          category: category,
-          open: false,
-        };
+  //   Array.from(event.target.files).forEach(async (fileToUpload) => {
+  //     var isImage = fileToUpload.type.includes("image");
+  //     //todo: cleaner error catching
+  //     await uploadFile(fileToUpload).then((fileLink) => {
+  //       var newMedRecord = {
+  //         // link: fileLink,
+  //         fileLinks:[],
+  //         isImage: isImage,
+  //         date: getCurrentDate(),
+  //         doctor: "Dr. Schneider",
+  //         disease: "Erkältung",
+  //         category: category,
+  //         open: false,
+  //       };
 
-        this.addnewMedRecord(newMedRecord);
-      });
-    });
-  };
+  //       this.addnewMedRecord(newMedRecord);
+  //     });
+  //   });
+  // };
 
   // Data Table changes
   addnewCategory = (newCategory) => {
@@ -164,7 +165,7 @@ class MedRecordsContent extends VisuComp {
     console.log("called addNewMedRecord");
 
     var newMedRecord = {
-      link: "",
+      fileLinks: [],
       isImage: "",
       date: getCurrentDate(),
       doctor: "Dr. Mustermann",
