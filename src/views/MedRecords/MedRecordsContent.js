@@ -75,6 +75,7 @@ class MedRecordsContent extends VisuComp {
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
     };
     this.openModal = this.openModal.bind(this);
+    this.openWindow = this.openWindow.bind(this);
   }
 
   componentDidMount() {
@@ -257,28 +258,25 @@ class MedRecordsContent extends VisuComp {
     }
 
     // Create new medRecord here and overwrite all (also list of files)
-  var files=medRecord.files;
-    
-
-
+    var files = medRecord.files;
 
     Array.from(event.target.files).forEach(async (fileToUpload) => {
       var isImage = fileToUpload.type.includes("image");
       //todo: cleaner error catching
       await uploadFile(fileToUpload).then((fileLink) => {
-
-        files.push({link:fileLink,isImage:isImage})
-
-        // this.changeMedRecord(medRecord, "link", fileLink);
+        files.push({
+          link: fileLink,
+          isImage: isImage,
+          name: fileToUpload.name,
+        });
       });
     });
 
-    console.log(files)
-
     this.changeMedRecord(medRecord, "files", files);
+  };
 
-
-
+  openWindow = (link) => {
+    window.open(link);
   };
 
   render() {
@@ -318,6 +316,7 @@ class MedRecordsContent extends VisuComp {
                             addValueToOptionList={this.addValueToOptionList}
                             removeMedRecord={this.removeMedRecord}
                             openModal={this.openModal}
+                            openWindow={this.openWindow}
                             CategoryList={this.state.CategoryList}
                             medRecord={medRecord}
                             uploadImageAction={this.uploadImageAction}

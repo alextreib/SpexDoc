@@ -51,7 +51,7 @@ const styles = {
     padding: 15,
     marginTop: -20,
   },
-  mediaroot:{
+  mediaroot: {
     maxWidth: 345,
   },
   media: {
@@ -129,48 +129,6 @@ class MedRecordDialog extends React.Component {
         </DialogTitle>
         <DialogContent dividers>
           <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
-              <Card>
-                <CardHeader color="primary">
-                  <h4 className={classes.cardTitleWhite}>Anhänge</h4>
-                  <p className={classes.cardCategoryWhite}>
-                    Alle Befunde digital
-                  </p>
-                </CardHeader>
-                <CardBody>
-                  <GridContainer>
-                    {this.props.medRecord.files.map((file) => (
-                      <GridItem xs={12} sm={12} md={12}>
-                        <Card className={classes.mediaroot}>
-                          <CardBody>
-                            {file.isImage ? (
-                              <div>
-                                <CardMedia
-                                  className={classes.media}
-                                  component="img"
-                                  image={file.link}
-                                  title="Befund"
-                                />
-                                <a href={file.link} target="_blank" download>
-                                  Expandieren
-                                </a>
-                              </div>
-                            ) : (
-                              <a href={file.link} download>
-                                <GetAppIcon
-                                  className={classes.downloadButton}
-                                />
-                              </a>
-                            )}
-                          </CardBody>
-                        </Card>
-                      </GridItem>
-                    ))}
-                  </GridContainer>
-                  <UploadImage {...this.props} />
-                </CardBody>
-              </Card>
-            </GridItem>
             <GridItem xs={12} sm={12} md={12}>
               <Card>
                 <CardHeader color="primary">
@@ -311,6 +269,51 @@ class MedRecordDialog extends React.Component {
                 </CardBody>
               </Card>
               {/* todo: Add QR Code to share */}
+            </GridItem>
+            <GridItem xs={12} sm={12} md={12}>
+              <Card>
+                <CardHeader color="primary">
+                  <h4 className={classes.cardTitleWhite}>Anhänge</h4>
+                  <p className={classes.cardCategoryWhite}>
+                    Alle Befunde digital
+                  </p>
+                </CardHeader>
+                <CardBody>
+                  <GridContainer>
+                    {this.props.medRecord.files.map((file) => (
+                      <GridItem xs={12} sm={6} md={4}>
+                        <Card className={classes.mediaroot}>
+                          <CardActionArea
+                            onClick={(e) => this.props.openWindow(file.link, e)}
+                          >
+                            {file.isImage ? (
+                              <CardMedia
+                                className={classes.media}
+                                image={file.link}
+                              />
+                            ) : (
+                              <CardMedia
+                                className={classes.media}
+                                image="https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg"
+                              />
+                            )}
+                            <CardContent>
+                              <Typography
+                                gutterBottom
+                                variant="h5"
+                                component="h2"
+                              >
+                                {file.name}
+                              </Typography>
+                            </CardContent>
+                          </CardActionArea>
+                        </Card>
+                      </GridItem>
+                    ))}
+                  </GridContainer>
+                  <UploadImage medRecord={this.props.medRecord} />
+                </CardBody>
+              </Card>
             </GridItem>
           </GridContainer>
         </DialogContent>
