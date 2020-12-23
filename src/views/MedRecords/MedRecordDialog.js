@@ -39,31 +39,6 @@ import { withStyles } from "@material-ui/core/styles";
 
 // import Card from "@material-ui/core/Card";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const styles = {
   dialogCard: {
     marginTop: 30,
@@ -76,9 +51,13 @@ const styles = {
     padding: 15,
     marginTop: -20,
   },
+  mediaroot:{
+    maxWidth: 345,
+  },
   media: {
     height: 140,
   },
+
   dialogtitle: {
     margin: 25,
     // padding: theme.spacing(2),
@@ -160,25 +139,24 @@ class MedRecordDialog extends React.Component {
                 </CardHeader>
                 <CardBody>
                   <GridContainer>
-                    {this.props.medRecord.fileLinks.map((fileLink) => (
+                    {this.props.medRecord.files.map((file) => (
                       <GridItem xs={12} sm={12} md={12}>
-                        <Card>
+                        <Card className={classes.mediaroot}>
                           <CardBody>
-                            test
-                            {this.props.medRecord.isImage ? (
+                            {file.isImage ? (
                               <div>
                                 <CardMedia
                                   className={classes.media}
                                   component="img"
-                                  image={fileLink}
+                                  image={file.link}
                                   title="Befund"
                                 />
-                                <a href={fileLink} download>
+                                <a href={file.link} target="_blank" download>
                                   Expandieren
                                 </a>
                               </div>
                             ) : (
-                              <a href={fileLink} download>
+                              <a href={file.link} download>
                                 <GetAppIcon
                                   className={classes.downloadButton}
                                 />

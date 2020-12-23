@@ -165,8 +165,7 @@ class MedRecordsContent extends VisuComp {
     console.log("called addNewMedRecord");
 
     var newMedRecord = {
-      fileLinks: [],
-      isImage: "",
+      files: [],
       date: getCurrentDate(),
       doctor: "Dr. Mustermann",
       disease: "Neuer Befund",
@@ -257,26 +256,29 @@ class MedRecordsContent extends VisuComp {
       return;
     }
 
-    // Create new medRecord here and overwrite all (also list of fileLinks)
+    // Create new medRecord here and overwrite all (also list of files)
+  var files=medRecord.files;
+    
+
+
 
     Array.from(event.target.files).forEach(async (fileToUpload) => {
       var isImage = fileToUpload.type.includes("image");
       //todo: cleaner error catching
       await uploadFile(fileToUpload).then((fileLink) => {
-        // var newMedRecord = {
-        //   link: fileLink,
-        //   isImage: isImage,
-        //   date: getCurrentDate(),
-        //   doctor: "Dr. Schneider",
-        //   disease: "Erkältung",
-        //   category: category,
-        //   open: false,
-        // };
 
-        this.changeMedRecord(medRecord, "link", fileLink);
-        this.changeMedRecord(medRecord, "isImage", fileLink);
+        files.push({link:fileLink,isImage:isImage})
+
+        // this.changeMedRecord(medRecord, "link", fileLink);
       });
     });
+
+    console.log(files)
+
+    this.changeMedRecord(medRecord, "files", files);
+
+
+
   };
 
   render() {

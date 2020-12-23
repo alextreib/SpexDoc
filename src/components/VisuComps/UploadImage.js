@@ -33,6 +33,7 @@ class UploadImage extends React.Component {
           ref={(ref) => (this.fileInput = ref)}
           name="upload-photo"
           type="file"
+          multiple
           onChange={(ev) => this.props.uploadImageAction(this.props.medRecord,ev)}
 
         />
