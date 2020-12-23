@@ -69,7 +69,7 @@ class CommonComps extends VisuComp {
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <Hidden smDown implementation="css">
           <CookieConsent
             buttonStyle={{ backgroundColor: "#9c27b0", color: "white" }}
@@ -86,7 +86,7 @@ class CommonComps extends VisuComp {
         </Hidden>
         <LoginAlert loginState={this.props.commonProps.LoginAlertProps} />
         <PopUp popUp={this.props.commonProps.PopUpProps} />
-      </div>
+      </React.Fragment>
     );
   }
 }

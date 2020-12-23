@@ -46,13 +46,9 @@ const styles = (theme) => ({
     backgroundColor: red[500],
   },
   avatarMobile: {
-    height: 30,
-    width: 30,
+    height: 25,
+    width: 25,
     backgroundColor: red[500],
-  },
-  buttonLink: {
-    height: 30,
-    width: 30,
   },
 });
 
@@ -81,10 +77,6 @@ class ProfileButton extends VisuComp {
       return;
     } else {
       this.updateComp();
-      // Only required for visu, not loading
-      this.setState({
-        commonProps: { ...this.state.commonProps, loginState: checkUser() },
-      });
     }
   }
 
@@ -173,33 +165,22 @@ class ProfileButton extends VisuComp {
     const { classes } = this.props;
 
     return (
-      <div>
-        <CommonComps commonProps={this.state.commonProps} />
-
-        <Hidden mdUp implementation="css">
+      <React.Fragment>
+        <Hidden mdUp>
           {/* Mobile Version */}
-          <IconButton
-            aria-label="account of current user"
-            aria-controls="primary-search-account-menu"
-            aria-haspopup="true"
-            onClick={this.handleProfileMenuOpen}
-            className={classes.buttonLink}
-          >
-            {this.state.UserProfile != null ? (
-              <Avatar aria-label="recipe" className={classes.avatarMobile}>
-                {this.state.UserProfile.firstName.charAt(0)}
-              </Avatar>
-            ) : (
-              <AccountCircle />
-            )}
-          </IconButton>
+          {this.state.UserProfile != null ? (
+            <Avatar aria-label="recipe" className={classes.avatarMobile}>
+              {this.state.UserProfile.firstName.charAt(0)}
+            </Avatar>
+          ) : (
+            <AccountCircle />
+          )}
         </Hidden>
 
         <Hidden smDown implementation="css">
           {/* Desktop Version */}
 
-          {this.state.commonProps.loginState != false &&
-          this.state.UserProfile != null ? (
+          {this.state.UserProfile != null ? (
             <Avatar className={classes.avatar}>
               {this.state.UserProfile.firstName.charAt(0)}
             </Avatar>
@@ -254,7 +235,7 @@ class ProfileButton extends VisuComp {
             </Grow>
           )}
         </Popper>
-      </div>
+      </React.Fragment>
     );
   }
 }

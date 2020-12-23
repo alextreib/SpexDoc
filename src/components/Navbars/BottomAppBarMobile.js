@@ -140,35 +140,31 @@ class BottomAppBarMobile extends React.Component {
             className={classes.root}
           >
             <BottomNavigationAction
+              component={Link}
+              to="/dashboard"
               label="Dashboard"
-              icon={
-                <Link className={classes.Home} to="/dashboard">
-                  <HomeIcon />
-                </Link>
-              }
+              icon={<HomeIcon />}
             />
 
             <BottomNavigationAction
+              component={Link}
+              to="/notifications"
               label="Nachrichten"
               icon={
-                <Link className={classes.LinkNotification} to="/notifications">
-                  <Badge
-                    badgeContent={this.state.notificationList.length}
-                    color="secondary"
-                  >
-                    <NotificationIcon />
-                  </Badge>
-                </Link>
+                <Badge
+                  badgeContent={this.state.notificationList.length}
+                  color="secondary"
+                >
+                  <NotificationIcon />
+                </Badge>
               }
             />
 
             <BottomNavigationAction
+              component={Link}
+              to="/user"
               label="Profil"
-              icon={
-                <Link className={classes.Profile} to="/user">
-                  <ProfileButton />
-                </Link>
-              }
+              icon={<ProfileButton />}
             />
           </BottomNavigation>
         </AppBar>
