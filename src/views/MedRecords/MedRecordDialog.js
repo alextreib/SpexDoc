@@ -311,7 +311,7 @@ class MedRecordDialog extends React.Component {
                       </GridItem>
                     ))}
                   </GridContainer>
-                  <UploadImage medRecord={this.props.medRecord} />
+                  <UploadImage uploadImageAction={this.props.uploadImageAction} medRecord={this.props.medRecord} />
                 </CardBody>
               </Card>
             </GridItem>

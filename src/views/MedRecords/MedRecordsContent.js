@@ -244,12 +244,6 @@ class MedRecordsContent extends VisuComp {
     return MedRecordList;
   };
 
-  testfunc = () => {
-    // Console log
-    // this.fileInput2.click();
-    this.fileInput.click();
-  };
-
   uploadImageAction = (medRecord, event) => {
     console.log("now", medRecord);
     event.preventDefault();
@@ -261,6 +255,13 @@ class MedRecordsContent extends VisuComp {
     var files = medRecord.files;
 
     Array.from(event.target.files).forEach(async (fileToUpload) => {
+      var filesize = (fileToUpload.size / 1024 / 1024).toFixed(4); // MB
+
+      if (filesize > 20) {
+        this.displayPopUp("Datei zu groß", "danger");
+        return;
+      }
+
       var isImage = fileToUpload.type.includes("image");
       //todo: cleaner error catching
       await uploadFile(fileToUpload).then((fileLink) => {
@@ -270,9 +271,9 @@ class MedRecordsContent extends VisuComp {
           name: fileToUpload.name,
         });
       });
-    });
 
-    this.changeMedRecord(medRecord, "files", files);
+      this.changeMedRecord(medRecord, "files", files);
+    });
   };
 
   openWindow = (link) => {
