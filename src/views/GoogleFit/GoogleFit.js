@@ -101,7 +101,7 @@ class GoogleFit extends VisuComp {
   // Fetch the table from Firebase (Original data)
   // Is called when table is changed
   fetchTable = () => {
-    return readDBData(this.state.name, false).then((doc_data) => {
+    return readDBData(this.state.name).then((doc_data) => {
       if (doc_data == null) return;
       // Cannot get data -> set default data from parent class
       // this.setState({ data: this.props.tableOptions.data });

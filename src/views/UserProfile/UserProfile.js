@@ -146,7 +146,7 @@ class UserProfile extends VisuComp {
 
         // First read the data and then append list
         //todo: common function
-        readDBData("UserData", false).then((doc_data) => {
+        readDBData("UserData").then((doc_data) => {
           var deviceTokenList = [];
           if (doc_data != null) {
             deviceTokenList = doc_data.deviceTokenList;

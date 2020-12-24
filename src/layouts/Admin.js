@@ -20,6 +20,7 @@ import logo from "assets/img/SpexDoc_logo_png.png";
 import { makeStyles } from "@material-ui/core/styles";
 import routes from "routes.js";
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
+import { publicKeyProvided } from "components/Internal/Extraction";
 
 // creates a beautiful scrollbar
 
@@ -117,7 +118,7 @@ export default function Admin({ ...rest }) {
       />
       <div className={classes.mainPanel} ref={mainPanel}>
         {/* Navbar contains only Search, Dropdown, etc. */}
-        {checkUser() || loginClicked ? (
+        {checkUser() || loginClicked || publicKeyProvided() ? (
           <div>
             <Hidden mdUp implementation="css">
               {/* Mobile Version */}

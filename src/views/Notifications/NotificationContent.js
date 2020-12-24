@@ -125,7 +125,7 @@ class Notifications extends React.Component {
 
   // DB functions
   fetchTable = () => {
-    return readDBData(this.state.dbName, false).then((doc_data) => {
+    return readDBData(this.state.dbName).then((doc_data) => {
       if (doc_data == null) return;
       // Cannot get data -> set default data from parent class
       // this.setState({ data: this.props.tableOptions.data });

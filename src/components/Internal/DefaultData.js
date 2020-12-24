@@ -19,13 +19,3 @@ export const DefaultCategories = [
   { title: "Dermatologie" },
   { title: "Allergologie" },
 ];
-
-export const EmergencyData = [
-  "EmergencyPredisposition",
-  "EmergencyMedication",
-  "EmergencyContacts",
-  "OrganDonationData",
-  "MedRecords",
-  "CategoryList",
-  "Vaccination",
-];

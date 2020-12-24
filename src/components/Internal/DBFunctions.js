@@ -9,41 +9,65 @@ import Button from "components/CustomButtons/Button.js";
 import LoginAlert from "components/LoginAlert/LoginAlert.js";
 import MaterialTable from "material-table";
 import React from "react";
-import { getPublicKey } from "components/Internal/Extraction.js";
+import {
+  getPublicKey,
+  publicKeyProvided,
+} from "components/Internal/Extraction.js";
+import { isSharingAllowed } from "components/Internal/Sharing.js";
+
 import { getUserID } from "components/Internal/Checks.js";
 import {
   getStringDate,
   getCurrentDate,
 } from "components/Internal/VisuElements.js";
 
+// Use Case specific
 export const writeRequest = (message) => {
   return new Promise((resolve, reject) => {
-    var user_id = getUserID();
-    if (user_id == null) return false;
-
-    firestore.collection("requests").add({
+    var data = {
       message: message,
-      user_id: user_id,
+      user_id: getUserID(),
       answered: false,
-    });
+    };
 
-    // return true;
-    resolve(true);
+    resolve(writeGlobalDataCollection("requests", data));
   });
 };
 
 export const getRequests = () => {
   return new Promise((resolve, reject) => {
-    var docRef = firestore.collection("requests");
+    var docName = "requests";
+
+    resolve(readGlobalData(docName));
+  });
+};
+
+// Generating new doc method, maybe implement a doc method -> access data directly (not via array)
+export const writeGlobalDataCollection = (docName, data) => {
+  return new Promise((resolve, reject) => {
+    firestore
+      .collection("globalData")
+      .doc("globalDoc")
+      .collection(docName)
+      .add(data);
+
+    resolve(true);
+  });
+};
+
+export const readGlobalData = (docName) => {
+  return new Promise((resolve, reject) => {
+    var docRef = firestore
+      .collection("globalData")
+      .doc("globalDoc")
+      .collection(docName);
 
     var requestArray = [];
     docRef
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
           requestArray.push({ id: doc.id, data: doc.data() });
-          // console.log(doc.id, " => ", doc.data());
         });
         resolve(requestArray);
       })
@@ -85,18 +109,21 @@ export const writeNotification = (message, sender, recipient_uid) => {
 };
 
 export const writeDBData = (docName, data) => {
-  var user_id = getUserID();
-  if (user_id == null) return false;
+  var user_id;
+  // todo: Maybe optimize user_id through overriding
+  if (isSharingAllowed(docName) && publicKeyProvided()) {
+    // Get the publicKey as user_id
+    user_id = getPublicKey();
+  } else {
+    user_id = getUserID();
+    // Use usual path
+    if (user_id == null) {
+      console.log("Writing not possible");
+      return null;
+    }
+  }
 
-  firestore
-    .collection("userStorage")
-    .doc("users")
-    .collection(user_id)
-    .doc(docName)
-    .set({
-      data: data, // Required because array cannot be pushed
-    });
-  return true;
+  return writeDBDataWithUid(docName, data, user_id);
 };
 
 export const writeDBDataWithUid = (docName, data, user_id) => {
@@ -111,7 +138,7 @@ export const writeDBDataWithUid = (docName, data, user_id) => {
   return true;
 };
 
-export const readDBData = (docName, allowPublicKey) => {
+export const readDBData = (docName, allowPublicKey = false) => {
   return new Promise((resolve, reject) => {
     var user_id;
     // todo: Maybe optimize user_id through overriding
@@ -123,27 +150,11 @@ export const readDBData = (docName, allowPublicKey) => {
       // Use usual path
       if (user_id == null) {
         console.log("Reading not possible");
-        resolve(null);
+        return resolve(null);
       }
     }
 
-    var docRef = firestore
-      .collection("userStorage")
-      .doc("users")
-      .collection(user_id)
-      .doc(docName);
-
-    docRef
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          return doc.data();
-        }
-      })
-      .then((doc_data) => {
-        if (doc_data != null) resolve(doc_data["data"]);
-        else resolve(null);
-      });
+    resolve(readDBDataWithUid(docName, user_id));
   });
 };
 

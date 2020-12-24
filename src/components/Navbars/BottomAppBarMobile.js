@@ -113,7 +113,7 @@ class BottomAppBarMobile extends React.Component {
   }
 
   fetchTable = () => {
-    readDBData("Notifications", false).then((doc_data) => {
+    readDBData("Notifications").then((doc_data) => {
       if (doc_data == null) {
         console.log(doc_data);
         this.setState({ notificationList: [] });

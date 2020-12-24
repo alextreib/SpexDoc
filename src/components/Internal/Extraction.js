@@ -1,4 +1,3 @@
-
 // Based on link, get the publicKey
 export const getPublicKey = () => {
   var keyWord = "publicKey=";
@@ -13,4 +12,8 @@ export const getPublicKey = () => {
     return publicKey;
   }
   return null;
+};
+
+export const publicKeyProvided = () => {
+  return getPublicKey != null;
 };
