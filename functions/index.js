@@ -13,11 +13,12 @@ admin.initializeApp();
 
 // When a new request comes in, send notification to every person with supervisor status
 exports.requestHandler = functions.firestore
-  .document("/requests/{tx_id}")
+  .document("/globalData/globalDoc/requests/{tx_id}")
   .onCreate(async (snap, context) => {
     var tx_id = context.params.tx_id;
 
     // Should be extended to list of admins
+    // todo: read supervisor list from firebase
     var admin_user_id = "8X81AgrU6Sc3Z23OMsXw4zLNuno2";
 
     var message = `Du hast eine neue Anfrage. siehe (${tx_id})`;

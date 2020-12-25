@@ -21,10 +21,12 @@ export const openPopUp = () => {
   return <PopUp popUp={PopUpProps} />;
 };
 
+export const openWindow = (link) => {
+  window.open(link);
+};
 
-
- // Return 17.12.2020
- export const getCurrentDate = (separator = ".") => {
+// Return 17.12.2020
+export const getCurrentDate = (separator = ".") => {
   let newDate = new Date();
   let date = newDate.getDate();
   let month = newDate.getMonth() + 1;
@@ -46,6 +48,3 @@ export const getStringDate = (inputDate) => {
     month < 10 ? `0${month}` : `${month}`
   }${separator}${year}`;
 };
-
-
-

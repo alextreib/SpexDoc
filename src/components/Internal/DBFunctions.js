@@ -22,10 +22,10 @@ import {
 } from "components/Internal/VisuElements.js";
 
 // Use Case specific
-export const writeRequest = (message) => {
+export const writeRequest = (requestData) => {
   return new Promise((resolve, reject) => {
     var data = {
-      message: message,
+      requestData: requestData,
       user_id: getUserID(),
       answered: false,
     };

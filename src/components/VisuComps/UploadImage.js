@@ -34,7 +34,7 @@ class UploadImage extends React.Component {
           name="upload-photo"
           type="file"
           multiple
-          onChange={(ev) => this.props.uploadImageAction(this.props.medRecord,ev)}
+          onChange={(ev) => this.props.uploadImageAction(ev,this.props.param)}
 
         />
         <Fab

@@ -75,7 +75,6 @@ class MedRecordsContent extends VisuComp {
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
     };
     this.openModal = this.openModal.bind(this);
-    this.openWindow = this.openWindow.bind(this);
   }
 
   componentDidMount() {
@@ -244,8 +243,7 @@ class MedRecordsContent extends VisuComp {
     return MedRecordList;
   };
 
-  uploadImageAction = (medRecord, event) => {
-    console.log("now", medRecord);
+  uploadImageAction = ( event,medRecord) => {
     event.preventDefault();
     if (!this.checkLoginAndDisplay()) {
       return;
@@ -276,10 +274,7 @@ class MedRecordsContent extends VisuComp {
     });
   };
 
-  openWindow = (link) => {
-    window.open(link);
-  };
-
+ 
   render() {
     const { classes } = this.props;
 
@@ -317,7 +312,6 @@ class MedRecordsContent extends VisuComp {
                             addValueToOptionList={this.addValueToOptionList}
                             removeMedRecord={this.removeMedRecord}
                             openModal={this.openModal}
-                            openWindow={this.openWindow}
                             CategoryList={this.state.CategoryList}
                             medRecord={medRecord}
                             uploadImageAction={this.uploadImageAction}

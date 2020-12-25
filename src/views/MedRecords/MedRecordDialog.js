@@ -36,6 +36,7 @@ import Typography from "@material-ui/core/Typography";
 import UploadImage from "components/VisuComps/UploadImage.js";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
+import {openWindow} from "components/Internal/VisuElements"
 
 // import Card from "@material-ui/core/Card";
 
@@ -284,7 +285,7 @@ class MedRecordDialog extends React.Component {
                       <GridItem xs={12} sm={6} md={4}>
                         <Card className={classes.mediaroot}>
                           <CardActionArea
-                            onClick={(e) => this.props.openWindow(file.link, e)}
+                            onClick={(e) => openWindow(file.link, e)}
                           >
                             {file.isImage ? (
                               <CardMedia
@@ -311,7 +312,7 @@ class MedRecordDialog extends React.Component {
                       </GridItem>
                     ))}
                   </GridContainer>
-                  <UploadImage uploadImageAction={this.props.uploadImageAction} medRecord={this.props.medRecord} />
+                  <UploadImage uploadImageAction={this.props.uploadImageAction} param={this.props.medRecord} />
                 </CardBody>
               </Card>
             </GridItem>

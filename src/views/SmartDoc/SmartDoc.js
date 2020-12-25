@@ -10,6 +10,10 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import CardHeader from "components/Card/CardHeader.js";
 import GridContainer from "components/Grid/GridContainer.js";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+
 import GridItem from "components/Grid/GridItem.js";
 import PlainTable from "components/EditableTableReport/PlainTable.js";
 import PropTypes from "prop-types";
@@ -22,10 +26,24 @@ import { withStyles } from "@material-ui/core/styles";
 import { writeRequest } from "components/Internal/DBFunctions.js";
 import { CommonCompsData } from "components/Internal/DefaultData.js";
 import CommonComps from "components/Internal/CommonComps.js";
+import UploadImage from "components/VisuComps/UploadImage";
+import {
+  readDBData,
+  uploadFile,
+  writeDBData,
+} from "components/Internal/DBFunctions.js";
+
+import { openWindow } from "components/Internal/VisuElements.js";
 
 const styles = (theme) => ({
   margin: {
     margin: "0",
+  },
+  mediaroot: {
+    maxWidth: 345,
+  },
+  media: {
+    height: 140,
   },
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
@@ -65,7 +83,7 @@ class SmartDoc extends VisuComp {
 
     this.state = {
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
-
+      uploadFiles: [],
       bloodValueTable: {
         //todo: capsulate and parameterize
         name: "bloodValueTable",
@@ -180,11 +198,50 @@ class SmartDoc extends VisuComp {
       return;
     }
 
-    writeRequest(this.state.contactMessage).then(() => {
+    var requestData = {
+      message: this.state.contactMessage,
+      files: this.state.uploadFiles,
+    };
+
+    writeRequest(requestData).then(() => {
       this.setState({
         contactMessage: "",
       });
+      this.setState({
+        uploadFiles: [],
+      });
       this.displayPopUp("Anfrage erfolgreich versendet");
+    });
+  };
+
+  uploadImageAction = (event, param = false) => {
+    event.preventDefault();
+    if (!this.checkLoginAndDisplay()) {
+      return;
+    }
+
+    // Create new medRecord here and overwrite all (also list of files)
+    var files = this.state.uploadFiles;
+
+    Array.from(event.target.files).forEach(async (fileToUpload) => {
+      var filesize = (fileToUpload.size / 1024 / 1024).toFixed(4); // MB
+
+      if (filesize > 20) {
+        this.displayPopUp("Datei zu groß", "danger");
+        return;
+      }
+
+      var isImage = fileToUpload.type.includes("image");
+      //todo: cleaner error catching
+      await uploadFile(fileToUpload).then((fileLink) => {
+        files.push({
+          link: fileLink,
+          isImage: isImage,
+          name: fileToUpload.name,
+        });
+      });
+
+      this.setState({ uploadFiles: files });
     });
   };
 
@@ -245,6 +302,42 @@ class SmartDoc extends VisuComp {
                     />
                   </GridItem>
                 </GridContainer>
+                <GridContainer>
+                  {this.state.uploadFiles.map((file) => (
+                    <GridItem xs={12} sm={6} md={4}>
+                      <Card className={classes.mediaroot}>
+                        <CardActionArea
+                          onClick={(e) => openWindow(file.link, e)}
+                        >
+                          {file.isImage ? (
+                            <CardMedia
+                              className={classes.media}
+                              image={file.link}
+                            />
+                          ) : (
+                            <CardMedia
+                              className={classes.media}
+                              image="https://upload.wikimedia.org/wikipedia/commons/8/87/PDF_file_icon.svg"
+                            />
+                          )}
+                          <CardContent>
+                            <Typography
+                              gutterBottom
+                              variant="h5"
+                              component="h2"
+                            >
+                              {file.name}
+                            </Typography>
+                          </CardContent>
+                        </CardActionArea>
+                      </Card>
+                    </GridItem>
+                  ))}
+                </GridContainer>
+                <UploadImage
+                  uploadImageAction={this.uploadImageAction}
+                  param={null}
+                />
               </CardBody>
               <CardFooter>
                 <Button

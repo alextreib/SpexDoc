@@ -152,7 +152,8 @@ class BottomAppBarMobile extends React.Component {
               label="Nachrichten"
               icon={
                 <Badge
-                  badgeContent={this.state.notificationList.length}
+                  variant="dot"
+                  invisible={this.state.notificationList.length == 0}
                   color="secondary"
                 >
                   <NotificationIcon />
