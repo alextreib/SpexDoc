@@ -29,7 +29,9 @@ class AutoCompletionForm extends React.Component {
               // wait - I don't know
             });
           } else if (newValue && newValue.inputValue) {
+            // Called when new category is added
             // newValue: {inputValue: "NewCategory"}
+
             var newElement = { title: newValue.inputValue };
             this.props.addValueToOptionList(newElement);
             this.props.changeMedRecord(
@@ -38,12 +40,22 @@ class AutoCompletionForm extends React.Component {
               newValue.inputValue
             );
           } else {
+            // Called when category is changed
             // newValue: {title: "NewCategory"}
-            this.props.changeMedRecord(
-              this.props.medRecord,
-              "category",
-              newValue.title
-            );
+
+            if (newValue != null) {
+              if (
+                this.props.optionList.some(
+                  (option) => option.title === newValue.title
+                )
+              ) {
+                this.props.changeMedRecord(
+                  this.props.medRecord,
+                  "category",
+                  newValue.title
+                );
+              }
+            }
           }
         }}
         filterOptions={(options, params) => {
@@ -77,10 +89,12 @@ class AutoCompletionForm extends React.Component {
           return option.title;
         }}
         renderOption={(option) => option.title}
-        style={{ width: 300 }}
+        style={{
+          marginTop: "27px",
+        }}
         freeSolo
         renderInput={(params) => (
-          <TextField {...params} label="Kategorie" variant="outlined" />
+          <TextField {...params} label="Kategorie" variant="standard" />
         )}
       />
     );
