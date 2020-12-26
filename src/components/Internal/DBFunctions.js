@@ -219,6 +219,48 @@ export const writeDBDataWithUid = (docName, data, user_id) => {
   return true;
 };
 
+
+// Generating new doc method, maybe implement a doc method -> access data directly (not via array)
+// export const changeDBDataWithUid = (
+//   collectionName,
+//   docName,
+//   key,
+//   value
+// ) => {
+//   return new Promise((resolve, reject) => {
+//     var docRef = firestore
+//       .collection("globalData")
+//       .doc("globalDoc")
+//       .collection(collectionName)
+//       .doc(docName);
+
+//     docRef
+//       .get()
+//       .then((doc) => {
+//         if (doc.exists) {
+//           return doc.data();
+//         }
+//       })
+//       .then((doc_data) => {
+//         if (doc_data != null) {
+//           console.log(doc_data);
+//           doc_data[key] = value;
+//           console.log(doc_data);
+
+//           firestore
+//             .collection("globalData")
+//             .doc("globalDoc")
+//             .collection(collectionName)
+//             .doc(docName)
+//             .set(doc_data);
+//         } else resolve(null);
+//       });
+
+//     resolve(true);
+//   });
+// };
+
+
 export const readDBData = (docName, allowPublicKey = false) => {
   return new Promise((resolve, reject) => {
     var user_id;

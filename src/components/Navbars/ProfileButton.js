@@ -82,83 +82,16 @@ class ProfileButton extends VisuComp {
 
   // Required from CommonProps
   updateComp = () => {
-    this.TableFetch("UserProfile");
+    this.TableFetch("UserProfile").then((result) => {
+      if (result == false) this.setState({ UserProfile: null });
+    });
   };
 
   // Currently all functions are silent because component is only navlink
 
-  handleLoginProfile = () => {
-    console.log("login process");
-    // loginUser()
-    //   .then((result) => {
-    //     console.log(result);
-    //     // This gives you a Google Access Token. You can use it to access the Google API.
-    //     var access_token = result.credential.accessToken;
-    //     // setUserToken(access_token);
-    //     var user = result.user;
-    //     this.setState({ loginState: true });
 
-    //     console.log("User successfully logged in ");
-    //     dispatch(loginRedux({ user_id: user.uid }));
-    //     dispatch(loginRedux({ user_id: user.uid }));
-    //     dispatch(setAccessToken(access_token));
-    //   })
-    //   .catch((error) => {
-    //     // Handle Errors here.
-    //     var errorCode = error.code;
-    //     var errorMessage = error.message;
-    //     // The email of the user's account used.
-    //     var email = error.email;
-    //     // The firebase.auth.AuthCredential type that was used.
-    //     var credential = error.credential;
-    //     console.log("error: " + errorCode + ":" + errorMessage);
-    //     // ...
-    //   });
-    this.handleMenuClose();
-  };
-
-  handleLogoutProfile = () => {
-    // logoutUser()
-    //   .then(() => {
-    //     window.user = null;
-    //     console.log("User successfully logged out");
-    //     // todo: PopUp
-    //     // Sign-out successful.
-    //     this.setState({ loginState: false });
-
-    //     dispatch(logoutRedux());
-    //     dispatch(removeAccessToken());
-    //   })
-    //   .catch((error) => {
-    //     console.log("error while logging out");
-    //     // An error happened.
-    //   });
-    this.handleMenuClose();
-  };
-
-  handleProfileMenuOpen = (event) => {
-    console.log("click");
-    // // Not logged in:
-    if (this.state.commonProps.loginState == false) {
-      this.handleLoginProfile();
-    } else {
-      console.log("currenttarget");
-      console.log(event.currentTarget);
-      this.setState({ anchorEl: event.currentTarget });
-    }
-  };
-
-  handleMobileMenuClose = () => {
-    this.setState({ mobileMoreAnchorEl: null });
-  };
-
-  handleMenuClose = () => {
-    this.handleMobileMenuClose();
-    this.setState({ anchorEl: null });
-  };
-
-  handleMobileMenuOpen = (event) => {
-    this.setState({ mobileMoreAnchorEl: event.currentTarget });
+  testfunc = () => {
+    console.log(this.state);
   };
 
   render() {
@@ -188,53 +121,6 @@ class ProfileButton extends VisuComp {
             <Person fontSize="large" />
           )}
         </Hidden>
-
-        <Popper
-          open={this.state.isMenuOpen}
-          anchorEl={this.state.anchorEl}
-          transition
-          disablePortal
-          className={
-            classNames({
-              [classes.popperClose]: !this.state.isMenuOpen,
-            }) +
-            " " +
-            classes.popperNav
-          }
-        >
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              id="profile-menu-list-grow"
-              style={{
-                transformOrigin:
-                  placement === "bottom" ? "center top" : "center bottom",
-              }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={this.handleMenuClose}>
-                  <MenuList role="menu">
-                    <Link style={{ textDecoration: "none" }} to="/user">
-                      <MenuItem
-                        onClick={this.handleMenuClose}
-                        className={classes.dropdownItem}
-                      >
-                        Profile
-                      </MenuItem>
-                    </Link>
-                    <Divider light />
-                    <MenuItem
-                      onClick={this.handleLogoutProfile}
-                      className={classes.dropdownItem}
-                    >
-                      Logout
-                    </MenuItem>
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
       </React.Fragment>
     );
   }
@@ -244,19 +130,19 @@ ProfileButton.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  loginState: state.loginState,
-  access_token: state.access_token,
-});
+// const mapStateToProps = (state) => ({
+//   loginState: state.loginState,
+//   access_token: state.access_token,
+// });
 
-const mapDispatchToProps = {
-  loginRedux,
-  logoutRedux,
-};
+// const mapDispatchToProps = {
+//   loginRedux,
+//   logoutRedux,
+// };
 
-const ProfileButtonWithRedux = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ProfileButton);
+// const ProfileButtonWithRedux = connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(ProfileButton);
 
 export default withStyles(styles)(ProfileButton);
