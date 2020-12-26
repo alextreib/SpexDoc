@@ -18,7 +18,6 @@ export default class VisuComp extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log("visu comp update");
   }
 
   fetchTable = (property) => {

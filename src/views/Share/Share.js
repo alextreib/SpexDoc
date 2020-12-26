@@ -18,6 +18,11 @@ import { withStyles } from "@material-ui/core/styles";
 import VisuComp from "components/Internal/VisuComp";
 
 const styles = {
+  centerChild: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   cardCategoryWhite: {
     "&,& a,& a:hover,& a:focus": {
       color: "rgba(255,255,255,.62)",
@@ -201,13 +206,7 @@ class Share extends VisuComp {
                   <h4 className={classes.cardTitleWhite}>Impfpass</h4>
                 </CardHeader>
                 <CardBody>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
+                  <div className={classes.centerChild}>
                     <Switch
                       checked={this.state.data.vaccination.Switchactive}
                       onChange={(ev) =>

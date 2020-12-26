@@ -24,38 +24,89 @@ import {
 // Use Case specific
 export const writeRequest = (requestData) => {
   return new Promise((resolve, reject) => {
+    var collectionName = "requests";
+
     var data = {
       requestData: requestData,
       user_id: getUserID(),
       answered: false,
     };
 
-    resolve(writeGlobalDataCollection("requests", data));
+    resolve(writeGlobalDataCollection(collectionName, data));
   });
 };
 
 export const getRequests = () => {
   return new Promise((resolve, reject) => {
-    var docName = "requests";
+    var collectionName = "requests";
 
-    resolve(readGlobalData(docName));
+    resolve(readGlobalDataCollection(collectionName));
+  });
+};
+
+export const changeRequest = (docName,key,value) => {
+  return new Promise((resolve, reject) => {
+    var collectionName = "requests";
+
+    resolve(changeGlobalDataCollection(collectionName,docName,key,value));
   });
 };
 
 // Generating new doc method, maybe implement a doc method -> access data directly (not via array)
-export const writeGlobalDataCollection = (docName, data) => {
+export const writeGlobalDataCollection = (collectionName, data) => {
   return new Promise((resolve, reject) => {
     firestore
       .collection("globalData")
       .doc("globalDoc")
-      .collection(docName)
+      .collection(collectionName)
       .add(data);
 
     resolve(true);
   });
 };
 
-export const readGlobalData = (docName) => {
+// Generating new doc method, maybe implement a doc method -> access data directly (not via array)
+export const changeGlobalDataCollection = (
+  collectionName,
+  docName,
+  key,
+  value
+) => {
+  return new Promise((resolve, reject) => {
+    var docRef = firestore
+      .collection("globalData")
+      .doc("globalDoc")
+      .collection(collectionName)
+      .doc(docName);
+
+    docRef
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          return doc.data();
+        }
+      })
+      .then((doc_data) => {
+        if (doc_data != null) {
+          console.log(doc_data);
+          doc_data[key] = value;
+          console.log(doc_data);
+
+          firestore
+            .collection("globalData")
+            .doc("globalDoc")
+            .collection(collectionName)
+            .doc(docName)
+            .set(doc_data);
+        } else resolve(null);
+      });
+
+    resolve(true);
+  });
+};
+
+// Returns total array of all docs
+export const readGlobalDataCollection = (docName) => {
   return new Promise((resolve, reject) => {
     var docRef = firestore
       .collection("globalData")
@@ -73,6 +124,36 @@ export const readGlobalData = (docName) => {
       })
       .catch(function (error) {
         console.log("Error getting documents: ", error);
+      });
+  });
+};
+
+
+
+// data is the whole doc
+// Not working
+export const writeGlobalDoc = (docName, data) => {
+  firestore.collection("globalData").doc(docName).set({
+    data: data,
+  });
+  return true;
+};
+
+// Not working
+export const readGlobalDoc = (docName) => {
+  return new Promise((resolve, reject) => {
+    var docRef = firestore.collection("globalData").doc(docName);
+
+    docRef
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          return doc.data();
+        }
+      })
+      .then((doc_data) => {
+        if (doc_data != null) resolve(doc_data["data"]);
+        else resolve(null);
       });
   });
 };

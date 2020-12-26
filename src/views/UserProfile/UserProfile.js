@@ -39,9 +39,19 @@ import VisuComp from "components/Internal/VisuComp.js";
 import avatar from "assets/img/faces/profile_white.png";
 import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
+import { grey, red } from "@material-ui/core/colors";
+
 import { writeRequest } from "components/Internal/DBFunctions";
 
 const styles = (theme) => ({
+  logoutButton: {
+    backgroundColor: red[500],
+  },
+  centerChild: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
   cardCategoryWhite: {
     color: "rgba(255,255,255,.62)",
     margin: "0",
@@ -140,6 +150,16 @@ class UserProfile extends VisuComp {
         var user = result.user;
         console.log("User successfully logged in ");
         this.props.loginRedux({ user_id: user.uid });
+
+        //todo: readglobaldoc
+        // readGlobalDoc("UserInfo").then((doc_data) => {
+
+        // })
+        // .catch((error) => {
+        //   console.log("error global doc userprofile")
+        //   console.log(error)
+        //   // ...
+        // });
 
         // Get the token from the window because index is not avaiable here
         var deviceToken = window.localStorage.getItem("sentToServer");
@@ -319,10 +339,6 @@ class UserProfile extends VisuComp {
               ) : (
                 <div>
                   <CardBody>
-                    <Button color="primary" onClick={this.handleLogoutProfile}>
-                      Logout
-                    </Button>
-
                     <GridContainer>
                       <GridItem xs={12} sm={12} md={4}>
                         <CustomInput
@@ -495,6 +511,18 @@ class UserProfile extends VisuComp {
                 </Button> */}
               </CardBody>
             </Card>
+
+            {this.props.loginState != null && (
+              <div className={classes.centerChild}>
+                <Button
+                  color="primary"
+                  className={classes.logoutButton}
+                  onClick={this.handleLogoutProfile}
+                >
+                  Logout
+                </Button>
+              </div>
+            )}
           </GridItem>
         </GridContainer>
       </div>

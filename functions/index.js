@@ -11,6 +11,7 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 // [END import]
 
+// ***Messaging***
 // When a new request comes in, send notification to every person with supervisor status
 exports.requestHandler = functions.firestore
   .document("/globalData/globalDoc/requests/{tx_id}")
@@ -43,6 +44,23 @@ exports.sendNotification = functions.firestore
     }
     return true;
   });
+
+// *** User Management ***
+// exports.sendNotification = functions.firestore
+//   .document("userStorage/users/")
+//   .onUpdate(async (change, context) => {
+//     const previousValue = change.before.data();
+//     const newValue = change.after.data();
+
+//     // newValue must contain a larger array than the old one (notification added)
+//     if (previousValue["data"].length < newValue["data"].length) {
+//       var user_id = context.params.user_id;
+
+//       sendNotificationToUser(user_id);
+//     }
+//     return true;
+//   });
+
 
 //
 // DBFunctions.js

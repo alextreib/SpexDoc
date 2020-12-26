@@ -23,14 +23,19 @@ import { checkUser } from "components/Internal/Checks.js";
 import { withStyles } from "@material-ui/core/styles";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
+import { getAllUsers } from "components/Internal/UserFunctions.js";
+
+import DisplayFiles from "components/VisuComps/DisplayFiles.js";
 
 import {
   writeRequest,
   writeNotification,
   getRequests,
+  changeRequest,
 } from "components/Internal/DBFunctions.js";
 import { CommonCompsData } from "components/Internal/DefaultData.js";
 import CommonComps from "components/Internal/CommonComps.js";
+
 
 const styles = (theme) => ({
   margin: {
@@ -108,10 +113,11 @@ class Supervisor extends VisuComp {
     this.TableFetch("UserProfile");
 
     // Request Loading
-    var result = await getRequests();
+    var requests = await getRequests();
+    requests = this.filterRequests(requests);
 
     this.setState({
-      Requests: result,
+      Requests: requests,
     });
   };
 
@@ -122,27 +128,36 @@ class Supervisor extends VisuComp {
     if (this.state.UserProfile != null) {
       return (
         //todo fix data bug
-        this.state.UserProfile.firstName +
-        " " +
-        this.state.UserProfile.lastName
+        this.state.UserProfile.firstName + " " + this.state.UserProfile.lastName
       );
     } else {
       return "";
     }
   };
 
+  filterRequests = (requests) => {
+    var filteredRequests = [];
+
+    requests.forEach((request) => {
+      if (request.data.answered == false) {
+        filteredRequests.push(request);
+      }
+    });
+    return filteredRequests;
+  };
+
   submitAnswer = () => {
-    // write to Requests of user
-    var recipient_uid = this.getRequestData().user_id;
     // Get UserProfile
     writeNotification(
       this.state.answerMessage,
       this.SupervisorName(),
-      recipient_uid
+      this.getRequest().user_id
     );
 
-    // todo: overwrite request with answered true
+    console.log(this.state.selectedRequest)
+    changeRequest(this.state.selectedRequest, "answered", true);
 
+    // Reset
     this.setState({
       answerMessage: "",
     });
@@ -150,7 +165,7 @@ class Supervisor extends VisuComp {
     this.displayPopUp("Danke, Frage beantwortet.");
   };
 
-  getRequestData = () => {
+  getRequest = () => {
     var returnData = "";
     this.state.Requests.forEach((request) => {
       if (request.id == this.state.selectedRequest) {
@@ -160,8 +175,24 @@ class Supervisor extends VisuComp {
     return returnData;
   };
 
-  testfunc = () => {
-    console.log(this.state);
+  getRequestData = (property) => {
+    if (this.getRequest() != "") {
+      if (this.getRequest()["requestData"].hasOwnProperty(property)) {
+        return this.getRequest()["requestData"][property];
+      }
+    }
+    // Default values
+    else if (property == "files") {
+      return [];
+    } else {
+      return null;
+    }
+  };
+
+  testfunc = async () => {
+    // var test=await getAllUsers()
+
+    changeRequest("sFoan0ow0L1EbXVfeu5L", "answered", true);
   };
 
   render() {
@@ -170,8 +201,9 @@ class Supervisor extends VisuComp {
     return (
       <div>
         <CommonComps commonProps={this.state.commonProps} />
+        <Button onClick={this.testfunc}>Testfunc</Button>
         <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
+          <GridItem xs={12} sm={12} md={12}>
             <Card>
               <CardHeader color="warning">
                 <h4 className={classes.cardTitleWhite}>Befund schreiben</h4>
@@ -183,6 +215,10 @@ class Supervisor extends VisuComp {
               <CardBody>
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
+                    {/* Read all user -> provide in list */}
+                    {/* More or less copy befunddaten hierher */}
+                    {/* Directly write into the user space */}
+                    {/* Write Notification that new befund available */}
                     {this.state.Requests ? (
                       <div>
                         <FormControl className={classes.formControl}>
@@ -200,15 +236,12 @@ class Supervisor extends VisuComp {
                           </Select>
                         </FormControl>
                         <br />
-                        <Typography variant="body1">
-                          User:
-                          {this.getRequestData().message}
-                        </Typography>
+                        <Typography variant="body1">User:</Typography>
                         <br />
-                        {this.getRequestData().answered ? (
+                        {this.getRequest().answered ? (
                           <Typography variant="body1">
                             UserName:
-                            {this.getRequestData().answered.toString()}
+                            {this.getRequest().answered.toString()}
                           </Typography>
                         ) : null}
                         <br />
@@ -248,8 +281,8 @@ class Supervisor extends VisuComp {
                 </Button>
               </CardFooter>
             </Card>
-        </GridItem>
-        
+          </GridItem>
+
           <GridItem xs={12} sm={12} md={12}>
             <Card>
               <CardHeader color="warning">
@@ -282,20 +315,22 @@ class Supervisor extends VisuComp {
                         <br />
                         <Typography variant="body1">
                           Message:
-                          {this.getRequestData().message}
+                          {this.getRequestData("message")}
                         </Typography>
                         <br />
-                        {this.getRequestData().answered ? (
+                        {this.getRequest().answered ? (
                           <Typography variant="body1">
                             Answered:
-                            {this.getRequestData().answered.toString()}
+                            {this.getRequest().answered.toString()}
                           </Typography>
                         ) : null}
                         <br />
                         <Typography variant="body1">
                           User_id:
-                          {this.getRequestData().user_id}
+                          {this.getRequest().user_id}
                         </Typography>
+
+                        <DisplayFiles files={this.getRequestData("files")} />
                         <br />
                       </div>
                     ) : null}
