@@ -15,7 +15,7 @@ const messaging = firebase.messaging();
 // background (Web app is closed or not in browser focus) then you should
 // implement this optional method.
 // [START on_background_message]
-messaging.onBackgroundMessage(function (payload) {
+messaging.onBackgroundMessage( (payload)=> {
   // Triggered when background is obtained
   console.log(
     "[firebase-messaging-sw.js] Received background message ",
@@ -25,7 +25,8 @@ messaging.onBackgroundMessage(function (payload) {
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
-    icon: '/favicon.ico'
+    icon: '/favicon.ico',
+    vibrate: [80, 270, 40, 530], //heart beat
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);

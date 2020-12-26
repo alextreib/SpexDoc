@@ -164,24 +164,29 @@ class UserProfile extends VisuComp {
         // Get the token from the window because index is not avaiable here
         var deviceToken = window.localStorage.getItem("sentToServer");
 
-        // First read the data and then append list
-        //todo: common function
-        readDBData("UserData").then((doc_data) => {
-          var deviceTokenList = [];
-          if (doc_data != null) {
-            deviceTokenList = doc_data.deviceTokenList;
-          }
-          if (!deviceTokenList.includes(deviceToken)) {
-            deviceTokenList.push(deviceToken);
-          }
+        if (deviceToken != "false" && deviceToken != null) {
+          // First read the data and then append list
+          //todo: common function
+          readDBData("UserData").then((doc_data) => {
+            var deviceTokenList = [];
+            if (doc_data != null) {
+              deviceTokenList = doc_data.deviceTokenList;
+            }
+            if (!deviceTokenList.includes(deviceToken)) {
+              deviceTokenList.push(deviceToken);
+            }
 
-          var userData = {
-            deviceTokenList: deviceTokenList,
-            accessToken: accessToken,
-          };
+            console.log("accessToken", accessToken);
+            console.log("deviceToken", deviceToken);
 
-          writeDBData("UserData", userData);
-        });
+            var userData = {
+              deviceTokenList: deviceTokenList,
+              accessToken: accessToken,
+            };
+
+            writeDBData("UserData", userData);
+          });
+        }
       })
       .catch((error) => {
         // Handle Errors here.
@@ -321,20 +326,21 @@ class UserProfile extends VisuComp {
                   </FormControl>
                   <br />
 
-                  <Button
-                    disabled={
-                      !(
-                        this.state.UserSwitches.legal.checked &&
-                        this.state.UserSwitches.acceptConditions.checked &&
-                        this.state.UserSwitches.DSGVO.checked
-                      )
-                    }
-                    onClick={this.handleLoginProfile}
-                    color="primary"
-                    round
-                  >
-                    Login
-                  </Button>
+                  <div className={classes.centerChild}>
+                    <Button
+                      disabled={
+                        !(
+                          this.state.UserSwitches.legal.checked &&
+                          this.state.UserSwitches.acceptConditions.checked &&
+                          this.state.UserSwitches.DSGVO.checked
+                        )
+                      }
+                      onClick={this.handleLoginProfile}
+                      color="primary"
+                    >
+                      Login
+                    </Button>
+                  </div>
                 </CardBody>
               ) : (
                 <div>
@@ -469,9 +475,7 @@ class UserProfile extends VisuComp {
                   </CardBody>
                   <CardFooter>
                     <Link className={classes.Home} to="/dashboard">
-                      <Button color="primary" round>
-                        Ok
-                      </Button>
+                      <Button color="primary">Ok</Button>
                     </Link>
                   </CardFooter>
                 </div>

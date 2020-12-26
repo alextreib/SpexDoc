@@ -61,7 +61,6 @@ exports.sendNotification = functions.firestore
 //     return true;
 //   });
 
-
 //
 // DBFunctions.js
 //
@@ -83,6 +82,7 @@ async function sendNotificationToUser(user_id) {
       deviceTokenList.forEach(async (deviceToken) => {
         // Writing notification
         const payload = {
+          
           notification: {
             title: "Neue Benachrichtigung",
             body: `Es gibt Neuigkeiten. Überprüfe deine Nachrichten`,
@@ -119,10 +119,8 @@ async function writeNotification(message, sender, recipient_uid) {
         notificationList = doc_data;
       }
 
-      console.log(doc_data);
 
       var newNotificationMsg = await newNotification(message, sender);
-      console.log(newNotificationMsg);
       notificationList.push(newNotificationMsg);
 
       writeDBDataWithUid("Notifications", notificationList, recipient_uid);

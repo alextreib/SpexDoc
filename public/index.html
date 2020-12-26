@@ -109,6 +109,19 @@
         // [START_EXCLUDE]
         // Update the UI to include the received message.
         appendMessage(payload);
+
+        // Customize notification here
+        const notificationTitle = payload.notification.title;
+        const notificationOptions = {
+          body: payload.notification.body,
+          icon: "/favicon.ico",
+          vibrate: [80, 270, 40, 530], //heart beat
+        };
+
+        navigator.serviceWorker.ready.then((registration) => {
+          registration.showNotification(notificationTitle, notificationOptions);
+        });
+
         // [END_EXCLUDE]
       });
       // [END receive_message]
@@ -180,7 +193,7 @@
       // }
 
       function setTokenSentToServer(currentToken) {
-        window.localStorage.setItem("sentToServer",currentToken);
+        window.localStorage.setItem("sentToServer", currentToken);
       }
 
       function showHideDiv(divId, show) {
