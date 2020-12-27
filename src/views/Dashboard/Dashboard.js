@@ -98,8 +98,9 @@ class Dashboard extends VisuComp {
     // Sharing
     var SharingActive = 0;
     if (this.state.Share != null) {
-      if (this.state.Share.emergency.Switchactive == true) SharingActive += 1;
-      if (this.state.Share.medRecords.Switchactive == true) SharingActive += 1;
+      if (this.state.Share.Emergency.active == true) SharingActive += 1;
+      if (this.state.Share.MedRecords.active == true) SharingActive += 1;
+      if (this.state.Share.Vaccination.active == true) SharingActive += 1;
     }
     this.setState({
       sharingDataCount: SharingActive,
@@ -209,7 +210,7 @@ class Dashboard extends VisuComp {
                   <CardFooter stats>
                     <div className={classes.stats}>
                       <LocalOffer />
-                      Nur für Notärzte verfügbar
+                      Nur über Freigabe verfügbar
                     </div>
                   </CardFooter>
                 </Card>
@@ -245,7 +246,7 @@ class Dashboard extends VisuComp {
                       {this.state.Vaccination
                         ? this.state.Vaccination.length
                         : 0}{" "}
-                      aktiv
+                      
                     </h3>
                   </CardHeader>
                   <CardFooter stats>

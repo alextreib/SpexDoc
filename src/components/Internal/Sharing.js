@@ -25,22 +25,42 @@ export const shareLink = (message, link) => {
 // Based on link, get the publicKey
 export const isSharingAllowed = (docName, writing = false) => {
   // Has to be generally allowed to share
-  if (!SharingTableNames.includes(docName)) return false;
 
-  // is user wise allowed to share
-  var user_id = getPublicKey();
-  //todo: docName has to be global accessible sharing list
-  // readDBDataWithUid(docName, user_id);
+  return TableInShareMap(docName) != null;
+};
+
+export const TableInShareMap = (Table) => {
+  var returnValue = null;
+  Object.keys(ShareToTable).map((ShareItem, index) => {
+    var TableList = ShareToTable[ShareItem];
+
+    if (TableList.includes(Table)) {
+      returnValue = ShareItem;
+    }
+  });
+
+  return returnValue;
 };
 
 // Generally allowed shared data
-// todo: Sort into categories: Emergency, Vaccination, MedRecords
-export const SharingTableNames = [
-  "EmergencyPredisposition",
-  "EmergencyMedication",
-  "EmergencyContacts",
-  "OrganDonationData",
-  "MedRecords",
-  "CategoryList",
-  "Vaccination",
-];
+// // todo: Sort into categories: Emergency, Vaccination, MedRecords
+// export const SharingTableNames = [
+//   "EmergencyPredisposition",
+//   "EmergencyMedication",
+//   "EmergencyContacts",
+//   "OrganDonationData",
+//   "MedRecords",
+//   "CategoryList",
+//   "Vaccination",
+// ];
+
+export const ShareToTable = {
+  Emergency: [
+    "EmergencyPredisposition",
+    "EmergencyMedication",
+    "EmergencyContacts",
+    "OrganDonationData",
+  ],
+  MedRecords: ["MedRecords", "CategoryList"],
+  Vaccination: ["Vaccination"],
+};

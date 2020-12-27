@@ -17,6 +17,8 @@ import { getUserID } from "components/Internal/Checks";
 import { withStyles } from "@material-ui/core/styles";
 import VisuComp from "components/Internal/VisuComp";
 
+import WarningIcon from "@material-ui/icons/Warning";
+
 const styles = {
   centerChild: {
     display: "flex",
@@ -53,19 +55,16 @@ const styles = {
 };
 
 const defaultData = {
-  emergency: {
-    QRCodeactive: false,
-    Switchactive: false,
+  Emergency: {
+    active: false,
     shortLink: "",
   },
-  medRecords: {
-    QRCodeactive: false,
-    Switchactive: false,
+  MedRecords: {
+    active: false,
     shortLink: "",
   },
-  vaccination: {
-    QRCodeactive: false,
-    Switchactive: false,
+  Vaccination: {
+    active: false,
     shortLink: "",
   },
 };
@@ -113,8 +112,7 @@ class Share extends VisuComp {
         ...this.state.data,
         [property]: {
           shortLink: shortLink,
-          Switchactive: checked,
-          QRCodeactive: checked,
+          active: checked,
         },
       },
     });
@@ -153,9 +151,9 @@ class Share extends VisuComp {
                     }}
                   >
                     <Switch
-                      checked={this.state.data.emergency.Switchactive}
+                      checked={this.state.data.Emergency.active}
                       onChange={(ev) =>
-                        this.handleSwitchChange("emergency", ev)
+                        this.handleSwitchChange("Emergency", ev)
                       }
                       color="primary"
                       name="Emergency_switch"
@@ -163,8 +161,8 @@ class Share extends VisuComp {
                     />
                   </div>
                   {/* todo: Layout without br and maybe one component */}
-                  {this.state.data.emergency.QRCodeactive ? (
-                    <QRCodeCard link={this.state.data.emergency.shortLink} />
+                  {this.state.data.Emergency.active ? (
+                    <QRCodeCard link={this.state.data.Emergency.shortLink} />
                   ) : null}
                 </CardBody>
               </Card>
@@ -183,18 +181,18 @@ class Share extends VisuComp {
                     }}
                   >
                     <Switch
-                      checked={this.state.data.medRecords.Switchactive}
+                      checked={this.state.data.MedRecords.active}
                       onChange={(ev) =>
-                        this.handleSwitchChange("medRecords", ev)
+                        this.handleSwitchChange("MedRecords", ev)
                       }
                       color="primary"
-                      name="medRecords_switch"
+                      name="MedRecords_switch"
                       inputProps={{ "aria-label": "secondary checkbox" }}
                     />
                   </div>
-                  {this.state.data.medRecords.QRCodeactive ? (
+                  {this.state.data.MedRecords.active ? (
                     <div>
-                      <QRCodeCard link={this.state.data.medRecords.shortLink} />
+                      <QRCodeCard link={this.state.data.MedRecords.shortLink} />
                     </div>
                   ) : null}
                 </CardBody>
@@ -208,9 +206,9 @@ class Share extends VisuComp {
                 <CardBody>
                   <div className={classes.centerChild}>
                     <Switch
-                      checked={this.state.data.vaccination.Switchactive}
+                      checked={this.state.data.Vaccination.active}
                       onChange={(ev) =>
-                        this.handleSwitchChange("vaccination", ev)
+                        this.handleSwitchChange("Vaccination", ev)
                       }
                       color="primary"
                       name="Vaccination_switch"
@@ -218,8 +216,8 @@ class Share extends VisuComp {
                     />
                   </div>
                   {/* todo: Layout without br and maybe one component */}
-                  {this.state.data.vaccination.QRCodeactive ? (
-                    <QRCodeCard link={this.state.data.vaccination.shortLink} />
+                  {this.state.data.Vaccination.active ? (
+                    <QRCodeCard link={this.state.data.Vaccination.shortLink} />
                   ) : null}
                 </CardBody>
               </Card>

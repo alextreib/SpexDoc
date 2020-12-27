@@ -21,6 +21,8 @@ import {
   getCurrentDate,
 } from "components/Internal/VisuElements.js";
 
+import { ShareToTable, TableInShareMap } from "components/Internal/Sharing";
+
 // Use Case specific
 export const writeRequest = (requestData) => {
   return new Promise((resolve, reject) => {
@@ -44,11 +46,11 @@ export const getRequests = () => {
   });
 };
 
-export const changeRequest = (docName,key,value) => {
+export const changeRequest = (docName, key, value) => {
   return new Promise((resolve, reject) => {
     var collectionName = "requests";
 
-    resolve(changeGlobalDataCollection(collectionName,docName,key,value));
+    resolve(changeGlobalDataCollection(collectionName, docName, key, value));
   });
 };
 
@@ -127,8 +129,6 @@ export const readGlobalDataCollection = (docName) => {
       });
   });
 };
-
-
 
 // data is the whole doc
 // Not working
@@ -219,7 +219,6 @@ export const writeDBDataWithUid = (docName, data, user_id) => {
   return true;
 };
 
-
 // Generating new doc method, maybe implement a doc method -> access data directly (not via array)
 // export const changeDBDataWithUid = (
 //   collectionName,
@@ -260,19 +259,31 @@ export const writeDBDataWithUid = (docName, data, user_id) => {
 //   });
 // };
 
-
 export const readDBData = (docName, allowPublicKey = false) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     var user_id;
-    // todo: Maybe optimize user_id through overriding
     if (allowPublicKey && getPublicKey() != null) {
       // Get the publicKey as user_id
+      // check if permission is provided
       user_id = getPublicKey();
+
+      // Working, but could be improved for clarity
+      await readDBDataWithUid("Share", user_id).then((doc_data) => {
+        var ShareName = TableInShareMap(docName);
+
+        if (doc_data[ShareName].active) {
+          // Permission granted
+          user_id = getPublicKey();
+        } else {
+          // Permission denied
+          user_id = null;
+          return resolve(null);
+        }
+      });
     } else {
       user_id = getUserID();
       // Use usual path
       if (user_id == null) {
-        console.log("Reading not possible");
         return resolve(null);
       }
     }
