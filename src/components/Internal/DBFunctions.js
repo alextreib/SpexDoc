@@ -197,11 +197,11 @@ export const writeDBData = (docName, data) => {
     user_id = getPublicKey();
   } else {
     user_id = getUserID();
-    // Use usual path
-    if (user_id == null) {
-      console.log("Writing not possible");
-      return null;
-    }
+  }
+  // Use usual path
+  if (user_id == null) {
+    console.log("Writing not possible");
+    return null;
   }
 
   return writeDBDataWithUid(docName, data, user_id);

@@ -42,18 +42,6 @@ export const TableInShareMap = (Table) => {
   return returnValue;
 };
 
-// Generally allowed shared data
-// // todo: Sort into categories: Emergency, Vaccination, MedRecords
-// export const SharingTableNames = [
-//   "EmergencyPredisposition",
-//   "EmergencyMedication",
-//   "EmergencyContacts",
-//   "OrganDonationData",
-//   "MedRecords",
-//   "CategoryList",
-//   "Vaccination",
-// ];
-
 export const ShareToTable = {
   Emergency: [
     "EmergencyPredisposition",

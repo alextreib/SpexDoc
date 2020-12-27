@@ -16,7 +16,10 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CommonComps from "components/Internal/CommonComps.js";
-import { CommonCompsData } from "components/Internal/DefaultData.js";
+import {
+  CommonCompsData,
+  DefaultUserProfile,
+} from "components/Internal/DefaultData.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import EditableSwitch from "components/EditableTableReport/EditableSwitch";
 import Fab from "@material-ui/core/Fab";
@@ -81,15 +84,7 @@ class UserProfile extends VisuComp {
       dbNameUserProfile: "UserProfile",
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
       UserProfile: {
-        email: "",
-        firstName: "",
-        lastName: "",
-        plz: "",
-        city: "",
-        street: "",
-        birthDate: "",
-        insurance: "",
-        aboutMe: "",
+        ...DefaultUserProfile,
       },
       UserSwitches: {
         legal: {
@@ -482,50 +477,53 @@ class UserProfile extends VisuComp {
               )}
             </Card>
           </GridItem>
+
           <GridItem xs={12} sm={12} md={4}>
-            <Card profile>
-              <CardAvatar profile>
-                <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                  <img src={avatar} alt="..." />
-                </a>
-              </CardAvatar>
-              <CardBody profile>
-                <h6 className={classes.cardCategory}>Patient</h6>
-                {this.state.UserProfile.status != "supervisor" ? (
-                  <Button
-                    color="primary"
-                    onClick={this.submitSupervisorRequest}
-                  >
-                    <SyncAltIcon />
-                    Ich bin Arzt
-                  </Button>
-                ) : null}
-                <h4 className={classes.cardTitle}>
-                  {this.state.UserProfile.firstName}{" "}
-                  {this.state.UserProfile.lastName}
-                </h4>
-                <h4 className={classes.cardTitle}>
-                  {this.state.UserProfile.city}
-                </h4>
-                <p className={classes.description}>
-                  {this.state.UserProfile.aboutMe}
-                </p>
-                {/* <Button color="primary" onClick={this.shareProfile} round>
+            {this.props.loginState != null && (
+              <React.Fragment>
+                <Card profile>
+                  <CardAvatar profile>
+                    <a href="#pablo" onClick={(e) => e.preventDefault()}>
+                      <img src={avatar} alt="..." />
+                    </a>
+                  </CardAvatar>
+                  <CardBody profile>
+                    <h6 className={classes.cardCategory}>Patient</h6>
+                    {this.state.UserProfile.status != "supervisor" ? (
+                      <Button
+                        color="primary"
+                        onClick={this.submitSupervisorRequest}
+                      >
+                        <SyncAltIcon />
+                        Ich bin Arzt
+                      </Button>
+                    ) : null}
+                    <h4 className={classes.cardTitle}>
+                      {this.state.UserProfile.firstName}{" "}
+                      {this.state.UserProfile.lastName}
+                    </h4>
+                    <h4 className={classes.cardTitle}>
+                      {this.state.UserProfile.city}
+                    </h4>
+                    <p className={classes.description}>
+                      {this.state.UserProfile.aboutMe}
+                    </p>
+                    {/* <Button color="primary" onClick={this.shareProfile} round>
                   Share
                 </Button> */}
-              </CardBody>
-            </Card>
+                  </CardBody>
+                </Card>
 
-            {this.props.loginState != null && (
-              <div className={classes.centerChild}>
-                <Button
-                  color="primary"
-                  className={classes.logoutButton}
-                  onClick={this.handleLogoutProfile}
-                >
-                  Logout
-                </Button>
-              </div>
+                <div className={classes.centerChild}>
+                  <Button
+                    color="primary"
+                    className={classes.logoutButton}
+                    onClick={this.handleLogoutProfile}
+                  >
+                    Logout
+                  </Button>
+                </div>
+              </React.Fragment>
             )}
           </GridItem>
         </GridContainer>

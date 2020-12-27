@@ -24,6 +24,7 @@ import { withStyles } from "@material-ui/core/styles";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { getAllUsers } from "components/Internal/UserFunctions.js";
+import CustomInput from "components/CustomInput/CustomInput.js";
 
 import DisplayFiles from "components/VisuComps/DisplayFiles.js";
 
@@ -32,10 +33,15 @@ import {
   writeNotification,
   getRequests,
   changeRequest,
+  writeDBDataWithUid,
+  readDBDataWithUid,
 } from "components/Internal/DBFunctions.js";
 import { CommonCompsData } from "components/Internal/DefaultData.js";
 import CommonComps from "components/Internal/CommonComps.js";
-
+import {
+  DefaultUserProfile,
+  DefaultMedRecord,
+} from "components/Internal/DefaultData";
 
 const styles = (theme) => ({
   margin: {
@@ -85,6 +91,9 @@ class Supervisor extends VisuComp {
     this.state = {
       selectedRequest: "",
       answerMessage: "",
+      medRecord: {
+        ...DefaultMedRecord,
+      },
       commonProps: { ...CommonCompsData, updateComp: this.updateComp },
     };
   }
@@ -146,6 +155,38 @@ class Supervisor extends VisuComp {
     return filteredRequests;
   };
 
+  //todo: connect this.SupervisorName() and this.state.MedRecords.doctor
+
+  submitMedRecord = () => {
+    // Get UserProfile
+    var user_id = this.state.medRecord.user_id;
+
+    writeNotification(
+      "Neuer Befund liegt vor von " + this.SupervisorName(),
+      this.SupervisorName(),
+      user_id
+    );
+
+    // Write to user db
+    readDBDataWithUid("MedRecords", user_id).then((doc_data) => {
+      // Append
+      const MedRecords = [...doc_data];
+      MedRecords.push(this.state.medRecord);
+
+      // Write new data
+      writeDBDataWithUid("MedRecords", MedRecords, user_id);
+
+      this.displayPopUp("Danke, Befund gesendet.");
+
+      // Reset
+      this.setState({
+        medRecord: {
+          ...DefaultMedRecord,
+        },
+      });
+    });
+  };
+
   submitAnswer = () => {
     // Get UserProfile
     writeNotification(
@@ -154,7 +195,6 @@ class Supervisor extends VisuComp {
       this.getRequest().user_id
     );
 
-    console.log(this.state.selectedRequest)
     changeRequest(this.state.selectedRequest, "answered", true);
 
     // Reset
@@ -191,8 +231,18 @@ class Supervisor extends VisuComp {
 
   testfunc = async () => {
     // var test=await getAllUsers()
+    console.log(this.state);
+    // changeRequest("sFoan0ow0L1EbXVfeu5L", "answered", true);
+  };
 
-    changeRequest("sFoan0ow0L1EbXVfeu5L", "answered", true);
+  changeMedRecord = (property, event) => {
+    console.log(property);
+    var changedValue = event.target.value;
+    console.log(changedValue);
+
+    this.setState({
+      medRecord: { ...this.state.medRecord, [property]: changedValue },
+    });
   };
 
   render() {
@@ -209,63 +259,130 @@ class Supervisor extends VisuComp {
                 <h4 className={classes.cardTitleWhite}>Befund schreiben</h4>
 
                 <p className={classes.cardCategoryWhite}>
-                  Legen Sie direkt einen Befund an.
+                  Legen Sie einen Befund für einen Patienten an.
                 </p>
               </CardHeader>
               <CardBody>
                 <GridContainer>
-                  <GridItem xs={12} sm={12} md={12}>
-                    {/* Read all user -> provide in list */}
-                    {/* More or less copy befunddaten hierher */}
-                    {/* Directly write into the user space */}
-                    {/* Write Notification that new befund available */}
-                    {this.state.Requests ? (
-                      <div>
-                        <FormControl className={classes.formControl}>
-                          <Select
-                            value={this.state.selectedUser}
-                            onChange={(ev) =>
-                              this.handlePropertyChange("selectedUser", ev)
-                            }
-                          >
-                            {this.state.Requests.map((request) => (
-                              <MenuItem value={request.id}>
-                                {request.id}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                        <br />
-                        <Typography variant="body1">User:</Typography>
-                        <br />
-                        {this.getRequest().answered ? (
-                          <Typography variant="body1">
-                            UserName:
-                            {this.getRequest().answered.toString()}
-                          </Typography>
-                        ) : null}
-                        <br />
-                      </div>
-                    ) : null}
-
-                    <br />
-                    <Typography variant="body1">
-                      Sie antworten als {this.SupervisorName()}
-                    </Typography>
-                    <br />
-
-                    <TextField
-                      id="outlined-multiline-static"
-                      label="Deine Antwort"
-                      multiline
-                      fullWidth="true"
-                      rows={8}
-                      defaultValue="Default Value"
-                      variant="outlined"
+                  {/* Read all user -> provide in list - NO! Only userid */}
+                  {/* More or less copy befunddaten hierher */}
+                  {/* Directly write into the user space */}
+                  {/* Write Notification that new befund available */}
+                  <GridItem xs={12} sm={12} md={4}>
+                    <CustomInput
+                      labelText="User ID"
+                      id="user_id"
                       inputProps={{
-                        value: this.state.answerMessage,
-                        onChange: (ev) =>
-                          this.handlePropertyChange("answerMessage", ev),
+                        value: this.state.medRecord.user_id,
+                        onChange: (e) => this.changeMedRecord("user_id", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                    />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={4}>
+                    <CustomInput
+                      labelText="Datum"
+                      id="date"
+                      inputProps={{
+                        value: this.state.medRecord.date,
+                        onChange: (e) => this.changeMedRecord("date", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                    />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={4}>
+                    <CustomInput
+                      labelText="Arzt"
+                      id="doctor"
+                      inputProps={{
+                        value: this.state.medRecord.doctor,
+                        onChange: (e) => this.changeMedRecord("doctor", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                    />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={4}>
+                    <CustomInput
+                      labelText="Krankheit"
+                      id="disease"
+                      inputProps={{
+                        value: this.state.medRecord.disease,
+                        onChange: (e) => this.changeMedRecord("disease", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                    />
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={4}>
+                    {/* todo: cleanup */}
+                    <CustomInput
+                      labelText="Kategorie"
+                      id="disease"
+                      inputProps={{
+                        value: this.state.medRecord.category,
+                        onChange: (e) => this.changeMedRecord("category", e),
+                      }}
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                    />
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <CustomInput
+                      labelText="Symptome"
+                      id="moreInfo"
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                      inputProps={{
+                        value: this.state.medRecord.symptoms,
+                        onChange: (e) => this.changeMedRecord("symptoms", e),
+                        multiline: true,
+                        rows: 5,
+                      }}
+                    />
+                  </GridItem>
+                </GridContainer>
+
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <CustomInput
+                      labelText="Diagnose"
+                      id="moreInfo"
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                      inputProps={{
+                        value: this.state.medRecord.diagnosis,
+                        onChange: (e) => this.changeMedRecord("diagnosis", e),
+                        multiline: true,
+                        rows: 5,
+                      }}
+                    />
+                  </GridItem>
+                </GridContainer>
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={12}>
+                    <CustomInput
+                      labelText="Weiteres"
+                      id="moreInfo"
+                      formControlProps={{
+                        fullWidth: true,
+                      }}
+                      inputProps={{
+                        value: this.state.medRecord.moreInfo,
+                        onChange: (e) => this.changeMedRecord("moreInfo", e),
+                        multiline: true,
+                        rows: 5,
                       }}
                     />
                   </GridItem>
@@ -275,7 +392,7 @@ class Supervisor extends VisuComp {
                 <Button
                   className={classes.submitButton}
                   color="primary"
-                  onClick={this.submitAnswer}
+                  onClick={this.submitMedRecord}
                 >
                   Absenden
                 </Button>

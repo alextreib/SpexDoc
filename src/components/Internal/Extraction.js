@@ -15,5 +15,5 @@ export const getPublicKey = () => {
 };
 
 export const publicKeyProvided = () => {
-  return getPublicKey != null;
+  return getPublicKey() != null;
 };
