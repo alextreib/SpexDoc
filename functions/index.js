@@ -79,19 +79,26 @@ async function sendNotificationToUser(user_id) {
       const doc_data = user_data_doc.data()["data"];
       var deviceTokenList = doc_data.deviceTokenList;
 
-      deviceTokenList.forEach(async (deviceToken) => {
-        // Writing notification
-        const payload = {
-          
-          notification: {
-            title: "Neue Benachrichtigung",
-            body: `Es gibt Neuigkeiten. Überprüfe deine Nachrichten`,
-          },
-        };
+      var payload = {
+        data: {
+          title: "Neue Benachrichtigung",
+          body: `Es gibt Neuigkeiten. Überprüfe deine Nachrichten`,
+        },
+        tokens: deviceTokenList,
+      };
 
-        // Send to admins
-        await admin.messaging().sendToDevice(deviceToken, payload);
-      });
+      // Send a message to the device corresponding to the provided
+      // registration token.
+      admin
+        .messaging()
+        .sendMulticast(payload)
+        .then((response) => {
+          // Response is a message ID string.
+          console.log("Successfully sent message:", response);
+        })
+        .catch((error) => {
+          console.log("Error sending message:", error);
+        });
     });
     resolve(true);
   });
@@ -118,7 +125,6 @@ async function writeNotification(message, sender, recipient_uid) {
       if (doc_data != null) {
         notificationList = doc_data;
       }
-
 
       var newNotificationMsg = await newNotification(message, sender);
       notificationList.push(newNotificationMsg);

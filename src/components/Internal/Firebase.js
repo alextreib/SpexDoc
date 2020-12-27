@@ -13,6 +13,9 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
+firebase.analytics();
+
+// alias
 const firestore = firebase.firestore();
 const auth = firebase.auth();
 const storage = firebase.storage();

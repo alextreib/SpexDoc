@@ -111,12 +111,13 @@
         appendMessage(payload);
 
         // Customize notification here
-        const notificationTitle = payload.notification.title;
+        const notificationTitle = payload.data.title;
         const notificationOptions = {
-          body: payload.notification.body,
+          body: payload.data.body,
           icon: "/favicon.ico",
           vibrate: [80, 270, 40, 530], //heart beat
         };
+        // todo: add link
 
         navigator.serviceWorker.ready.then((registration) => {
           registration.showNotification(notificationTitle, notificationOptions);
