@@ -235,23 +235,12 @@ class Supervisor extends VisuComp {
     // changeRequest("sFoan0ow0L1EbXVfeu5L", "answered", true);
   };
 
-  changeMedRecord = (property, event) => {
-    console.log(property);
-    var changedValue = event.target.value;
-    console.log(changedValue);
-
-    this.setState({
-      medRecord: { ...this.state.medRecord, [property]: changedValue },
-    });
-  };
-
   render() {
     const { classes } = this.props;
 
     return (
       <div>
         <CommonComps commonProps={this.state.commonProps} />
-        <Button onClick={this.testfunc}>Testfunc</Button>
         <GridContainer>
           <GridItem xs={12} sm={12} md={12}>
             <Card>
@@ -272,9 +261,10 @@ class Supervisor extends VisuComp {
                     <CustomInput
                       labelText="User ID"
                       id="user_id"
+                      required
                       inputProps={{
                         value: this.state.medRecord.user_id,
-                        onChange: (e) => this.changeMedRecord("user_id", e),
+                        onChange: (e) => this.handlePropertyChange("medRecord","user_id", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -287,7 +277,7 @@ class Supervisor extends VisuComp {
                       id="date"
                       inputProps={{
                         value: this.state.medRecord.date,
-                        onChange: (e) => this.changeMedRecord("date", e),
+                        onChange: (e) => this.handlePropertyChange("medRecord","date", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -300,7 +290,7 @@ class Supervisor extends VisuComp {
                       id="doctor"
                       inputProps={{
                         value: this.state.medRecord.doctor,
-                        onChange: (e) => this.changeMedRecord("doctor", e),
+                        onChange: (e) => this.handlePropertyChange("medRecord","doctor", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -313,7 +303,7 @@ class Supervisor extends VisuComp {
                       id="disease"
                       inputProps={{
                         value: this.state.medRecord.disease,
-                        onChange: (e) => this.changeMedRecord("disease", e),
+                        onChange: (e) => this.handlePropertyChange("medRecord","disease", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -327,7 +317,7 @@ class Supervisor extends VisuComp {
                       id="disease"
                       inputProps={{
                         value: this.state.medRecord.category,
-                        onChange: (e) => this.changeMedRecord("category", e),
+                        onChange: (e) => this.handlePropertyChange("medRecord","category", e),
                       }}
                       formControlProps={{
                         fullWidth: true,
@@ -345,7 +335,7 @@ class Supervisor extends VisuComp {
                       }}
                       inputProps={{
                         value: this.state.medRecord.symptoms,
-                        onChange: (e) => this.changeMedRecord("symptoms", e),
+                        onChange: (e) => this.handlePropertyChange("medRecord","symptoms", e),
                         multiline: true,
                         rows: 5,
                       }}
@@ -363,7 +353,7 @@ class Supervisor extends VisuComp {
                       }}
                       inputProps={{
                         value: this.state.medRecord.diagnosis,
-                        onChange: (e) => this.changeMedRecord("diagnosis", e),
+                        onChange: (e) => this.handlePropertyChange("medRecord","diagnosis", e),
                         multiline: true,
                         rows: 5,
                       }}
@@ -380,7 +370,7 @@ class Supervisor extends VisuComp {
                       }}
                       inputProps={{
                         value: this.state.medRecord.moreInfo,
-                        onChange: (e) => this.changeMedRecord("moreInfo", e),
+                        onChange: (e) => this.handlePropertyChange("medRecord","moreInfo", e),
                         multiline: true,
                         rows: 5,
                       }}

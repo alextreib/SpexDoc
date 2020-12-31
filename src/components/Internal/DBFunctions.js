@@ -24,7 +24,7 @@ import {
 import { ShareToTable, TableInShareMap } from "components/Internal/Sharing";
 
 // Use Case specific
-export const writeRequest = (requestData) => {
+export const writeRequest = (requestData, type) => {
   return new Promise((resolve, reject) => {
     var collectionName = "requests";
 
@@ -32,6 +32,7 @@ export const writeRequest = (requestData) => {
       requestData: requestData,
       user_id: getUserID(),
       answered: false,
+      type: type,
     };
 
     resolve(writeGlobalDataCollection(collectionName, data));
@@ -133,9 +134,7 @@ export const readGlobalDataCollection = (docName) => {
 // data is the whole doc
 // Not working
 export const writeGlobalDoc = (docName, data) => {
-  firestore.collection("globalData").doc(docName).set({
-    data: data,
-  });
+  console.log(firestore.collection("globalData").doc(docName).set(data));
   return true;
 };
 
@@ -152,7 +151,7 @@ export const readGlobalDoc = (docName) => {
         }
       })
       .then((doc_data) => {
-        if (doc_data != null) resolve(doc_data["data"]);
+        if (doc_data != null) resolve(doc_data);
         else resolve(null);
       });
   });

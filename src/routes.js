@@ -46,7 +46,7 @@ const dashboardRoutes = [
     rtlName: "لوحة القيادة",
     icon: Dashboard,
     component: DashboardPage,
-    layout: "/admin"
+    layout: "/sidebar"
   },
   {
     path: "/user",
@@ -54,7 +54,7 @@ const dashboardRoutes = [
     rtlName: "ملف تعريفي للمستخدم",
     icon: AssignmentIndIcon,
     component: UserProfile,
-    layout: "/admin"
+    layout: "/sidebar"
   },
   {
     path: "/medRecords",
@@ -62,7 +62,7 @@ const dashboardRoutes = [
     rtlName: "قائمة الجدول",
     icon: "content_paste",
     component: MedRecords,
-    layout: "/admin"
+    layout: "/sidebar"
   }, 
   {
     path: "/appointments",
@@ -70,7 +70,7 @@ const dashboardRoutes = [
     rtlName: "طباعة",
     icon: TodayIcon,
     component: Appointments,
-    layout: "/admin"
+    layout: "/sidebar"
   },
   {
     path: "/share",
@@ -78,7 +78,7 @@ const dashboardRoutes = [
     rtlName: "إخطارات",
     icon: ShareIcon,
     component: Share,
-    layout: "/admin"
+    layout: "/sidebar"
   },
  
   {
@@ -87,7 +87,7 @@ const dashboardRoutes = [
     rtlName: "خرائط",
     icon: Alarm,
     component: Vaccination,
-    layout: "/admin"
+    layout: "/sidebar"
   },
   {
     path: "/emergency",
@@ -95,7 +95,7 @@ const dashboardRoutes = [
     rtlName: "إخطارات",
     icon: LocalHospitalIcon,
     component: Emergency,
-    layout: "/admin"
+    layout: "/sidebar"
   },
   {
     path: "/notifications",
@@ -103,7 +103,7 @@ const dashboardRoutes = [
     rtlName: "إخطارات",
     icon: Notifications,
     component: NotificationsPage,
-    layout: "/admin"
+    layout: "/sidebar"
   },
   {
     path: "/googleFit",
@@ -111,7 +111,7 @@ const dashboardRoutes = [
     rtlName: "لوحة القيادة",
     icon: FitnessCenterIcon ,
     component: GoogleFit,
-    layout: "/admin"
+    layout: "/sidebar"
   },
   {
     path: "/smartDoc",
@@ -119,16 +119,25 @@ const dashboardRoutes = [
     rtlName: "إخطارات",
     icon: SmartDocIcon,
     component: SmartDoc,
-    layout: "/admin"
+    layout: "/sidebar"
   },
   {
     path: "/Supervisor",
-    name: "Supervisor",
+    name: "Arzt",
     rtlName: "إخطارات",
     icon: SupervisorAccountIcon,
     component: Supervisor,
-    layout: "/Supervisor"
+    layout: "/supervisor"
   },
+  {
+    path: "/Supervisor",
+    name: "FAQ",
+    rtlName: "إخطارات",
+    icon: SupervisorAccountIcon,
+    component: Supervisor,
+    layout: "/footer"
+  },
+
 ];
 
 export default dashboardRoutes;

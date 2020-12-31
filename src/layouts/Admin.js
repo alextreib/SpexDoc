@@ -30,14 +30,28 @@ import { publicKeyProvided } from "components/Internal/Extraction";
 
 let ps;
 
-const switchRoutes = (
-  <Switch>
-    {routes.map((prop, key) => {
-      return <Route path={prop.path} component={prop.component} key={key} />;
-    })}
-    <Redirect from="/" to="/dashboard" />
-  </Switch>
-);
+const filteredRoutes = (filter) => {
+  const routesList = [];
+  routes.map((prop, key) => {
+    if (prop.layout == filter) {
+    routesList.push(prop);
+    }
+  });
+  console.log(routesList);
+  return routesList;
+};
+
+// const switchRoutes = (
+//   <Switch>
+//     {routes.map((prop, key) => {
+//       if (prop.layout === "/admin") {
+
+//       return <Route path={prop.path} component={prop.component} key={key} />;
+//       }
+//     })}
+//     <Redirect from="/" to="/dashboard" />
+//   </Switch>
+// );
 
 const useStyles = makeStyles(styles);
 
@@ -123,7 +137,8 @@ export default function Admin({ ...rest }) {
             <Hidden mdUp implementation="css">
               {/* Mobile Version */}
               <NavbarMobile
-                routes={routes}
+                routes={filteredRoutes("/sidebar")
+                }
                 handleDrawerToggle={handleDrawerToggle}
                 //  Not used yet
                 closeSidebar={closeSidebar}
@@ -133,7 +148,7 @@ export default function Admin({ ...rest }) {
             </Hidden>
             <Hidden smDown implementation="css">
               <Navbar
-                routes={routes}
+                routes={filteredRoutes("/sidebar")}
                 handleDrawerToggle={handleDrawerToggle}
                 //  Not used yet
                 closeSidebar={closeSidebar}
@@ -142,11 +157,10 @@ export default function Admin({ ...rest }) {
             </Hidden>
 
             {/* On the /maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
-            {getRoute() ? (
               <div className={classes.content}>
                 <div className={classes.container}>
                   <Switch>
-                    {routes.map((prop, key) => {
+                    {filteredRoutes("/sidebar").map((prop, key) => {
                       return (
                         <Route
                           path={prop.path}
@@ -165,10 +179,7 @@ export default function Admin({ ...rest }) {
                   </Switch>
                 </div>
               </div>
-            ) : (
-              <div className={classes.map}>{switchRoutes}</div>
-            )}
-            {getRoute() ? <Footer /> : null}
+              <Footer routes={filteredRoutes("/footer")}/>
           </div>
         ) : (
           <LoginFirst setLoginClicked={setLoginClicked} />

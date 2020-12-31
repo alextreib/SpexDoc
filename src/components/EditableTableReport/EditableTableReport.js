@@ -10,7 +10,14 @@ import { getPublicKey } from "components/Internal/Extraction.js";
 import { CommonCompsData } from "components/Internal/DefaultData.js";
 import { checkUser } from "components/Internal/Checks.js";
 import VisuComp from "components/Internal/VisuComp";
+import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
+import Fab from "@material-ui/core/Fab";
+import { withStyles } from "@material-ui/core/styles";
 
+import { MTableToolbar } from "material-table";
+
+const styles = () => ({});
 class EditableTableReport extends VisuComp {
   constructor(props) {
     super(props);
@@ -53,6 +60,8 @@ class EditableTableReport extends VisuComp {
   };
 
   render() {
+    const { classes } = this.props;
+
     return (
       <div>
         <CommonComps commonProps={this.state.commonProps} />
@@ -61,9 +70,20 @@ class EditableTableReport extends VisuComp {
           components={{
             Container: (props) => <Paper {...props} elevation={0} />,
           }}
+          icons={{
+            Add: () => (
+              <Fab color="primary" aria-label="add">
+                <AddIcon />
+              </Fab>
+            ),
+          }}
           title=""
           columns={this.props.tableOptions.columns}
           options={{
+            search: false,
+            toolbarButtonAlignment: "right",
+            paging: false,
+
             headerStyle: {
               color: "#9c27b0",
               padding: 15,
@@ -173,4 +193,4 @@ class EditableTableReport extends VisuComp {
   }
 }
 
-export default EditableTableReport;
+export default withStyles(styles)(EditableTableReport);

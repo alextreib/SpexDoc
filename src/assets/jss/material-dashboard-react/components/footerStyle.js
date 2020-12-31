@@ -31,7 +31,12 @@ const footerStyle = {
   footer: {
     bottom: "0",
     borderTop: "1px solid " + grayColor[11],
-    padding: "15px 0",
+    ...defaultFont
+  },
+  mobilefooter:{
+    bottom: "0",
+    borderTop: "1px solid " + grayColor[11],
+    paddingBottom:"100px",
     ...defaultFont
   },
   container,

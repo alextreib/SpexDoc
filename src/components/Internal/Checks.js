@@ -31,9 +31,38 @@ export const getUserEmail = () => {
   return null;
 };
 
-export const getShortLink = async (property) => {
+export const getShortLink = async (property, withouthttps = false) => {
   var longLink =
     "https://app.spexdoc.net/" + property + "/publicKey=" + getUserID();
   const response = await bitly.shorten(longLink);
-  return response.link;
+
+  var link = response.link;
+  if (withouthttps) {
+    var https = "https://";
+    if (link.includes(https)) {
+      var link_without_https_length = link.indexOf(https); // 38
+
+      var link_without_https = link.substr(
+        link_without_https_length + https.length
+      );
+
+      link = link_without_https;
+    }
+  }
+  return link;
+};
+
+export const removehttpsFromLink = (link) => {
+  var https = "https://";
+  if (link.includes(https)) {
+    var link_without_https_length = link.indexOf(https); // 38
+
+    var link_without_https = link.substr(
+      link_without_https_length + https.length
+    );
+    return link_without_https;
+  } else {
+    console.log("error: no https given");
+    return link;
+  }
 };

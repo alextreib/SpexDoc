@@ -7,44 +7,22 @@ import ShareIcon from "@material-ui/icons/Share";
 import { shareLink } from "components/Internal/Sharing";
 import { withStyles } from "@material-ui/core/styles";
 
+import {removehttpsFromLink} from "components/Internal/Checks"
+
+
 const styles = (theme) => ({
-  card: {
-    maxWidth: 345,
-    marginBottom: 100,
-    paddingBottom: theme.spacing(1),
-  },
-  media: {
-    height: 140,
-  },
-  dialogtitle: {
-    margin: 0,
-    padding: theme.spacing(2),
-  },
-  closeButton: {
-    position: "absolute",
-    right: theme.spacing(1),
-    top: theme.spacing(1),
-    color: theme.palette.grey[500],
-  },
 });
 
 class QRCodeCard extends React.Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      link: this.props.link,
-    };
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props == prevProps) {
-      return;
-    }
   }
 
   shareLink = () => {
-    return shareLink("Hallo, schau dir das doch mal an: \n", this.state.link);
+    return shareLink(
+      "Hallo, hier habe ich dir meine Daten freigegeben: \n",
+      removehttpsFromLink(this.props.link)
+    );
   };
 
   render() {
@@ -63,8 +41,8 @@ class QRCodeCard extends React.Component {
               alignItems: "center",
             }}
           >
-            <a href={this.state.link} onClick={this.shareLink}>
-              {this.state.link}
+            <a href={this.props.link} onClick={this.shareLink}>
+              {removehttpsFromLink(this.props.link)}
             </a>
             {/* Oder einfach nur auf den Link klicken */}
             <IconButton

@@ -8,14 +8,14 @@ import React from "react";
 import { connect } from "react-redux";
 import { getPublicKey } from "components/Internal/Extraction.js";
 import { CommonCompsData } from "components/Internal/DefaultData.js";
-
+import AddIcon from "@material-ui/icons/Add";
+import Fab from "@material-ui/core/Fab";
 class PlainTable extends React.Component {
   constructor(props) {
     super(props);
 
     // No state -> is only given through props and from parent
   }
-
 
   render() {
     return (
@@ -25,9 +25,19 @@ class PlainTable extends React.Component {
           components={{
             Container: (props) => <Paper {...props} elevation={0} />,
           }}
+          icons={{
+            Add: () => (
+              <Fab color="primary" aria-label="add">
+                <AddIcon />
+              </Fab>
+            ),
+          }}
           title=""
           columns={this.props.tableOptions.columns}
           options={{
+            search: false,
+            toolbarButtonAlignment: "right",
+            paging: false,
             headerStyle: {
               color: "#9c27b0",
               padding: 15,

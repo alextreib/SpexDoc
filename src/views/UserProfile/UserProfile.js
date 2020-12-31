@@ -44,7 +44,16 @@ import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import { grey, red } from "@material-ui/core/colors";
 
-import { writeRequest } from "components/Internal/DBFunctions";
+import {
+  writeRequest,
+  readGlobalDoc,
+  writeGlobalDoc,
+} from "components/Internal/DBFunctions";
+import {
+  isAdmin,
+  isSupervisor,
+  getUserInfo,
+} from "components/Internal/LayoutFunctions";
 
 const styles = (theme) => ({
   logoutButton: {
@@ -86,6 +95,7 @@ class UserProfile extends VisuComp {
       UserProfile: {
         ...DefaultUserProfile,
       },
+      UserInfo: "Patient",
       UserSwitches: {
         legal: {
           checked: false,
@@ -114,13 +124,20 @@ class UserProfile extends VisuComp {
   }
 
   // Required from CommonProps
-  updateComp = () => {
+  updateComp = async () => {
     this.TableFetch(this.state.dbNameUserProfile);
 
-    //todo: Cleanup
+    this.preloadInfo();
+  };
+
+  preloadInfo = async () => {
     this.setState({
       UserProfile: { ...this.state.UserProfile, email: getUserEmail() },
     });
+
+    var userInfo = await getUserInfo();
+
+    this.setState({ UserInfo: userInfo });
   };
 
   // Nice function: Sets states automatically
@@ -147,7 +164,14 @@ class UserProfile extends VisuComp {
         this.props.loginRedux({ user_id: user.uid });
 
         //todo: readglobaldoc
-        // readGlobalDoc("UserInfo").then((doc_data) => {
+        readGlobalDoc("UserInfo").then(async (doc_data) => {
+          console.log(doc_data)
+          if (doc_data != null) {
+            var data = { ...doc_data, [user.uid]: "patient" };
+            console.log(data);
+            writeGlobalDoc("UserInfo", data);
+          }
+        });
 
         // })
         // .catch((error) => {
@@ -228,7 +252,7 @@ class UserProfile extends VisuComp {
 
   submitSupervisorRequest = () => {
     var message = "Ich bin ein Arzt";
-    writeRequest(message).then(() => {
+    writeRequest(message, "WannaBeSupervisor").then(() => {
       this.displayPopUp("Anfrage erfolgreich versendet");
     });
   };
@@ -488,8 +512,10 @@ class UserProfile extends VisuComp {
                     </a>
                   </CardAvatar>
                   <CardBody profile>
-                    <h6 className={classes.cardCategory}>Patient</h6>
-                    {this.state.UserProfile.status != "supervisor" ? (
+                    <h6 className={classes.cardCategory}>
+                      {this.state.UserInfo}
+                    </h6>
+                    { this.state.UserInfo=="Patient" && (
                       <Button
                         color="primary"
                         onClick={this.submitSupervisorRequest}
@@ -497,7 +523,7 @@ class UserProfile extends VisuComp {
                         <SyncAltIcon />
                         Ich bin Arzt
                       </Button>
-                    ) : null}
+                    ) }
                     <h4 className={classes.cardTitle}>
                       {this.state.UserProfile.firstName}{" "}
                       {this.state.UserProfile.lastName}

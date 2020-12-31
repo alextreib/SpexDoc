@@ -203,7 +203,7 @@ class SmartDoc extends VisuComp {
       files: this.state.uploadFiles,
     };
 
-    writeRequest(requestData).then(() => {
+    writeRequest(requestData, "question").then(() => {
       this.setState({
         contactMessage: "",
       });

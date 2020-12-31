@@ -17,8 +17,7 @@ export default class VisuComp extends React.Component {
     super(props);
   }
 
-  componentDidUpdate() {
-  }
+  componentDidUpdate() {}
 
   fetchTable = (property) => {
     // Promis probably won't work
@@ -147,36 +146,34 @@ export default class VisuComp extends React.Component {
   // Is called when table is changed
   TableFetch = (TableName, writeinData = false, defaultData = null) => {
     return new Promise((resolve, reject) => {
-      readDBData(TableName, isSharingAllowed(TableName)).then(
-        (doc_data) => {
-          var data_to_write;
-          if (doc_data != null) {
-            data_to_write = doc_data;
-          }
-          // Reading wasn't successfull, check if defaultData is provided
-          else {
-            if (defaultData == null) {
-              // Assumption: Default data is not supposed to be null
-              resolve(false);
-              return;
-            } else {
-              data_to_write = defaultData;
-            }
-          }
-
-          if (writeinData) {
-            this.setState({
-              data: data_to_write,
-            });
-          } else {
-            // Overwriting
-            this.setState({
-              [TableName]: data_to_write,
-            });
-          }
-          resolve(doc_data != null);
+      readDBData(TableName, isSharingAllowed(TableName)).then((doc_data) => {
+        var data_to_write;
+        if (doc_data != null) {
+          data_to_write = doc_data;
         }
-      );
+        // Reading wasn't successfull, check if defaultData is provided
+        else {
+          if (defaultData == null) {
+            // Assumption: Default data is not supposed to be null
+            resolve(false);
+            return;
+          } else {
+            data_to_write = defaultData;
+          }
+        }
+
+        if (writeinData) {
+          this.setState({
+            data: data_to_write,
+          });
+        } else {
+          // Overwriting
+          this.setState({
+            [TableName]: data_to_write,
+          });
+        }
+        resolve(doc_data != null);
+      });
     });
   };
 
@@ -195,6 +192,13 @@ export default class VisuComp extends React.Component {
     var changedValue = event.target.value;
     this.setState({
       [propertyName]: changedValue,
+    });
+  };
+
+  handlePropertyChange = (dbName, propertyName, event) => {
+    var changedValue = event.target.value;
+    this.setState({
+      [dbName]: { ...this.state[dbName], [propertyName]: changedValue },
     });
   };
 

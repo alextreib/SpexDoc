@@ -243,7 +243,7 @@ class MedRecordsContent extends VisuComp {
     return MedRecordList;
   };
 
-  uploadImageAction = ( event,medRecord) => {
+  uploadImageAction = (event, medRecord) => {
     event.preventDefault();
     if (!this.checkLoginAndDisplay()) {
       return;
@@ -274,7 +274,6 @@ class MedRecordsContent extends VisuComp {
     });
   };
 
- 
   render() {
     const { classes } = this.props;
 
@@ -283,6 +282,16 @@ class MedRecordsContent extends VisuComp {
         <CommonComps commonProps={this.state.commonProps} />
 
         <GridContainer>
+          {this.state.CategoryList.length == 0 && (
+            <GridItem xs={12} sm={12} md={12}>
+              <Card>
+                <AddButton
+                  param={{ title: "Neue Kategorie" }}
+                  addAction={this.addnewCategory}
+                />
+              </Card>
+            </GridItem>
+          )}
           {this.state.CategoryList.map((category) => (
             // this.getMedRecord(category).length>0 ?(
             <GridItem xs={12} sm={12} md={12}>
