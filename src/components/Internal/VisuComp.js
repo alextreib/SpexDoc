@@ -104,7 +104,6 @@ export default class VisuComp extends React.Component {
           this.setState((prevState) => {
             TableName: {
               const data = [...prevState[TableName].data];
-              console.log(data);
               data[data.indexOf(oldData)] = newData;
               return {
                 ...prevState,

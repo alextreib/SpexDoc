@@ -19,6 +19,7 @@ import Supervisor from "views/Supervisor/Supervisor.js";
 import FAQ from "views/FAQ/FAQ";
 import Imprint from "views/Imprint/Imprint";
 import ContactUs from "views/ContactUs/ContactUs";
+import Premium from "views/Premium/Premium";
 
 import Vaccination from "views/Vaccination/Vaccination.js";
 import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
@@ -121,7 +122,7 @@ const dashboardRoutes = [
     layout: "/sidebar",
   },
   {
-    path: "/Supervisor",
+    path: "/doctor",
     name: "Arzt",
     rtlName: "إخطارات",
     icon: SupervisorAccountIcon,
@@ -129,7 +130,7 @@ const dashboardRoutes = [
     layout: "/supervisor",
   },
   {
-    path: "/FAQ",
+    path: "/faq",
     name: "FAQ",
     rtlName: "إخطارات",
     icon: SupervisorAccountIcon,
@@ -137,7 +138,7 @@ const dashboardRoutes = [
     layout: "/footer",
   },
   {
-    path: "/Imprint",
+    path: "/imprint",
     name: "Impressum",
     rtlName: "إخطارات",
     icon: SupervisorAccountIcon,
@@ -145,12 +146,20 @@ const dashboardRoutes = [
     layout: "/footer",
   },
   {
-    path: "/ContactUs",
+    path: "/contactUs",
     name: "Kontakt",
     rtlName: "إخطارات",
     icon: SupervisorAccountIcon,
     component: ContactUs,
     layout: "/footer",
+  },
+  {
+    path: "/premium",
+    name: "Premium",
+    rtlName: "إخطارات",
+    icon: SupervisorAccountIcon,
+    component: Premium,
+    layout: "/NavBar",
   },
 ];
 

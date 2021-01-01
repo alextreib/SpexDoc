@@ -165,20 +165,14 @@ class UserProfile extends VisuComp {
 
         //todo: readglobaldoc
         readGlobalDoc("UserInfo").then(async (doc_data) => {
-          console.log(doc_data)
           if (doc_data != null) {
-            var data = { ...doc_data, [user.uid]: "patient" };
-            console.log(data);
-            writeGlobalDoc("UserInfo", data);
+            if (!(user.uid in doc_data)) {
+              var data = { ...doc_data, [user.uid]: "patient" };
+              writeGlobalDoc("UserInfo", data);
+            }
           }
         });
 
-        // })
-        // .catch((error) => {
-        //   console.log("error global doc userprofile")
-        //   console.log(error)
-        //   // ...
-        // });
 
         // Get the token from the window because index is not avaiable here
         var deviceToken = window.localStorage.getItem("sentToServer");
@@ -515,7 +509,7 @@ class UserProfile extends VisuComp {
                     <h6 className={classes.cardCategory}>
                       {this.state.UserInfo}
                     </h6>
-                    { this.state.UserInfo=="Patient" && (
+                    {this.state.UserInfo == "Patient" && (
                       <Button
                         color="primary"
                         onClick={this.submitSupervisorRequest}
@@ -523,7 +517,7 @@ class UserProfile extends VisuComp {
                         <SyncAltIcon />
                         Ich bin Arzt
                       </Button>
-                    ) }
+                    )}
                     <h4 className={classes.cardTitle}>
                       {this.state.UserProfile.firstName}{" "}
                       {this.state.UserProfile.lastName}

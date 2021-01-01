@@ -109,6 +109,12 @@ class AdminNavbarLinks extends VisuComp {
             </Button>
           </div> */}
             <div className={classes.manager}>
+              <Link className={classes.LinkNotification} to="/premium">
+                <IconButton color="inherit">Premium</IconButton>
+              </Link>
+            </div>
+
+            <div className={classes.manager}>
               <Link className={classes.LinkNotification} to="/dashboard">
                 <IconButton color="inherit">
                   <Dashboard fontSize="large" />

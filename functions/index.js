@@ -136,7 +136,6 @@ async function writeNotification(message, sender, recipient_uid) {
 }
 
 async function writeDBDataWithUid(docName, data, user_id) {
-  console.log(data);
   admin
     .firestore()
     .collection("userStorage")
