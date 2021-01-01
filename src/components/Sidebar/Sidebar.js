@@ -60,7 +60,7 @@ class Sidebar extends React.Component {
     var links = (
       <List className={classes.list}>
         {routes.map((prop, key) => {
-          if (prop.layout === "/sidebar" || this.state.isAdminValue) {
+          if (prop.layout === "/sidebar" || (prop.layout === "/supervisor" && this.state.isAdminValue)) {
             console.log(prop.path);
             console.log(prop.layout);
             console.log(prop.layout === "/sidebar");

@@ -1,10 +1,10 @@
 import Alarm from "@material-ui/icons/Alarm";
 import Appointments from "views/Appointments/Appointments.js";
-import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import AssignmentIndIcon from "@material-ui/icons/AssignmentInd";
 import Dashboard from "@material-ui/icons/Dashboard";
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import Emergency from "views/Emergency/Emergency.js";
-import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
+import LocalHospitalIcon from "@material-ui/icons/LocalHospital";
 import MedRecords from "views/MedRecords/MedRecords.js";
 import GoogleFit from "views/GoogleFit/GoogleFit.js";
 import Notifications from "@material-ui/icons/Notifications";
@@ -13,18 +13,20 @@ import Share from "views/Share/Share.js";
 import ShareIcon from "@material-ui/icons/Share";
 import SmartDoc from "views/SmartDoc/SmartDoc.js";
 import SmartDocIcon from "@material-ui/icons/TabletMac";
-import TodayIcon from '@material-ui/icons/Today';
+import TodayIcon from "@material-ui/icons/Today";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import Supervisor from "views/Supervisor/Supervisor.js";
+import FAQ from "views/FAQ/FAQ";
+import Imprint from "views/Imprint/Imprint";
+import ContactUs from "views/ContactUs/ContactUs";
 
 import Vaccination from "views/Vaccination/Vaccination.js";
-import FitnessCenterIcon from '@material-ui/icons/FitnessCenter';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import FitnessCenterIcon from "@material-ui/icons/FitnessCenter";
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 // npm install --save-dev @iconify/react @iconify-icons/fa-solid
-import { Icon, InlineIcon } from '@iconify/react';
+import { Icon, InlineIcon } from "@iconify/react";
 // import syringeIcon from '@iconify-icons/fa-solid/syringe';
 // import React from "react";
-
 
 // // npm install --save-dev @iconify/react @iconify-icons/mdi
 // // import { Icon, InlineIcon } from '@iconify/react';
@@ -32,12 +34,9 @@ import { Icon, InlineIcon } from '@iconify/react';
 
 // // <Icon icon={googleFit} />
 
-
-
 // function SyringeIcon() {
 //   return <Icon style={{height:18,width:18}} icon={syringeIcon} />;
 // };
-
 
 const dashboardRoutes = [
   {
@@ -46,7 +45,7 @@ const dashboardRoutes = [
     rtlName: "لوحة القيادة",
     icon: Dashboard,
     component: DashboardPage,
-    layout: "/sidebar"
+    layout: "/sidebar",
   },
   {
     path: "/user",
@@ -54,7 +53,7 @@ const dashboardRoutes = [
     rtlName: "ملف تعريفي للمستخدم",
     icon: AssignmentIndIcon,
     component: UserProfile,
-    layout: "/sidebar"
+    layout: "/sidebar",
   },
   {
     path: "/medRecords",
@@ -62,15 +61,15 @@ const dashboardRoutes = [
     rtlName: "قائمة الجدول",
     icon: "content_paste",
     component: MedRecords,
-    layout: "/sidebar"
-  }, 
+    layout: "/sidebar",
+  },
   {
     path: "/appointments",
     name: "Termine",
     rtlName: "طباعة",
     icon: TodayIcon,
     component: Appointments,
-    layout: "/sidebar"
+    layout: "/sidebar",
   },
   {
     path: "/share",
@@ -78,16 +77,16 @@ const dashboardRoutes = [
     rtlName: "إخطارات",
     icon: ShareIcon,
     component: Share,
-    layout: "/sidebar"
+    layout: "/sidebar",
   },
- 
+
   {
     path: "/vaccination",
     name: "Impfpass",
     rtlName: "خرائط",
     icon: Alarm,
     component: Vaccination,
-    layout: "/sidebar"
+    layout: "/sidebar",
   },
   {
     path: "/emergency",
@@ -95,7 +94,7 @@ const dashboardRoutes = [
     rtlName: "إخطارات",
     icon: LocalHospitalIcon,
     component: Emergency,
-    layout: "/sidebar"
+    layout: "/sidebar",
   },
   {
     path: "/notifications",
@@ -103,15 +102,15 @@ const dashboardRoutes = [
     rtlName: "إخطارات",
     icon: Notifications,
     component: NotificationsPage,
-    layout: "/sidebar"
+    layout: "/sidebar",
   },
   {
     path: "/googleFit",
     name: "GoogleFit",
     rtlName: "لوحة القيادة",
-    icon: FitnessCenterIcon ,
+    icon: FitnessCenterIcon,
     component: GoogleFit,
-    layout: "/sidebar"
+    layout: "/sidebar",
   },
   {
     path: "/smartDoc",
@@ -119,7 +118,7 @@ const dashboardRoutes = [
     rtlName: "إخطارات",
     icon: SmartDocIcon,
     component: SmartDoc,
-    layout: "/sidebar"
+    layout: "/sidebar",
   },
   {
     path: "/Supervisor",
@@ -127,17 +126,32 @@ const dashboardRoutes = [
     rtlName: "إخطارات",
     icon: SupervisorAccountIcon,
     component: Supervisor,
-    layout: "/supervisor"
+    layout: "/supervisor",
   },
   {
-    path: "/Supervisor",
+    path: "/FAQ",
     name: "FAQ",
     rtlName: "إخطارات",
     icon: SupervisorAccountIcon,
-    component: Supervisor,
-    layout: "/footer"
+    component: FAQ,
+    layout: "/footer",
   },
-
+  {
+    path: "/Imprint",
+    name: "Impressum",
+    rtlName: "إخطارات",
+    icon: SupervisorAccountIcon,
+    component: Imprint,
+    layout: "/footer",
+  },
+  {
+    path: "/ContactUs",
+    name: "Kontakt",
+    rtlName: "إخطارات",
+    icon: SupervisorAccountIcon,
+    component: ContactUs,
+    layout: "/footer",
+  },
 ];
 
 export default dashboardRoutes;

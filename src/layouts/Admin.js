@@ -137,7 +137,7 @@ export default function Admin({ ...rest }) {
             <Hidden mdUp implementation="css">
               {/* Mobile Version */}
               <NavbarMobile
-                routes={filteredRoutes("/sidebar")
+                routes={routes
                 }
                 handleDrawerToggle={handleDrawerToggle}
                 //  Not used yet
@@ -148,7 +148,7 @@ export default function Admin({ ...rest }) {
             </Hidden>
             <Hidden smDown implementation="css">
               <Navbar
-                routes={filteredRoutes("/sidebar")}
+                routes={routes}
                 handleDrawerToggle={handleDrawerToggle}
                 //  Not used yet
                 closeSidebar={closeSidebar}
@@ -160,7 +160,7 @@ export default function Admin({ ...rest }) {
               <div className={classes.content}>
                 <div className={classes.container}>
                   <Switch>
-                    {filteredRoutes("/sidebar").map((prop, key) => {
+                    {routes.map((prop, key) => {
                       return (
                         <Route
                           path={prop.path}

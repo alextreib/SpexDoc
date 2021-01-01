@@ -7,6 +7,8 @@ import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 import Hidden from "@material-ui/core/Hidden";
 
+import { NavLink } from "react-router-dom";
+
 // core components
 import styles from "assets/jss/material-dashboard-react/components/footerStyle.js";
 
@@ -19,16 +21,21 @@ function footerContent(props) {
     <div className={classes.container}>
       <div className={classes.left}>
         <List className={classes.list}>
-          <ListItem className={classes.inlineBlock}>
-            <a href="https://spexdoc.net" className={classes.block}>
-              Home
-            </a>
-          </ListItem>
-          <ListItem className={classes.inlineBlock}>
-            <a href="https://spexdoc.net/about-us" className={classes.block}>
-              Über uns
-            </a>
-          </ListItem>
+          {props.routes.map((prop, key) => {
+            return (
+              <NavLink
+                to={prop.path}
+                className={classes.inlineBlock}
+                activeClassName="active"
+                key={key}
+                onClick={props.closeSidebar}
+              >
+                <ListItem button className={classes.block}>
+                  {prop.name}
+                </ListItem>
+              </NavLink>
+            );
+          })}
         </List>
       </div>
       <p className={classes.right}>
@@ -49,13 +56,12 @@ export default function Footer(props) {
     <React.Fragment>
       <Hidden mdUp>
         {/* Mobile version */}
-        <footer className={classes.mobilefooter}>{footerContent()}</footer>
+        <footer className={classes.mobilefooter}>{footerContent(props)}</footer>
       </Hidden>
 
       <Hidden smDown implementation="css">
         {/* Desktop version */}
-
-        <footer className={classes.footer}>{footerContent()}</footer>
+        <footer className={classes.footer}>{footerContent(props)}</footer>
       </Hidden>
     </React.Fragment>
   );
