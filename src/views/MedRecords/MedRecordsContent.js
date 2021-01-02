@@ -285,7 +285,7 @@ class MedRecordsContent extends VisuComp {
           {this.state.CategoryList.length == 0 && (
             <GridItem xs={12} sm={12} md={12}>
               <Card>
-                <AddButton
+                <AddButton 
                   param={{ title: "Neue Kategorie" }}
                   addAction={this.addnewCategory}
                 />
@@ -329,7 +329,7 @@ class MedRecordsContent extends VisuComp {
                       ) : null
                     )}
                   </GridContainer>
-                  <AddButton
+                  <AddButton 
                     param={category.title}
                     addAction={this.addnewMedRecord}
                   />

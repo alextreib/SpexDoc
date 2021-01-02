@@ -46,7 +46,7 @@ const dashboardRoutes = [
     rtlName: "لوحة القيادة",
     icon: Dashboard,
     component: DashboardPage,
-    layout: "/sidebar",
+    layout: "/navbar",
   },
   {
     path: "/user",
@@ -54,7 +54,7 @@ const dashboardRoutes = [
     rtlName: "ملف تعريفي للمستخدم",
     icon: AssignmentIndIcon,
     component: UserProfile,
-    layout: "/sidebar",
+    layout: "/navbar",
   },
   {
     path: "/medRecords",
@@ -103,7 +103,7 @@ const dashboardRoutes = [
     rtlName: "إخطارات",
     icon: Notifications,
     component: NotificationsPage,
-    layout: "/sidebar",
+    layout: "/navbar",
   },
   {
     path: "/googleFit",
