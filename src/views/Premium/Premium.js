@@ -58,7 +58,6 @@ import Divider from "@material-ui/core/Divider";
 import InboxIcon from "@material-ui/icons/Inbox";
 import DraftsIcon from "@material-ui/icons/Drafts";
 
-import TextCard from "components/VisuComps/TextCard.js";
 
 import { RiVipCrown2Fill } from "react-icons/ri";
 
