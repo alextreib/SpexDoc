@@ -17,6 +17,9 @@ export const CommonCompsData = {
     type: "info", //info, success, warning, danger, primary
     FuncParams: "test",
   },
+  Progress: {
+    openProgress: false,
+  },
 };
 
 export const DefaultCategories = [
@@ -25,8 +28,7 @@ export const DefaultCategories = [
   { title: "Allergologie" },
 ];
 
-
-export const DefaultUserProfile={
+export const DefaultUserProfile = {
   email: "",
   firstName: "",
   lastName: "",
@@ -36,8 +38,7 @@ export const DefaultUserProfile={
   birthDate: "",
   insurance: "",
   aboutMe: "",
-}
-
+};
 
 export const DefaultMedRecord = {
   files: [],

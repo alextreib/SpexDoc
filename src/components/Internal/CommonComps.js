@@ -11,6 +11,7 @@ import VisuComp from "components/Internal/VisuComp.js";
 
 import { openLoginAlert } from "components/Internal/VisuElements.js";
 import LoginAlert from "components/LoginAlert/LoginAlert";
+import ProgressModal from "components/VisuComps/ProgressModal";
 import CookieConsent, { Cookies } from "react-cookie-consent";
 import Hidden from "@material-ui/core/Hidden";
 
@@ -86,6 +87,7 @@ class CommonComps extends VisuComp {
         </Hidden>
         <LoginAlert loginState={this.props.commonProps.LoginAlertProps} />
         <PopUp popUp={this.props.commonProps.PopUpProps} />
+        <ProgressModal progressModal={this.props.commonProps.Progress} />
       </React.Fragment>
     );
   }
