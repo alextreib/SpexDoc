@@ -57,7 +57,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import InboxIcon from "@material-ui/icons/Inbox";
 import DraftsIcon from "@material-ui/icons/Drafts";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
+import { green } from "@material-ui/core/colors";
 
 import { RiVipCrown2Fill } from "react-icons/ri";
 
@@ -82,7 +84,12 @@ const styles = (theme) => ({
     },
   },
   submitButton: {
-    marginRight: theme.spacing(2),
+    marginTop: 20,
+    left: "50%",
+    top: "50%",
+    transform: "translate(-50%, -50%)",
+    marginBottom: 50,
+    marginTop: 50,
   },
   formControl: {
     margin: theme.spacing(1),
@@ -104,6 +111,22 @@ const styles = (theme) => ({
       lineHeight: "1",
     },
   },
+
+  cardFooter: {
+    color: "#9e9e9e",
+    marginTop: "0px",
+    minHeight: "auto",
+    fontWeight: "300",
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    marginBottom: "3px",
+    textDecoration: "none",
+    "& small": {
+      color: "#777",
+      fontSize: "65%",
+      fontWeight: "400",
+      lineHeight: "1",
+    },
+  },
 });
 
 function getListItem(content) {
@@ -111,7 +134,9 @@ function getListItem(content) {
     <GridItem xs={12} sm={6} md={4}>
       <ListItem>
         <ListItemIcon>
-          <RiVipCrown2Fill style={{ height: "25px", width: "25px" }} />
+          <CheckCircleIcon
+            style={{ height: "25px", width: "25px", color: "#4caf50" }}
+          />
         </ListItemIcon>
         <ListItemText primary={content} />
       </ListItem>
@@ -157,7 +182,21 @@ class Premium extends VisuComp {
 
     var requestData = {};
 
-    writeRequest(requestData, "premium").then(() => {
+    writeRequest(requestData, "premium_buy").then(() => {
+      this.displayPopUp(
+        "Dieses Feature kommt in Kürze. Danke für das Verständnis."
+      );
+    });
+  };
+
+  recommend = async () => {
+    if (!this.checkLoginAndDisplay()) {
+      return;
+    }
+
+    var requestData = {};
+
+    writeRequest(requestData, "premium_recommend").then(() => {
       this.displayPopUp(
         "Dieses Feature kommt in Kürze. Danke für das Verständnis."
       );
@@ -211,34 +250,63 @@ class Premium extends VisuComp {
                 <List component="nav" aria-label="main mailbox folders">
                   <GridContainer>
                     {getListItem(
-                      "Jedes Abo hilft uns neue Feature zu entwickeln"
+                      "Jedes Abo hilft uns neue Features zu entwickeln"
                     )}
                   </GridContainer>
                 </List>
-
-                <Typography align="center" variant="h4">
-                  Abo
-                </Typography>
-                <List component="nav" aria-label="main mailbox folders">
-                  <GridContainer>
-                    {getListItem("30 Tage Geld-Züruck-Garantie")}
-                    {getListItem("Monatlich kündbar")}
-                  </GridContainer>
-                </List>
-                <Typography align="right" variant="h4">
-                  20€/Monat
-                </Typography>
               </CardBody>
               <CardFooter>
-                <Grid container justify="flex-end">
-                  <Button
-                    align="right"
-                    className={classes.submitButton}
-                    color="primary"
-                    onClick={this.subscribe}
-                  >
-                    Aktivieren
-                  </Button>
+                <Grid container justify="center" spacing={2}>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <Card>
+                      <CardHeader color="info"> Abo</CardHeader>
+                      <CardBody>
+                        <Typography
+                          style={{ marginTop: "50px" }}
+                          align="center"
+                          variant="h5"
+                        >
+                          Jederzeit kündbar.
+                        </Typography>
+
+                        <Typography align="center" variant="h4">
+                          10€/Monat
+                        </Typography>
+                        <Button
+                          className={classes.submitButton}
+                          color="primary"
+                          onClick={this.subscribe}
+                        >
+                          7 Tage gratis testen
+                        </Button>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <Card>
+                      <CardHeader color="info">Empfehlung</CardHeader>
+                      <CardBody>
+                        <Typography
+                          style={{ marginTop: "50px" }}
+                          align="center"
+                          variant="h5"
+                        >
+                          Jederzeit kündbar.
+                        </Typography>
+
+                        <Typography align="center" variant="h4">
+                          Kostenlos
+                        </Typography>
+                        <Button
+                          className={classes.submitButton}
+                          color="primary"
+                          onClick={this.recommend}
+                        >
+                          Empfehle SpexDoc einem Freund
+                        </Button>
+                      </CardBody>
+                    </Card>
+                  </GridItem>
                 </Grid>
               </CardFooter>
             </Card>
